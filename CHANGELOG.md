@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-04-01
+
+### Fixed
+- `RunConfig` API reference now shows per-field descriptions
+- OTel example in `extending.md` no longer silently drops spans when a node is retried
+- README "What You Get" bullets now include the fluent builder API
+- `parallel()` contract bypass documented as an explicit warning admonition in Concepts
+- `on_node_success` `tokens_used` argument semantics documented (input + output tokens, `0` if unreported)
+- `KNOWN_MODELS` pricing table added to Concepts page so models and prices are discoverable without reading source
+- README Install section now states the Python 3.12+ requirement
+- Home page Next Steps section replaced broken table-as-cards with a clean bullet list
+- API reference for `stroma_node` now explains when to use it vs `@runner.node`
+
 ## [0.2.0] - 2026-04-01
 
 ### Added
