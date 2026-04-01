@@ -1395,6 +1395,12 @@ that opens a span in <code>on_node_start</code> and closes it in <code>on_node_s
 
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">otel_start</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">)</span>
+    <span class="c1"># End any leftover span from a previous attempt so it isn&#39;t silently dropped</span>
+    <span class="n">previous</span> <span class="o">=</span> <span class="n">_active_spans</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">previous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">previous</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;superseded by retry&quot;</span><span class="p">)</span>
+        <span class="n">previous</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
     <span class="n">span</span> <span class="o">=</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_span</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;stroma.node.</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="n">attributes</span><span class="o">=</span><span class="p">{</span>
@@ -1402,7 +1408,7 @@ that opens a span in <code>on_node_start</code> and closes it in <code>on_node_s
             <span class="s2">&quot;stroma.node_id&quot;</span><span class="p">:</span> <span class="n">node_id</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span>
-    <span class="n">_active_spans</span><span class="p">[(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">span</span>
+    <span class="n">_active_spans</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">span</span>
 
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">otel_success</span><span class="p">(</span><span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">tokens</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

@@ -1304,7 +1304,7 @@
 <tr>
 <td><code>on_node_success</code></td>
 <td>After a node completes and passes validation</td>
-<td><code>run_id</code>, <code>node_id</code>, <code>output_state_dict</code>, <code>tokens_used</code></td>
+<td><code>run_id</code>, <code>node_id</code>, <code>output_state_dict</code>, <code>tokens_used</code> (input + output tokens for this attempt, <code>0</code> if the node didn't report usage)</td>
 </tr>
 <tr>
 <td><code>on_node_failure</code></td>

@@ -1117,6 +1117,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#node-decorators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node decorators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stroma.runner.stroma_node" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1577,6 +1588,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#node-decorators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node decorators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stroma.runner.stroma_node" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2030,7 +2052,30 @@ cost info.</p>
 
     </div>
 
-</div>
+</div><h2 id="node-decorators">Node decorators</h2>
+<p>Stroma provides two ways to declare a pipeline node:</p>
+<table>
+<thead>
+<tr>
+<th>Decorator</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@runner.node("id", input=In, output=Out)</code></td>
+<td>You already have a <code>StromaRunner</code> instance and want the contract registered automatically.</td>
+</tr>
+<tr>
+<td><code>@stroma_node("id", contract)</code></td>
+<td>You're building the registry manually, testing in isolation, or sharing node definitions across runners.</td>
+</tr>
+</tbody>
+</table>
+<p>Both attach the same <code>_stroma_node_id</code> and <code>_stroma_contract</code> metadata to the
+function. <code>@runner.node</code> is syntactic sugar that also calls
+<code>registry.register(...)</code> for you.</p>
+
 
 <div class="doc doc-object doc-function">
 

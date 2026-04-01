@@ -912,6 +912,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#built-in-pricing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in pricing
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1419,6 +1430,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#built-in-pricing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in pricing
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1808,7 +1830,66 @@
 <ol>
 <li>Stroma looks up <code>"gpt-4o"</code> in <code>KNOWN_MODELS</code> and computes cost as <code>(input_tokens * input_price + output_tokens * output_price) / 1_000_000</code>. Unknown models default to $0.00.</li>
 </ol>
-<p>Built-in pricing covers GPT-4o, GPT-4o-mini, GPT-4-turbo, Claude Opus/Sonnet/Haiku, and Gemini 1.5 Pro/Flash. The <code>max_cost_usd</code> budget now enforces actual dollar limits based on model pricing.</p>
+<h3 id="built-in-pricing">Built-in pricing</h3>
+<p><code>KNOWN_MODELS</code> ships with per-million-token pricing for these models:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align: right;">Input ($/1M tokens)</th>
+<th style="text-align: right;">Output ($/1M tokens)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gpt-4o</code></td>
+<td style="text-align: right;">2.50</td>
+<td style="text-align: right;">10.00</td>
+</tr>
+<tr>
+<td><code>gpt-4o-mini</code></td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.60</td>
+</tr>
+<tr>
+<td><code>gpt-4-turbo</code></td>
+<td style="text-align: right;">10.00</td>
+<td style="text-align: right;">30.00</td>
+</tr>
+<tr>
+<td><code>claude-opus-4-6</code></td>
+<td style="text-align: right;">15.00</td>
+<td style="text-align: right;">75.00</td>
+</tr>
+<tr>
+<td><code>claude-sonnet-4-6</code></td>
+<td style="text-align: right;">3.00</td>
+<td style="text-align: right;">15.00</td>
+</tr>
+<tr>
+<td><code>claude-haiku-4-5</code></td>
+<td style="text-align: right;">0.80</td>
+<td style="text-align: right;">4.00</td>
+</tr>
+<tr>
+<td><code>gemini-1.5-pro</code></td>
+<td style="text-align: right;">3.50</td>
+<td style="text-align: right;">10.50</td>
+</tr>
+<tr>
+<td><code>gemini-1.5-flash</code></td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">1.05</td>
+</tr>
+</tbody>
+</table>
+<p>Unknown models default to <code>$0.00</code> — no error, just no cost tracking. You can inspect or extend <code>KNOWN_MODELS</code> at runtime:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNOWN_MODELS</span>
+
+<span class="c1"># Add a custom model</span>
+<span class="n">KNOWN_MODELS</span><span class="p">[</span><span class="s2">&quot;my-fine-tune&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">5.00</span><span class="p">,</span> <span class="mf">15.00</span><span class="p">)</span>
+</code></pre></div>
+<p>The <code>max_cost_usd</code> budget enforces actual dollar limits based on model pricing.</p>
 <h2 id="observability-hooks">Observability Hooks</h2>
 <p>Plug in external telemetry (Datadog, Prometheus, OpenTelemetry, Sentry) with <code>NodeHooks</code> — async callbacks fired at node execution boundaries:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeHooks</span><span class="p">,</span> <span class="n">RunConfig</span>
@@ -1817,6 +1898,7 @@
     <span class="n">metrics</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s2">&quot;node.started&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;node:</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">output_state</span><span class="p">,</span> <span class="n">tokens_used</span><span class="p">):</span>
+    <span class="c1"># tokens_used is input_tokens + output_tokens for this attempt (0 if node didn&#39;t report usage)</span>
     <span class="n">metrics</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s2">&quot;node.completed&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;node:</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_failure</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">failure_class</span><span class="p">):</span>
@@ -1898,7 +1980,10 @@
 <span class="p">)</span>
 </code></pre></div>
 <p><code>parallel()</code> wraps multiple nodes into a single pseudo-node that runs them concurrently with <code>asyncio.gather</code>. Child outputs are merged into a single dict (last write wins on key conflicts). On any child failure, remaining tasks are cancelled and the exception propagates to the runner's failure handling.</p>
-<p>Parallel nodes bypass individual contract validation — each child returns a raw dict and the merged output is validated by the next sequential node's input contract.</p>
+<div class="admonition warning">
+<p class="admonition-title">Parallel nodes bypass per-child contract validation</p>
+<p>Each child node inside <code>parallel()</code> returns a raw dict. Stroma does <strong>not</strong> validate individual child outputs against their declared contracts — only the merged dict is validated when it reaches the next sequential node's input contract. This means a child can return structurally invalid data that silently merges into the pipeline state. If you need per-child validation, run each child as a separate sequential node or add explicit checks inside the child function.</p>
+</div>
 <h3 id="stateless-runner">Stateless runner</h3>
 <p><code>CostTracker</code>, <code>RetryBudget</code>, and <code>ExecutionTrace</code> are created fresh per <code>run()</code> call. Calling <code>runner.run()</code> multiple times on the same instance does not accumulate state between runs.</p>
 <h3 id="structured-logging">Structured logging</h3>
