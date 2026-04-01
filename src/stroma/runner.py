@@ -1,5 +1,3 @@
-"""Pipeline runner with contract validation, retries, cost tracking, and checkpointing."""
-
 import asyncio
 import logging
 import random
@@ -30,13 +28,8 @@ logger = logging.getLogger(__name__)
 class RunConfig(BaseModel):
     """Configuration for a single pipeline run.
 
-    Attributes:
-        run_id: Unique identifier for this run. Auto-generated if not provided.
-        budget: Resource budget constraints for the run. Defaults to unlimited.
-        policy_map: Mapping from failure class to retry policy.
-        model_hints: Per-node model selection hints.
-        classifiers: Custom failure classifiers checked before built-in rules.
-        resume_from: Node ID to resume execution from (skips earlier nodes).
+    A `run_id` is auto-generated if not provided. Set `budget`, `policy_map`,
+    `model_hints`, `classifiers`, or `resume_from` to customize behavior.
     """
 
     run_id: str = Field(default_factory=lambda: str(uuid4()))
@@ -56,18 +49,16 @@ NodeFunc = Callable[[BaseModel], Awaitable[dict[str, Any]]]
 def stroma_node(node_id: str, contract: NodeContract) -> Callable[..., Any]:
     """Decorator that attaches contract metadata to an async node function.
 
-    Args:
-        node_id: Unique identifier for this node.
-        contract: The input/output contract for this node.
+    Binds *node_id* and *contract* as attributes on the decorated function,
+    returning a decorator that marks it as a stroma pipeline node.
 
-    Returns:
-        A decorator that marks the function as a stroma pipeline node.
+    ## Example
 
-    Example::
-
-        @stroma_node("extract", NodeContract(node_id="extract", input_schema=In, output_schema=Out))
-        async def extract(state: In) -> dict:
-            return {"url": state.url, "content": "..."}
+    ```python
+    @stroma_node("extract", NodeContract(node_id="extract", input_schema=In, output_schema=Out))
+    async def extract(state: In) -> dict:
+        return {"url": state.url, "content": "..."}
+    ```
     """
 
     def decorator(func: Any) -> Any:
@@ -86,18 +77,17 @@ class StromaRunner:
     """Orchestrates sequential node execution with reliability primitives.
 
     Runs a sequence of async node functions, applying contract validation,
-    retry policies, cost tracking, and checkpointing at each step.
+    retry policies, cost tracking, and checkpointing at each step. Requires
+    a `ContractRegistry` for input/output validation, a `CheckpointManager`
+    for persistence, and a `RunConfig` with budget, policies, and classifiers.
 
-    Args:
-        registry: Contract registry for input/output validation.
-        checkpoint_manager: Manager for saving and loading checkpoints.
-        config: Run configuration including budget, policies, and classifiers.
+    ## Example
 
-    Example::
-
-        runner = StromaRunner(registry, checkpoint_manager, config)
-        result = await runner.run([node1, node2], initial_state)
-        print(result.status, result.final_state)
+    ```python
+    runner = StromaRunner(registry, checkpoint_manager, config)
+    result = await runner.run([node1, node2], initial_state)
+    print(result.status, result.final_state)
+    ```
     """
 
     def __init__(self, registry: ContractRegistry, checkpoint_manager: CheckpointManager, config: RunConfig) -> None:
@@ -120,28 +110,24 @@ class StromaRunner:
     ) -> "StromaRunner":
         """Create a runner with sensible defaults — no boilerplate required.
 
-        Sets up an in-memory checkpoint store, unlimited budget, and default
-        retry policies. Override any of these via keyword arguments.
+        Sets up an `InMemoryStore`, unlimited `ExecutionBudget`, and
+        `default_policy_map()` retry policies. Pass *store*, *budget*,
+        *policy_map*, or *classifiers* to override any of these. Additional
+        keyword arguments are forwarded to `RunConfig`.
 
-        Args:
-            store: Checkpoint storage backend. Defaults to :class:`~stroma.checkpoint.InMemoryStore`.
-            budget: Resource budget. Defaults to :meth:`~stroma.cost.ExecutionBudget.unlimited`.
-            policy_map: Retry policies per failure class. Defaults to :func:`~stroma.failures.default_policy_map`.
-            classifiers: Custom failure classifiers. Defaults to empty list.
-            **config_kwargs: Additional keyword arguments passed to :class:`RunConfig`.
+        Returns a fully configured `StromaRunner` ready to use.
 
-        Returns:
-            A fully configured :class:`StromaRunner` ready to use.
+        ## Example
 
-        Example::
+        ```python
+        runner = StromaRunner.quick()
 
-            runner = StromaRunner.quick()
+        @runner.node("double", input=InputState, output=OutputState)
+        async def double(state: InputState) -> dict:
+            return {"result": state.value * 2}
 
-            @runner.node("double", input=InputState, output=OutputState)
-            async def double(state: InputState) -> dict:
-                return {"result": state.value * 2}
-
-            result = await runner.run([double], InputState(value=5))
+        result = await runner.run([double], InputState(value=5))
+        ```
         """
         from stroma.checkpoint import InMemoryStore
 
@@ -165,24 +151,20 @@ class StromaRunner:
     ) -> Callable[..., Any]:
         """Decorator that creates a contract, registers it, and marks the function as a node.
 
-        Combines :func:`stroma_node`, :class:`~stroma.contracts.NodeContract` creation,
-        and :meth:`~stroma.contracts.ContractRegistry.register` into a single step.
+        Combines `stroma_node`, `NodeContract` creation, and
+        `ContractRegistry.register` into a single step. Pass the *node_id*,
+        *input* schema, and *output* schema and the returned decorator handles
+        the rest.
 
-        Args:
-            node_id: Unique identifier for this node.
-            input: Pydantic model class for the node's input schema.
-            output: Pydantic model class for the node's output schema.
+        ## Example
 
-        Returns:
-            A decorator that registers the contract and marks the function as a pipeline node.
+        ```python
+        runner = StromaRunner.quick()
 
-        Example::
-
-            runner = StromaRunner.quick()
-
-            @runner.node("extract", input=Document, output=Entities)
-            async def extract(state: Document) -> dict:
-                return {"entities": ["Python", "Pydantic"]}
+        @runner.node("extract", input=Document, output=Entities)
+        async def extract(state: Document) -> dict:
+            return {"entities": ["Python", "Pydantic"]}
+        ```
         """
         contract = NodeContract(node_id=node_id, input_schema=input, output_schema=output)
         self.registry.register(contract)
@@ -197,12 +179,9 @@ class StromaRunner:
     async def run(self, node_sequence: list[NodeFunc], initial_state: BaseModel) -> ExecutionResult:
         """Execute a sequence of nodes with full reliability instrumentation.
 
-        Args:
-            node_sequence: Ordered list of async node functions to execute.
-            initial_state: The initial Pydantic model state to pass to the first node.
-
-        Returns:
-            An :class:`~stroma.trace.ExecutionResult` with final state, trace, and cost info.
+        Runs each node in *node_sequence* starting from *initial_state*,
+        returning an `ExecutionResult` with the final state, trace, and
+        cost info.
         """
         current_state = initial_state
         start_index = self._resolve_resume_index(node_sequence)

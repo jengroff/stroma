@@ -1,5 +1,3 @@
-"""Cost tracking and budget enforcement for pipeline execution."""
-
 from dataclasses import dataclass
 from typing import Literal
 
@@ -10,11 +8,8 @@ from pydantic import BaseModel
 class ModelHint:
     """Hint for model selection on a per-node basis.
 
-    Attributes:
-        node_id: Node this hint applies to.
-        preferred_model: Primary model identifier to use.
-        fallback_model: Model to fall back to if the preferred model is unavailable.
-        max_tokens: Optional token limit for this node's LLM call.
+    Binds a `node_id` to a `preferred_model` with an optional
+    `fallback_model` and per-node `max_tokens` limit.
     """
 
     node_id: str
@@ -26,20 +21,16 @@ class ModelHint:
 class ExecutionBudget(BaseModel):
     """Optional budget constraints for a pipeline run.
 
-    All fields are optional — ``None`` means no limit on that dimension.
+    All fields are optional — `None` means no limit on that dimension.
+    Set `max_tokens_total`, `max_cost_usd`, and/or `max_latency_ms` to
+    cap resource usage across all nodes.
 
-    Attributes:
-        max_tokens_total: Maximum total tokens across all nodes.
-        max_cost_usd: Maximum total cost in USD across all nodes.
-        max_latency_ms: Maximum total latency in milliseconds across all nodes.
+    ## Example
 
-    Example::
-
-        # No limits (default)
-        budget = ExecutionBudget.unlimited()
-
-        # Constrain tokens and cost
-        budget = ExecutionBudget(max_tokens_total=10_000, max_cost_usd=0.50)
+    ```python
+    budget = ExecutionBudget.unlimited()
+    budget = ExecutionBudget(max_tokens_total=10_000, max_cost_usd=0.50)
+    ```
     """
 
     max_tokens_total: int | None = None
@@ -56,11 +47,8 @@ class ExecutionBudget(BaseModel):
 class NodeUsage:
     """Observed resource usage for a single node execution.
 
-    Attributes:
-        node_id: The node that was executed.
-        tokens_used: Number of tokens consumed.
-        cost_usd: Cost in USD for this execution.
-        latency_ms: Wall-clock duration in milliseconds.
+    Records `tokens_used`, `cost_usd`, and `latency_ms` for the given
+    `node_id`.
     """
 
     node_id: str
@@ -72,11 +60,9 @@ class NodeUsage:
 class BudgetExceeded(Exception):
     """Raised when cumulative resource usage exceeds a budget limit.
 
-    Attributes:
-        dimension: Which budget dimension was exceeded (``"tokens"``, ``"cost"``, or ``"latency"``).
-        limit: The budget cap that was exceeded.
-        actual: The actual cumulative value that triggered the violation.
-        node_id: The node whose execution caused the budget to be exceeded.
+    Carries the `dimension` (`"tokens"`, `"cost"`, or `"latency"`), the
+    `limit` that was exceeded, the `actual` cumulative value, and the
+    `node_id` that triggered the violation.
     """
 
     def __init__(self, dimension: Literal["tokens", "cost", "latency"], limit: float, actual: float, node_id: str):
@@ -90,15 +76,17 @@ class BudgetExceeded(Exception):
 class CostTracker:
     """Accumulates per-node resource usage and checks it against budgets.
 
-    Usage is keyed by ``node_id`` and accumulated across multiple calls to
-    :meth:`record` for the same node.
+    Usage is keyed by `node_id` and accumulated across multiple calls to
+    `record()` for the same node.
 
-    Example::
+    ## Example
 
-        tracker = CostTracker()
-        tracker.record(NodeUsage(node_id="llm", tokens_used=500, cost_usd=0.01, latency_ms=200))
-        tracker.check_budget(ExecutionBudget(max_tokens_total=1000), "llm")
-        print(tracker.total_tokens)  # 500
+    ```python
+    tracker = CostTracker()
+    tracker.record(NodeUsage(node_id="llm", tokens_used=500, cost_usd=0.01, latency_ms=200))
+    tracker.check_budget(ExecutionBudget(max_tokens_total=1000), "llm")
+    print(tracker.total_tokens)  # 500
+    ```
     """
 
     def __init__(self) -> None:
@@ -120,8 +108,7 @@ class CostTracker:
     def check_budget(self, budget: ExecutionBudget, node_id: str) -> None:
         """Check aggregate usage across all nodes against the budget.
 
-        Raises:
-            BudgetExceeded: If any budget dimension is exceeded.
+        Raises `BudgetExceeded` if any dimension is exceeded.
         """
         if budget.max_tokens_total is not None and self.total_tokens > budget.max_tokens_total:
             raise BudgetExceeded("tokens", float(budget.max_tokens_total), float(self.total_tokens), node_id)

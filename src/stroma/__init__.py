@@ -1,9 +1,3 @@
-"""Stroma — framework-agnostic reliability primitives for agent pipelines.
-
-Provides contracts, checkpointing, cost tracking, failure classification,
-and execution tracing for building robust LLM agent systems.
-"""
-
 from stroma.checkpoint import CheckpointManager, CheckpointStore, InMemoryStore, RedisStore
 from stroma.contracts import BoundaryValidator, ContractRegistry, ContractViolation, NodeContract
 from stroma.cost import BudgetExceeded, CostTracker, ExecutionBudget, ModelHint, NodeUsage

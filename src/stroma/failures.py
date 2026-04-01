@@ -1,5 +1,3 @@
-"""Failure classification, retry policies, and retry budget tracking."""
-
 from collections import defaultdict
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -14,9 +12,9 @@ from stroma.cost import BudgetExceeded
 class FailureClass(StrEnum):
     """Classification of a pipeline failure for deciding retry behavior.
 
-    - ``RECOVERABLE``: The failure is transient and the node should be retried.
-    - ``TERMINAL``: The failure is permanent and the pipeline should stop.
-    - ``AMBIGUOUS``: The failure may or may not be recoverable; limited retries are attempted.
+    - `RECOVERABLE`: The failure is transient and the node should be retried.
+    - `TERMINAL`: The failure is permanent and the pipeline should stop.
+    - `AMBIGUOUS`: The failure may or may not be recoverable; limited retries are attempted.
     """
 
     RECOVERABLE = "RECOVERABLE"
@@ -27,18 +25,15 @@ class FailureClass(StrEnum):
 class FailurePolicy(BaseModel):
     """Retry behavior for a given failure class.
 
-    Attributes:
-        max_retries: Maximum number of retry attempts before giving up.
-        backoff_seconds: Maximum backoff duration in seconds (actual delay is jittered).
-        fallback_node_id: Optional node to route to instead of retrying.
+    Controls `max_retries`, `backoff_seconds` (jittered), and an optional
+    `fallback_node_id` to route to instead of retrying.
 
-    Example::
+    ## Example
 
-        # Aggressive retries for recoverable errors
-        policy = FailurePolicy(max_retries=5, backoff_seconds=2.0)
-
-        # No retries for terminal errors
-        policy = FailurePolicy(max_retries=0, backoff_seconds=0.0)
+    ```python
+    policy = FailurePolicy(max_retries=5, backoff_seconds=2.0)
+    policy = FailurePolicy(max_retries=0, backoff_seconds=0.0)
+    ```
     """
 
     max_retries: int = 3
@@ -52,9 +47,9 @@ PolicyMap = dict[FailureClass, FailurePolicy]
 def default_policy_map() -> PolicyMap:
     """Return the default retry policies for each failure class.
 
-    - ``RECOVERABLE``: 3 retries, 1s backoff
-    - ``TERMINAL``: 0 retries, no backoff
-    - ``AMBIGUOUS``: 1 retry, 0.5s backoff
+    - `RECOVERABLE`: 3 retries, 1s backoff
+    - `TERMINAL`: 0 retries, no backoff
+    - `AMBIGUOUS`: 1 retry, 0.5s backoff
     """
     return {
         FailureClass.RECOVERABLE: FailurePolicy(max_retries=3, backoff_seconds=1.0),
@@ -67,10 +62,8 @@ def default_policy_map() -> PolicyMap:
 class NodeContext:
     """Context passed to failure classifiers for making classification decisions.
 
-    Attributes:
-        node_id: The node that raised the exception.
-        attempt: The attempt number (1-based) when the failure occurred.
-        run_id: The pipeline run identifier.
+    Carries the `node_id` that raised, the 1-based `attempt` number, and
+    the `run_id` of the pipeline.
     """
 
     node_id: str
@@ -85,22 +78,14 @@ Classifier = Callable[[Exception, NodeContext], FailureClass | None]
 def classify(exc: Exception, context: NodeContext, classifiers: list[Classifier] | None = None) -> FailureClass:
     """Determine the failure class of an exception.
 
-    Custom classifiers are checked first in order. If none return a result,
+    Custom *classifiers* are checked first in order. If none return a result,
     built-in rules apply:
 
-    - :class:`~stroma.contracts.ContractViolation` → ``TERMINAL``
-    - :class:`~stroma.cost.BudgetExceeded` → ``RECOVERABLE``
-    - :class:`TimeoutError` → ``RECOVERABLE``
-    - :class:`ValueError` → ``AMBIGUOUS``
-    - Everything else → ``AMBIGUOUS``
-
-    Args:
-        exc: The exception to classify.
-        context: Execution context at the time of failure.
-        classifiers: Optional list of custom classifiers to check first.
-
-    Returns:
-        The determined failure class.
+    - `ContractViolation` → `TERMINAL`
+    - `BudgetExceeded` → `RECOVERABLE`
+    - `TimeoutError` → `RECOVERABLE`
+    - `ValueError` → `AMBIGUOUS`
+    - Everything else → `AMBIGUOUS`
     """
     if classifiers:
         for classifier in classifiers:
@@ -130,5 +115,5 @@ class RetryBudget:
         return self._counts[(run_id, node_id)]
 
     def exhausted(self, run_id: str, node_id: str, policy: FailurePolicy) -> bool:
-        """Return ``True`` if the retry count has reached the policy's max_retries."""
+        """Return `True` if the retry count has reached the policy's `max_retries`."""
         return self._counts[(run_id, node_id)] >= policy.max_retries

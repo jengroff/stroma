@@ -1,5 +1,3 @@
-"""LangGraph adapter for applying stroma contract validation to graph nodes."""
-
 import asyncio
 import importlib
 from collections.abc import Callable
@@ -13,11 +11,9 @@ from stroma.contracts import BoundaryValidator, ContractRegistry, NodeContract
 def extract_state_dict(state: Any) -> dict[str, Any]:
     """Convert a LangGraph state object to a plain dict.
 
-    Supports dicts, Pydantic models, objects with a ``.dict()`` method,
-    and plain objects with ``__dict__``.
-
-    Raises:
-        TypeError: If the state cannot be converted to a dict.
+    Supports dicts, Pydantic models, objects with a `.dict()` method,
+    and plain objects with `__dict__`. Raises `TypeError` if the state
+    cannot be converted.
     """
     if isinstance(state, dict):
         return dict(state)
@@ -35,9 +31,8 @@ def extract_state_dict(state: Any) -> dict[str, Any]:
 def stroma_langgraph_node(node_id: str, contract: NodeContract) -> Callable[..., Any]:
     """Decorator that attaches stroma contract metadata to a LangGraph node function.
 
-    Args:
-        node_id: Unique identifier for this node.
-        contract: The input/output contract for this node.
+    Binds *node_id* and *contract* as attributes on the decorated function so
+    `LangGraphAdapter` can discover and validate it.
     """
 
     def decorator(fn: Any) -> Any:
@@ -55,9 +50,8 @@ armature_langgraph_node = stroma_langgraph_node
 class LangGraphAdapter:
     """Wraps a LangGraph graph to apply stroma contract validation on each node.
 
-    Args:
-        registry: Contract registry for validation.
-        runner: The stroma runner instance (for future use with cost/trace integration).
+    Takes a `ContractRegistry` for validation and a runner instance for
+    future cost/trace integration.
     """
 
     def __init__(self, registry: ContractRegistry, runner: Any) -> None:

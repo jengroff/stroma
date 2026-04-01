@@ -1,5 +1,3 @@
-"""Contract definitions and validation for pipeline nodes."""
-
 from typing import Any, Literal
 
 from pydantic import BaseModel, ValidationError
@@ -8,20 +6,20 @@ from pydantic import BaseModel, ValidationError
 class NodeContract(BaseModel):
     """Schema contract binding a node to its expected input and output types.
 
-    Attributes:
-        node_id: Unique identifier for the node this contract governs.
-        input_schema: Pydantic model class that incoming state must conform to.
-        output_schema: Pydantic model class that outgoing state must conform to.
+    Maps a `node_id` to its `input_schema` and `output_schema` Pydantic model
+    classes that state must conform to at each boundary.
 
-    Example::
+    ## Example
 
-        class Query(BaseModel):
-            text: str
+    ```python
+    class Query(BaseModel):
+        text: str
 
-        class Result(BaseModel):
-            urls: list[str]
+    class Result(BaseModel):
+        urls: list[str]
 
-        contract = NodeContract(node_id="search", input_schema=Query, output_schema=Result)
+    contract = NodeContract(node_id="search", input_schema=Query, output_schema=Result)
+    ```
     """
 
     node_id: str
@@ -32,11 +30,8 @@ class NodeContract(BaseModel):
 class ContractViolation(Exception):
     """Raised when node input or output fails schema validation.
 
-    Attributes:
-        node_id: The node whose contract was violated.
-        direction: Whether the violation occurred on ``"input"`` or ``"output"``.
-        raw: The raw dict that failed validation.
-        errors: List of Pydantic validation error details.
+    Carries the `node_id`, `direction` (`"input"` or `"output"`), the `raw`
+    dict that failed, and a list of Pydantic validation `errors`.
     """
 
     def __init__(self, node_id: str, direction: Literal["input", "output"], raw: dict[str, Any], errors: list[Any]):
@@ -57,16 +52,9 @@ class BoundaryValidator:
     def __call__(self, contract: NodeContract, direction: Literal["input", "output"], raw: dict[str, Any]) -> BaseModel:
         """Validate *raw* against the appropriate schema of *contract*.
 
-        Args:
-            contract: The node contract containing the schema.
-            direction: ``"input"`` or ``"output"`` — selects which schema to validate against.
-            raw: The dict to validate.
-
-        Returns:
-            A validated Pydantic model instance.
-
-        Raises:
-            ContractViolation: If validation fails.
+        Selects the input or output schema based on *direction* and returns
+        a validated Pydantic model instance. Raises `ContractViolation` on
+        validation failure.
         """
         schema = contract.input_schema if direction == "input" else contract.output_schema
         try:
@@ -78,14 +66,15 @@ class BoundaryValidator:
 class ContractRegistry:
     """Registry mapping node IDs to their contracts with built-in validation.
 
-    Example::
+    ## Example
 
-        registry = ContractRegistry()
-        registry.register(NodeContract(node_id="search", input_schema=Query, output_schema=Result))
+    ```python
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="search", input_schema=Query, output_schema=Result))
 
-        # Validate raw data against a node's schema
-        validated_input = registry.validate_input("search", {"text": "python"})
-        validated_output = registry.validate_output("search", {"urls": ["https://..."]})
+    validated_input = registry.validate_input("search", {"text": "python"})
+    validated_output = registry.validate_output("search", {"urls": ["https://..."]})
+    ```
     """
 
     def __init__(self) -> None:
@@ -97,11 +86,7 @@ class ContractRegistry:
         self._contracts[contract.node_id] = contract
 
     def get(self, node_id: str) -> NodeContract:
-        """Return the contract for *node_id*.
-
-        Raises:
-            KeyError: If no contract is registered for *node_id*.
-        """
+        """Return the contract for *node_id*, or raise `KeyError` if not registered."""
         return self._contracts[node_id]
 
     def validate_input(self, node_id: str, raw: dict[str, Any]) -> BaseModel:

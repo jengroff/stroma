@@ -1,5 +1,3 @@
-"""Execution tracing and result types for pipeline runs."""
-
 import dataclasses
 import json
 from collections.abc import Iterator
@@ -17,16 +15,10 @@ from stroma.failures import FailureClass
 class TraceEvent:
     """A single recorded execution attempt for a node.
 
-    Attributes:
-        node_id: The node that was executed.
-        run_id: The pipeline run this event belongs to.
-        attempt: The attempt number (1-based).
-        timestamp_utc: When the attempt started.
-        input_state: The input dict passed to the node.
-        output_state: The output dict returned, or ``None`` on failure.
-        duration_ms: Wall-clock duration in milliseconds.
-        failure: The failure classification, or ``None`` on success.
-        failure_message: Human-readable failure description, or ``None`` on success.
+    Captures the `node_id`, `run_id`, 1-based `attempt` number,
+    `timestamp_utc`, `input_state`, and `output_state` (or `None` on
+    failure). On failure, `failure` holds the `FailureClass` and
+    `failure_message` provides a human-readable description.
     """
 
     node_id: str
@@ -41,23 +33,25 @@ class TraceEvent:
 
 
 class ExecutionTrace:
-    """Ordered collection of :class:`TraceEvent` instances for a pipeline run.
+    """Ordered collection of `TraceEvent` instances for a pipeline run.
 
     Provides filtering, diffing, serialization, and iteration over events.
 
-    Example::
+    ## Example
 
-        result = await runner.run(nodes, state)
+    ```python
+    result = await runner.run(nodes, state)
 
-        # Inspect failures
-        for event in result.trace.failures():
-            print(f"{event.node_id}: {event.failure_message}")
+    # Inspect failures
+    for event in result.trace.failures():
+        print(f"{event.node_id}: {event.failure_message}")
 
-        # Compare two traces
-        diffs = trace_a.diff(trace_b)
+    # Compare two traces
+    diffs = trace_a.diff(trace_b)
 
-        # Export to JSON
-        json_str = result.trace.to_json()
+    # Export to JSON
+    json_str = result.trace.to_json()
+    ```
     """
 
     def __init__(self) -> None:
@@ -135,10 +129,10 @@ class ExecutionTrace:
 class RunStatus(StrEnum):
     """Terminal status of a pipeline run.
 
-    - ``COMPLETED``: All nodes executed successfully.
-    - ``FAILED``: A terminal failure stopped the pipeline.
-    - ``PARTIAL``: Retries were exhausted on a recoverable/ambiguous failure.
-    - ``RESUMED``: The pipeline completed after resuming from a checkpoint.
+    - `COMPLETED`: All nodes executed successfully.
+    - `FAILED`: A terminal failure stopped the pipeline.
+    - `PARTIAL`: Retries were exhausted on a recoverable/ambiguous failure.
+    - `RESUMED`: The pipeline completed after resuming from a checkpoint.
     """
 
     COMPLETED = "COMPLETED"
@@ -151,13 +145,10 @@ class RunStatus(StrEnum):
 class ExecutionResult:
     """Final output of a pipeline run.
 
-    Attributes:
-        run_id: The unique identifier for this run.
-        status: Terminal status of the run.
-        final_state: The last valid state produced, or the initial state on early failure.
-        trace: Complete execution trace with all attempts.
-        total_cost_usd: Cumulative cost in USD across all nodes.
-        total_tokens: Cumulative token usage across all nodes.
+    Contains the `run_id`, terminal `status`, `final_state` (the last valid
+    state produced, or the initial state on early failure), the complete
+    `trace` with all attempts, and aggregate `total_cost_usd` /
+    `total_tokens` across all nodes.
     """
 
     run_id: str

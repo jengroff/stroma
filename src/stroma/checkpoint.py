@@ -1,5 +1,3 @@
-"""Checkpoint storage and resumption for pipeline state."""
-
 from __future__ import annotations
 
 import importlib
@@ -12,8 +10,8 @@ from pydantic import BaseModel
 class CheckpointStore(Protocol):
     """Protocol for checkpoint storage backends.
 
-    Implementations must provide ``save``, ``load``, and ``delete``.
-    Optionally implement ``save_typed`` and ``load_typed`` for schema-aware
+    Implementations must provide `save`, `load`, and `delete`.
+    Optionally implement `save_typed` and `load_typed` for schema-aware
     storage and retrieval.
     """
 
@@ -22,7 +20,7 @@ class CheckpointStore(Protocol):
         ...
 
     def load(self, run_id: str, node_id: str) -> BaseModel | None:
-        """Load previously saved state, or return ``None`` if not found."""
+        """Load previously saved state, or return `None` if not found."""
         ...
 
     def delete(self, run_id: str) -> None:
@@ -43,11 +41,13 @@ class InMemoryStore:
     State is serialized to JSON internally so that round-trip behavior
     matches persistent backends.
 
-    Example::
+    ## Example
 
-        store = InMemoryStore()
-        store.save("run-1", "node-1", MyModel(value=42))
-        loaded = store.load("run-1", "node-1")
+    ```python
+    store = InMemoryStore()
+    store.save("run-1", "node-1", MyModel(value=42))
+    loaded = store.load("run-1", "node-1")
+    ```
     """
 
     def __init__(self) -> None:
@@ -93,12 +93,12 @@ class InMemoryStore:
 
 
 def _schema_ref(schema: type[BaseModel]) -> str:
-    """Return a ``module:qualname`` string reference for a schema class."""
+    """Return a `module:qualname` string reference for a schema class."""
     return f"{schema.__module__}:{schema.__qualname__}"
 
 
 def _resolve_schema(ref: str) -> type[BaseModel]:
-    """Resolve a ``module:qualname`` reference back to a schema class."""
+    """Resolve a `module:qualname` reference back to a schema class."""
     module_name, qualname = ref.split(":", 1)
     module = importlib.import_module(module_name)
     result: Any = module
@@ -112,16 +112,17 @@ def _resolve_schema(ref: str) -> type[BaseModel]:
 class RedisStore:
     """Redis-backed checkpoint store for durable, distributed pipelines.
 
-    Requires the ``redis`` extra: ``pip install stroma[redis]``.
+    Requires the `redis` extra: `pip install stroma[redis]`.
 
-    Args:
-        redis_url: Redis connection URL (e.g. ``redis://localhost:6379``).
-        ttl_seconds: Time-to-live for checkpoint keys. Defaults to 3600 (1 hour).
+    Pass a `redis_url` (e.g. `redis://localhost:6379`) and an optional
+    `ttl_seconds` (defaults to 3600) to control key expiration.
 
-    Example::
+    ## Example
 
-        store = RedisStore("redis://localhost:6379", ttl_seconds=7200)
-        manager = CheckpointManager(store)
+    ```python
+    store = RedisStore("redis://localhost:6379", ttl_seconds=7200)
+    manager = CheckpointManager(store)
+    ```
     """
 
     def __init__(self, redis_url: str, ttl_seconds: int = 3600) -> None:
@@ -182,17 +183,16 @@ class RedisStore:
 class CheckpointManager:
     """High-level checkpoint operations: save, resume, and clear.
 
-    Wraps a :class:`CheckpointStore` and handles schema-aware loading
-    when the underlying store supports it.
+    Wraps a `CheckpointStore` and handles schema-aware loading when the
+    underlying store supports it.
 
-    Args:
-        store: The storage backend to use.
+    ## Example
 
-    Example::
-
-        manager = CheckpointManager(InMemoryStore())
-        manager.checkpoint("run-1", "node-1", output_state)
-        resumed = manager.resume("run-1", "node-1", OutputSchema)
+    ```python
+    manager = CheckpointManager(InMemoryStore())
+    manager.checkpoint("run-1", "node-1", output_state)
+    resumed = manager.resume("run-1", "node-1", OutputSchema)
+    ```
     """
 
     def __init__(self, store: CheckpointStore) -> None:
@@ -205,11 +205,9 @@ class CheckpointManager:
     def resume(self, run_id: str, node_id: str, schema: type[BaseModel]) -> BaseModel | None:
         """Load a checkpoint, coercing to *schema* if the store supports typed loading.
 
-        Returns ``None`` if no checkpoint exists.
-
-        Raises:
-            TypeError: If the loaded state does not match *schema* and the store
-                does not support typed loading.
+        Returns `None` if no checkpoint exists. Raises `TypeError` if the
+        loaded state does not match *schema* and the store does not support
+        typed loading.
         """
         load_typed = getattr(self._store, "load_typed", None)
         if load_typed is not None:
