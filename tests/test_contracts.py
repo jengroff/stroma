@@ -45,6 +45,10 @@ def test_input_violation(registry):
     assert exc.raw == raw
     assert isinstance(exc.errors, list)
     assert any(error["loc"] == ("text",) for error in exc.errors)
+    violation_str = str(exc)
+    assert "node1" in violation_str
+    assert "input" in violation_str
+    assert "text" in violation_str or "count" in violation_str
 
 
 def test_output_violation(registry):
@@ -57,6 +61,9 @@ def test_output_violation(registry):
     assert exc.raw == raw
     assert isinstance(exc.errors, list)
     assert any(error["loc"] in {("success",), ("detail",)} for error in exc.errors)
+    violation_str = str(exc)
+    assert "node1" in violation_str
+    assert "output" in violation_str
 
 
 def test_missing_node_raises_key_error():
@@ -72,3 +79,10 @@ def test_round_trip_dict_model_dict(registry):
     model2 = InputModel.model_validate(dumped)
     assert dumped == raw
     assert isinstance(model2, InputModel)
+
+
+def test_contract_violation_str_with_no_errors():
+    exc = ContractViolation("mynode", "output", {}, [])
+    s = str(exc)
+    assert "mynode" in s
+    assert "output" in s

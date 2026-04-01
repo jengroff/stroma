@@ -202,3 +202,26 @@ def test_replace_node_raises_for_unknown_graph(registry):
     adapter = LangGraphAdapter(registry, object())
     with pytest.raises(AttributeError, match="Unable to replace"):
         adapter._replace_node(NoReplace(), "test", lambda: None)
+
+
+def test_wrap_node_raises_type_error_for_undecorated_function(registry):
+    adapter = LangGraphAdapter(registry, object())
+
+    async def undecorated(state):
+        return {"y": 1}
+
+    with pytest.raises(TypeError, match="undecorated"):
+        adapter._wrap_node(undecorated)
+
+
+def test_wrap_node_error_message_contains_function_name(registry):
+    adapter = LangGraphAdapter(registry, object())
+
+    async def my_special_node(state):
+        return {}
+
+    with pytest.raises(TypeError) as exc_info:
+        adapter._wrap_node(my_special_node)
+
+    assert "my_special_node" in str(exc_info.value)
+    assert "stroma_langgraph_node" in str(exc_info.value)

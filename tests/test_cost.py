@@ -1,10 +1,12 @@
 import pytest
 
 from stroma.cost import (
+    KNOWN_MODELS,
     BudgetExceeded,
     CostTracker,
     ExecutionBudget,
     NodeUsage,
+    estimate_cost_usd,
 )
 
 
@@ -76,3 +78,22 @@ def test_summary_keyed_by_node_id():
     summary = tracker.summary()
     assert set(summary) == {"node1", "node2"}
     assert summary["node2"].tokens_used == 5
+
+
+def test_estimate_cost_known_model():
+    cost = estimate_cost_usd("gpt-4o", input_tokens=1_000_000, output_tokens=0)
+    assert cost == pytest.approx(2.50)
+
+
+def test_estimate_cost_known_model_output_tokens():
+    cost = estimate_cost_usd("gpt-4o-mini", input_tokens=0, output_tokens=1_000_000)
+    assert cost == pytest.approx(0.60)
+
+
+def test_estimate_cost_unknown_model_returns_zero():
+    assert estimate_cost_usd("unknown-model-xyz", 100, 100) == 0.0
+
+
+def test_known_models_registry_is_not_empty():
+    assert len(KNOWN_MODELS) > 0
+    assert all(len(v) == 2 for v in KNOWN_MODELS.values())

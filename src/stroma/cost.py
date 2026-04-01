@@ -3,6 +3,31 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+KNOWN_MODELS: dict[str, tuple[float, float]] = {
+    # model_id: (input_price_per_1m_tokens, output_price_per_1m_tokens) in USD
+    "gpt-4o": (2.50, 10.00),
+    "gpt-4o-mini": (0.15, 0.60),
+    "gpt-4-turbo": (10.00, 30.00),
+    "claude-opus-4-6": (15.00, 75.00),
+    "claude-sonnet-4-6": (3.00, 15.00),
+    "claude-haiku-4-5": (0.80, 4.00),
+    "gemini-1.5-pro": (3.50, 10.50),
+    "gemini-1.5-flash": (0.35, 1.05),
+}
+
+
+def estimate_cost_usd(model: str, input_tokens: int, output_tokens: int = 0) -> float:
+    """Estimate the USD cost for a given model and token counts.
+
+    Looks up the model in `KNOWN_MODELS` and calculates cost based on
+    per-million-token pricing. Returns `0.0` for unknown models.
+    """
+    prices = KNOWN_MODELS.get(model)
+    if prices is None:
+        return 0.0
+    input_price, output_price = prices
+    return (input_tokens * input_price + output_tokens * output_price) / 1_000_000
+
 
 @dataclass
 class ModelHint:
@@ -55,6 +80,8 @@ class NodeUsage:
     tokens_used: int
     cost_usd: float
     latency_ms: int
+    model: str | None = None
+    output_tokens: int = 0
 
 
 class BudgetExceeded(Exception):

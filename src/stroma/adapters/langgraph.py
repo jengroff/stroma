@@ -107,7 +107,12 @@ class LangGraphAdapter:
 
     def _wrap_node(self, fn: Any) -> Any:
         """Create a validating async wrapper around a node function."""
-        contract = getattr(fn, "_stroma_contract", None) or fn._armature_contract
+        contract = getattr(fn, "_stroma_contract", None) or getattr(fn, "_armature_contract", None)
+        if contract is None:
+            raise TypeError(
+                f"Function '{getattr(fn, '__name__', repr(fn))}' is missing a stroma contract. "
+                "Did you forget the @stroma_langgraph_node decorator?"
+            )
 
         async def wrapper(state: Any) -> Any:
             input_dict = extract_state_dict(state)

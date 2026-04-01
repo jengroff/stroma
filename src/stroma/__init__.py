@@ -1,6 +1,22 @@
-from stroma.checkpoint import CheckpointManager, CheckpointStore, InMemoryStore, RedisStore
+from stroma.checkpoint import (
+    AsyncCheckpointStore,
+    AsyncInMemoryStore,
+    CheckpointManager,
+    CheckpointStore,
+    InMemoryStore,
+    RedisStore,
+    SyncRedisStore,
+)
 from stroma.contracts import BoundaryValidator, ContractRegistry, ContractViolation, NodeContract
-from stroma.cost import BudgetExceeded, CostTracker, ExecutionBudget, ModelHint, NodeUsage
+from stroma.cost import (
+    KNOWN_MODELS,
+    BudgetExceeded,
+    CostTracker,
+    ExecutionBudget,
+    ModelHint,
+    NodeUsage,
+    estimate_cost_usd,
+)
 from stroma.failures import (
     Classifier,
     FailureClass,
@@ -10,27 +26,25 @@ from stroma.failures import (
     classify,
     default_policy_map,
 )
-from stroma.runner import ArmatureRunner, RunConfig, StromaRunner, armature_node, stroma_node
+from stroma.runner import ArmatureRunner, NodeHooks, RunConfig, StromaRunner, armature_node, parallel, stroma_node
 from stroma.trace import ExecutionResult, ExecutionTrace, RunStatus, TraceEvent
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 __all__ = [
-    "ArmatureRunner",  # backwards-compatible alias
-    # Contracts
+    "KNOWN_MODELS",
+    "ArmatureRunner",
+    "AsyncCheckpointStore",
+    "AsyncInMemoryStore",
     "BoundaryValidator",
-    # Cost
     "BudgetExceeded",
-    # Checkpointing
     "CheckpointManager",
     "CheckpointStore",
-    # Failures
     "Classifier",
     "ContractRegistry",
     "ContractViolation",
     "CostTracker",
     "ExecutionBudget",
-    # Trace
     "ExecutionResult",
     "ExecutionTrace",
     "FailureClass",
@@ -39,16 +53,19 @@ __all__ = [
     "ModelHint",
     "NodeContext",
     "NodeContract",
+    "NodeHooks",
     "NodeUsage",
     "RedisStore",
     "RetryBudget",
     "RunConfig",
     "RunStatus",
-    # Runner
     "StromaRunner",
+    "SyncRedisStore",
     "TraceEvent",
-    "armature_node",  # backwards-compatible alias
+    "armature_node",
     "classify",
     "default_policy_map",
+    "estimate_cost_usd",
+    "parallel",
     "stroma_node",
 ]

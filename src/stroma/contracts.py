@@ -41,6 +41,14 @@ class ContractViolation(Exception):
         self.errors = errors
         super().__init__(f"Contract violation for {node_id} ({direction})")
 
+    def __str__(self) -> str:
+        error_lines = "; ".join(f"{'.'.join(str(loc) for loc in e['loc'])}: {e['msg']}" for e in self.errors[:5])
+        if len(self.errors) > 5:
+            error_lines += f"; ... and {len(self.errors) - 5} more"
+        return f"Contract violation for '{self.node_id}' ({self.direction})" + (
+            f": {error_lines}" if error_lines else ""
+        )
+
 
 class BoundaryValidator:
     """Callable that validates a raw dict against a contract's input or output schema.
