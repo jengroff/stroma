@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://jengroff.github.io/stroma/tutorial/">
+        <link rel="canonical" href="https://jengroff.github.io/stroma/tutorial/hooks/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../tracing/">
       
       
-        <link rel="next" href="first-pipeline/">
+        <link rel="next" href="../shared-context/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Getting Started - Stroma</title>
+        <title>Observability Hooks - Stroma</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorial" class="md-skip">
+        <a href="#observability-hooks" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Stroma" class="md-header__button md-logo" aria-label="Stroma" data-md-component="logo">
+    <a href="../.." title="Stroma" class="md-header__button md-logo" aria-label="Stroma" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting Started
+              Observability Hooks
             
           </span>
         </div>
@@ -211,7 +211,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -234,7 +234,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -252,7 +252,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../concepts/" class="md-tabs__link">
+      <a href="../../concepts/" class="md-tabs__link">
         
   
   
@@ -273,7 +273,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../api/runner/" class="md-tabs__link">
+        <a href="../../api/runner/" class="md-tabs__link">
           
   
   
@@ -307,7 +307,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Stroma" class="md-nav__button md-logo" aria-label="Stroma" data-md-component="logo">
+    <a href="../.." title="Stroma" class="md-nav__button md-logo" aria-label="Stroma" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -337,7 +337,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -418,37 +418,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Getting Started
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -464,59 +437,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-youll-learn" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What you'll learn
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prerequisites
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#install" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -529,7 +449,7 @@
   
   
     <li class="md-nav__item">
-      <a href="first-pipeline/" class="md-nav__link">
+      <a href="../first-pipeline/" class="md-nav__link">
         
   
   
@@ -557,7 +477,7 @@
   
   
     <li class="md-nav__item">
-      <a href="adding-contracts/" class="md-nav__link">
+      <a href="../adding-contracts/" class="md-nav__link">
         
   
   
@@ -585,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="retry-and-failures/" class="md-nav__link">
+      <a href="../retry-and-failures/" class="md-nav__link">
         
   
   
@@ -613,7 +533,7 @@
   
   
     <li class="md-nav__item">
-      <a href="checkpointing/" class="md-nav__link">
+      <a href="../checkpointing/" class="md-nav__link">
         
   
   
@@ -641,7 +561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cost-control/" class="md-nav__link">
+      <a href="../cost-control/" class="md-nav__link">
         
   
   
@@ -669,7 +589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tracing/" class="md-nav__link">
+      <a href="../tracing/" class="md-nav__link">
         
   
   
@@ -694,10 +614,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="hooks/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability Hooks
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -713,6 +660,92 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-three-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The three hooks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tracking-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tracking failures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrating-with-opentelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrating with OpenTelemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recap
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -725,7 +758,7 @@
   
   
     <li class="md-nav__item">
-      <a href="shared-context/" class="md-nav__link">
+      <a href="../shared-context/" class="md-nav__link">
         
   
   
@@ -753,7 +786,7 @@
   
   
     <li class="md-nav__item">
-      <a href="parallel/" class="md-nav__link">
+      <a href="../parallel/" class="md-nav__link">
         
   
   
@@ -781,7 +814,7 @@
   
   
     <li class="md-nav__item">
-      <a href="langgraph/" class="md-nav__link">
+      <a href="../langgraph/" class="md-nav__link">
         
   
   
@@ -816,7 +849,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/" class="md-nav__link">
+      <a href="../../concepts/" class="md-nav__link">
         
   
   
@@ -897,7 +930,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/runner/" class="md-nav__link">
+      <a href="../../api/runner/" class="md-nav__link">
         
   
   
@@ -925,7 +958,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/contracts/" class="md-nav__link">
+      <a href="../../api/contracts/" class="md-nav__link">
         
   
   
@@ -953,7 +986,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/checkpoint/" class="md-nav__link">
+      <a href="../../api/checkpoint/" class="md-nav__link">
         
   
   
@@ -981,7 +1014,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/cost/" class="md-nav__link">
+      <a href="../../api/cost/" class="md-nav__link">
         
   
   
@@ -1009,7 +1042,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/failures/" class="md-nav__link">
+      <a href="../../api/failures/" class="md-nav__link">
         
   
   
@@ -1037,7 +1070,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/trace/" class="md-nav__link">
+      <a href="../../api/trace/" class="md-nav__link">
         
   
   
@@ -1065,7 +1098,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/langgraph/" class="md-nav__link">
+      <a href="../../api/langgraph/" class="md-nav__link">
         
   
   
@@ -1120,10 +1153,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-youll-learn" class="md-nav__link">
+  <a href="#the-three-hooks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What you'll learn
+        The three hooks
       
     </span>
   </a>
@@ -1131,10 +1164,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#basic-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Basic usage
       
     </span>
   </a>
@@ -1142,10 +1175,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#install" class="md-nav__link">
+  <a href="#tracking-failures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install
+        Tracking failures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrating-with-opentelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrating with OpenTelemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recap
       
     </span>
   </a>
@@ -1172,73 +1238,131 @@
   
 
 
-<h1 id="tutorial">Tutorial</h1>
-<p>Learn to build reliable agent pipelines with Stroma, one concept at a time.</p>
-<p>Each page builds on the previous one, but they're also designed to work standalone — jump to any topic that interests you.</p>
-<h2 id="what-youll-learn">What you'll learn</h2>
+<h1 id="observability-hooks">Observability Hooks</h1>
+<p>Stroma provides async callbacks at node execution boundaries for plugging in external telemetry — Datadog, Prometheus, OpenTelemetry, Sentry, or any monitoring system.</p>
+<h2 id="the-three-hooks">The three hooks</h2>
 <table>
 <thead>
 <tr>
-<th>Page</th>
-<th>What you'll build</th>
+<th>Hook</th>
+<th>Fired when</th>
+<th>Arguments</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="first-pipeline/">Your First Pipeline</a></td>
-<td>A working pipeline in under 10 lines</td>
+<td><code>on_node_start</code></td>
+<td>Before the node function runs</td>
+<td><code>run_id</code>, <code>node_id</code>, <code>input_state_dict</code></td>
 </tr>
 <tr>
-<td><a href="adding-contracts/">Adding Contracts</a></td>
-<td>Input/output validation at every node boundary</td>
+<td><code>on_node_success</code></td>
+<td>After a node completes and passes validation</td>
+<td><code>run_id</code>, <code>node_id</code>, <code>output_state_dict</code>, <code>tokens_used</code></td>
 </tr>
 <tr>
-<td><a href="retry-and-failures/">Retry &amp; Failures</a></td>
-<td>Automatic failure classification and retry policies</td>
-</tr>
-<tr>
-<td><a href="checkpointing/">Checkpointing</a></td>
-<td>Save progress and resume after crashes</td>
-</tr>
-<tr>
-<td><a href="cost-control/">Cost Control</a></td>
-<td>Token, dollar, and latency budgets</td>
-</tr>
-<tr>
-<td><a href="tracing/">Tracing &amp; Debugging</a></td>
-<td>Inspect every execution attempt</td>
-</tr>
-<tr>
-<td><a href="hooks/">Observability Hooks</a></td>
-<td>Plug in external telemetry at node boundaries</td>
-</tr>
-<tr>
-<td><a href="shared-context/">Shared Context</a></td>
-<td>Share resources across nodes without globals</td>
-</tr>
-<tr>
-<td><a href="parallel/">Parallel Execution</a></td>
-<td>Run independent nodes concurrently</td>
-</tr>
-<tr>
-<td><a href="langgraph/">LangGraph Integration</a></td>
-<td>Apply contracts to existing LangGraph graphs</td>
+<td><code>on_node_failure</code></td>
+<td>After a node raises an exception</td>
+<td><code>run_id</code>, <code>node_id</code>, <code>exc</code>, <code>failure_class</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="prerequisites">Prerequisites</h2>
-<ul>
-<li>Python 3.12+</li>
-<li>Basic familiarity with <code>async</code>/<code>await</code></li>
-<li><a href="https://docs.pydantic.dev">Pydantic</a> (installed automatically with Stroma)</li>
-</ul>
-<h2 id="install">Install</h2>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>stroma
+<h2 id="basic-usage">Basic usage</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeHooks</span><span class="p">,</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StromaRunner</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Input</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Output</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">result</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_start</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">input_state</span><span class="p">):</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">input_state</span><span class="p">))</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">output_state</span><span class="p">,</span> <span class="n">tokens_used</span><span class="p">):</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">output_state</span><span class="p">,</span> <span class="n">tokens_used</span><span class="p">))</span>
+
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
+    <span class="n">hooks</span><span class="o">=</span><span class="n">NodeHooks</span><span class="p">(</span>
+        <span class="n">on_node_start</span><span class="o">=</span><span class="n">on_start</span><span class="p">,</span>
+        <span class="n">on_node_success</span><span class="o">=</span><span class="n">on_success</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Input</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Output</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">}</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">double</span><span class="p">],</span> <span class="n">Input</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>  <span class="c1"># COMPLETED</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+    <span class="c1"># [(&#39;start&#39;, &#39;double&#39;, {&#39;value&#39;: 5}), (&#39;success&#39;, &#39;double&#39;, {&#39;result&#39;: 10}, 0)]</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Every code example on these pages is a complete, runnable script. Copy any snippet, save it as a <code>.py</code> file, and run it.</p>
-</div>
+<h2 id="tracking-failures">Tracking failures</h2>
+<p>The <code>on_node_failure</code> hook receives the exception and its <code>FailureClass</code>, so you can route different failure types to different monitoring:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">FailureClass</span><span class="p">,</span> <span class="n">NodeHooks</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_failure</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">failure_class</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">failure_class</span> <span class="o">==</span> <span class="n">FailureClass</span><span class="o">.</span><span class="n">TERMINAL</span><span class="p">:</span>
+        <span class="c1"># Page someone — this won&#39;t recover</span>
+        <span class="k">await</span> <span class="n">alert_oncall</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Just log — the runner will retry</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Node </span><span class="si">%s</span><span class="s2"> failed (class=</span><span class="si">%s</span><span class="s2">): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">failure_class</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+    <span class="n">hooks</span><span class="o">=</span><span class="n">NodeHooks</span><span class="p">(</span><span class="n">on_node_failure</span><span class="o">=</span><span class="n">on_failure</span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="integrating-with-opentelemetry">Integrating with OpenTelemetry</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span>
+
+<span class="n">tracer</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">get_tracer</span><span class="p">(</span><span class="s2">&quot;stroma&quot;</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">otel_start</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">input_state</span><span class="p">):</span>
+    <span class="n">span</span> <span class="o">=</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_span</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;node.</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">})</span>
+    <span class="c1"># Store the span somewhere accessible to on_success/on_failure</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">otel_success</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">output_state</span><span class="p">,</span> <span class="n">tokens_used</span><span class="p">):</span>
+    <span class="c1"># End the span, record tokens_used as an attribute</span>
+    <span class="o">...</span>
+
+
+<span class="n">hooks</span> <span class="o">=</span> <span class="n">NodeHooks</span><span class="p">(</span><span class="n">on_node_start</span><span class="o">=</span><span class="n">otel_start</span><span class="p">,</span> <span class="n">on_node_success</span><span class="o">=</span><span class="n">otel_success</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="design-notes">Design notes</h2>
+<ul>
+<li>All hooks are <strong>optional</strong> — <code>None</code> by default. No overhead when unused.</li>
+<li>Hook callables must be <strong>async</strong>. Passing a sync function will raise at call time.</li>
+<li>Hooks fire <strong>after</strong> trace recording and <strong>before</strong> the result is returned, so the trace is always complete even if a hook raises.</li>
+</ul>
+<h2 id="recap">Recap</h2>
+<ul>
+<li><strong><code>NodeHooks</code></strong> provides <code>on_node_start</code>, <code>on_node_success</code>, and <code>on_node_failure</code></li>
+<li>Pass hooks via <code>RunConfig(hooks=NodeHooks(...))</code> or <code>StromaRunner.quick(hooks=...)</code></li>
+<li>Hooks are async, optional, and zero-overhead when unused</li>
+<li>Use them for metrics, alerting, distributed tracing, or any external integration</li>
+</ul>
+<p><strong>Next: <a href="../shared-context/">Shared Context</a></strong> — share resources across nodes without globals.</p>
 
 
 
@@ -1288,10 +1412,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.sections", "navigation.expand", "navigation.tabs"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "navigation.sections", "navigation.expand", "navigation.tabs"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

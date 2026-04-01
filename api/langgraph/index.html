@@ -612,6 +612,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorial/hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/shared-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallel Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tutorial/langgraph/" class="md-nav__link">
         
   
@@ -1139,53 +1223,8 @@
 
 
         <p>Wraps a LangGraph graph to apply stroma contract validation on each node.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>registry</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="ContractRegistry (stroma.contracts.ContractRegistry)" href="../contracts/#stroma.contracts.ContractRegistry">ContractRegistry</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Contract registry for validation.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>runner</code>
-            </td>
-            <td>
-                  <code><span title="typing.Any">Any</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The stroma runner instance (for future use with cost/trace integration).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Takes a <code>ContractRegistry</code> for validation and a runner instance for
+future cost/trace integration.</p>
 
 
 
@@ -1246,53 +1285,8 @@
     <div class="doc doc-contents first">
 
         <p>Decorator that attaches stroma contract metadata to a LangGraph node function.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>node_id</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Unique identifier for this node.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>contract</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="NodeContract (stroma.contracts.NodeContract)" href="../contracts/#stroma.contracts.NodeContract">NodeContract</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The input/output contract for this node.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Binds <em>node_id</em> and <em>contract</em> as attributes on the decorated function so
+<code>LangGraphAdapter</code> can discover and validate it.</p>
 
 
     </div>
@@ -1312,30 +1306,8 @@
 
         <p>Convert a LangGraph state object to a plain dict.</p>
 <p>Supports dicts, Pydantic models, objects with a <code>.dict()</code> method,
-and plain objects with <code>__dict__</code>.</p>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="TypeError">TypeError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the state cannot be converted to a dict.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+and plain objects with <code>__dict__</code>. Raises <code>TypeError</code> if the state
+cannot be converted.</p>
 
 
     </div>

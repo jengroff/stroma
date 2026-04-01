@@ -614,6 +614,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorial/hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/shared-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallel Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tutorial/langgraph/" class="md-nav__link">
         
   
@@ -956,6 +1040,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#stroma.trace.ExecutionTrace--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stroma.trace.ExecutionTrace.append" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1142,6 +1237,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#stroma.trace.ExecutionTrace--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stroma.trace.ExecutionTrace.append" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1277,119 +1383,10 @@
 
 
         <p>A single recorded execution attempt for a node.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.node_id">node_id</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The node that was executed.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.run_id">run_id</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The pipeline run this event belongs to.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.attempt">attempt</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The attempt number (1-based).</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.timestamp_utc">timestamp_utc</span></code></td>
-            <td>
-                  <code><span title="datetime.datetime">datetime</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>When the attempt started.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.input_state">input_state</span></code></td>
-            <td>
-                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The input dict passed to the node.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.output_state">output_state</span></code></td>
-            <td>
-                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>] | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The output dict returned, or <code>None</code> on failure.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.duration_ms">duration_ms</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Wall-clock duration in milliseconds.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.failure">failure</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="FailureClass (stroma.failures.FailureClass)" href="../failures/#stroma.failures.FailureClass">FailureClass</a> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The failure classification, or <code>None</code> on success.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.TraceEvent.failure_message">failure_message</span></code></td>
-            <td>
-                  <code><span title="str">str</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Human-readable failure description, or <code>None</code> on success.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Captures the <code>node_id</code>, <code>run_id</code>, 1-based <code>attempt</code> number,
+<code>timestamp_utc</code>, <code>input_state</code>, and <code>output_state</code> (or <code>None</code> on
+failure). On failure, <code>failure</code> holds the <code>FailureClass</code> and
+<code>failure_message</code> provides a human-readable description.</p>
 
 
 
@@ -1435,20 +1432,20 @@
 
 
 
-        <p>Ordered collection of :class:<code>TraceEvent</code> instances for a pipeline run.</p>
+        <p>Ordered collection of <code>TraceEvent</code> instances for a pipeline run.</p>
 <p>Provides filtering, diffing, serialization, and iteration over events.</p>
-<p>Example::</p>
-<div class="highlight"><pre><span></span><code>result = await runner.run(nodes, state)
+<h4 id="stroma.trace.ExecutionTrace--example">Example</h4>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
 
-# Inspect failures
-for event in result.trace.failures():
-    print(f&quot;{event.node_id}: {event.failure_message}&quot;)
+<span class="c1"># Inspect failures</span>
+<span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">failures</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">node_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">failure_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-# Compare two traces
-diffs = trace_a.diff(trace_b)
+<span class="c1"># Compare two traces</span>
+<span class="n">diffs</span> <span class="o">=</span> <span class="n">trace_a</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">trace_b</span><span class="p">)</span>
 
-# Export to JSON
-json_str = result.trace.to_json()
+<span class="c1"># Export to JSON</span>
+<span class="n">json_str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
 </code></pre></div>
 
 
@@ -1664,86 +1661,10 @@ list means the traces are logically equivalent.</p>
 
 
         <p>Final output of a pipeline run.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.ExecutionResult.run_id">run_id</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The unique identifier for this run.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.ExecutionResult.status">status</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="RunStatus (stroma.trace.RunStatus)" href="#stroma.trace.RunStatus">RunStatus</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Terminal status of the run.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.ExecutionResult.final_state">final_state</span></code></td>
-            <td>
-                  <code><span title="pydantic.BaseModel">BaseModel</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The last valid state produced, or the initial state on early failure.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.ExecutionResult.trace">trace</span></code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="ExecutionTrace (stroma.trace.ExecutionTrace)" href="#stroma.trace.ExecutionTrace">ExecutionTrace</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Complete execution trace with all attempts.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.ExecutionResult.total_cost_usd">total_cost_usd</span></code></td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Cumulative cost in USD across all nodes.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.trace.ExecutionResult.total_tokens">total_tokens</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Cumulative token usage across all nodes.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Contains the <code>run_id</code>, terminal <code>status</code>, <code>final_state</code> (the last valid
+state produced, or the initial state on early failure), the complete
+<code>trace</code> with all attempts, and aggregate <code>total_cost_usd</code> /
+<code>total_tokens</code> across all nodes.</p>
 
 
 

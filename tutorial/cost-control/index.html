@@ -654,6 +654,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#model-based-cost-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model-based cost estimation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-happens-when-a-budget-is-exceeded" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -710,6 +721,90 @@
     
   
     Tracing & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shared-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallel Execution
   
 
     
@@ -1102,6 +1197,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#model-based-cost-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model-based cost estimation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-happens-when-a-budget-is-exceeded" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1201,7 +1307,21 @@
 </ol>
 <p>Set any combination — <code>None</code> means no limit on that dimension. <code>ExecutionBudget.unlimited()</code> (the default) sets all three to <code>None</code>.</p>
 <h2 id="reporting-token-usage">Reporting token usage</h2>
-<p>Nodes report token usage by returning a tuple of <code>(output_dict, tokens_used)</code>:</p>
+<p>Nodes report token usage by returning a tuple instead of a plain dict. Four return shapes are supported:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># No usage tracking — tokens=0, cost=$0.00</span>
+<span class="k">return</span> <span class="p">{</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">}</span>
+
+<span class="c1"># Report total tokens only</span>
+<span class="k">return</span> <span class="p">({</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">},</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="c1"># Report input tokens + model name for automatic cost calculation</span>
+<span class="k">return</span> <span class="p">({</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">},</span> <span class="mi">500</span><span class="p">,</span> <span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+
+<span class="c1"># Full usage: input tokens, output tokens, model</span>
+<span class="k">return</span> <span class="p">({</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">},</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="model-based-cost-estimation">Model-based cost estimation</h2>
+<p>When you include a model name in the return tuple, Stroma looks it up in <code>KNOWN_MODELS</code> and computes the USD cost automatically:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExecutionBudget</span><span class="p">,</span> <span class="n">StromaRunner</span>
@@ -1216,16 +1336,17 @@
 
 
 <span class="n">runner</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
-    <span class="n">budget</span><span class="o">=</span><span class="n">ExecutionBudget</span><span class="p">(</span><span class="n">max_tokens_total</span><span class="o">=</span><span class="mi">1_000</span><span class="p">)</span>
+    <span class="n">budget</span><span class="o">=</span><span class="n">ExecutionBudget</span><span class="p">(</span><span class="n">max_cost_usd</span><span class="o">=</span><span class="mf">0.10</span><span class="p">)</span>
 <span class="p">)</span>
 
 
 <span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Input</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Output</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>  <span class="c1"># (1)!</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
     <span class="c1"># In real code, this would call an LLM</span>
     <span class="n">summary</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span>
-    <span class="n">tokens_used</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-    <span class="k">return</span> <span class="p">({</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="n">summary</span><span class="p">},</span> <span class="n">tokens_used</span><span class="p">)</span>  <span class="c1"># (2)!</span>
+    <span class="n">input_tokens</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="n">output_tokens</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">return</span> <span class="p">({</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="n">summary</span><span class="p">},</span> <span class="n">input_tokens</span><span class="p">,</span> <span class="n">output_tokens</span><span class="p">,</span> <span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>  <span class="c1"># (1)!</span>
 
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
@@ -1234,14 +1355,65 @@
         <span class="n">Input</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;A short document to summarize.&quot;</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tokens used: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">total_tokens</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cost: $</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">total_cost_usd</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cost: $</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">total_cost_usd</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
 <ol>
-<li>Return type annotation is <code>tuple</code> instead of <code>dict</code> when reporting tokens.</li>
-<li>The second element of the tuple is the token count as an integer. If you return just a dict, token usage is recorded as 0.</li>
+<li>The model string <code>"gpt-4o"</code> is looked up in <code>KNOWN_MODELS</code> to compute per-token pricing. Unknown models default to $0.00.</li>
 </ol>
+<p>Built-in pricing is included for:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Input (per 1M tokens)</th>
+<th>Output (per 1M tokens)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gpt-4o</code></td>
+<td>$2.50</td>
+<td>$10.00</td>
+</tr>
+<tr>
+<td><code>gpt-4o-mini</code></td>
+<td>$0.15</td>
+<td>$0.60</td>
+</tr>
+<tr>
+<td><code>gpt-4-turbo</code></td>
+<td>$10.00</td>
+<td>$30.00</td>
+</tr>
+<tr>
+<td><code>claude-opus-4-6</code></td>
+<td>$15.00</td>
+<td>$75.00</td>
+</tr>
+<tr>
+<td><code>claude-sonnet-4-6</code></td>
+<td>$3.00</td>
+<td>$15.00</td>
+</tr>
+<tr>
+<td><code>claude-haiku-4-5</code></td>
+<td>$0.80</td>
+<td>$4.00</td>
+</tr>
+<tr>
+<td><code>gemini-1.5-pro</code></td>
+<td>$3.50</td>
+<td>$10.50</td>
+</tr>
+<tr>
+<td><code>gemini-1.5-flash</code></td>
+<td>$0.35</td>
+<td>$1.05</td>
+</tr>
+</tbody>
+</table>
 <h2 id="what-happens-when-a-budget-is-exceeded">What happens when a budget is exceeded</h2>
 <p>When cumulative usage crosses a budget limit, <code>BudgetExceeded</code> is raised. By default this is classified as <code>RECOVERABLE</code> — the runner will retry (useful if the budget was close and a cheaper retry succeeds).</p>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
@@ -1268,16 +1440,13 @@
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">total_tokens</span><span class="p">)</span>    <span class="c1"># aggregate tokens across all nodes</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">total_cost_usd</span><span class="p">)</span>  <span class="c1"># aggregate cost across all nodes</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">total_cost_usd</span><span class="p">)</span>  <span class="c1"># aggregate cost in USD across all nodes</span>
 </code></pre></div>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>Latency is tracked automatically from wall-clock time. Token usage comes from your node's return value. Cost in USD is currently recorded as 0.0 — to track actual costs, record them in your node logic and include them in a custom <code>CostTracker</code>.</p>
-</div>
 <h2 id="recap">Recap</h2>
 <ul>
 <li><strong><code>ExecutionBudget</code></strong> sets limits on tokens, cost, and latency</li>
-<li>Nodes report tokens by returning <code>(dict, tokens_used)</code> tuples</li>
+<li>Nodes report usage by returning tuples: <code>(dict, tokens)</code>, <code>(dict, input_tokens, model)</code>, or <code>(dict, input_tokens, output_tokens, model)</code></li>
+<li><strong>Model-based pricing</strong> computes <code>cost_usd</code> automatically from <code>KNOWN_MODELS</code></li>
 <li><strong><code>BudgetExceeded</code></strong> is raised when a limit is crossed (classified as recoverable by default)</li>
 <li><code>result.total_tokens</code> and <code>result.total_cost_usd</code> give you post-run totals</li>
 <li>Use <code>ExecutionBudget.unlimited()</code> (the default) to disable all limits</li>

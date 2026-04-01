@@ -57,11 +57,23 @@
          <lastmod>2026-04-01</lastmod>
     </url>
     <url>
+         <loc>https://jengroff.github.io/stroma/tutorial/hooks/</loc>
+         <lastmod>2026-04-01</lastmod>
+    </url>
+    <url>
          <loc>https://jengroff.github.io/stroma/tutorial/langgraph/</loc>
          <lastmod>2026-04-01</lastmod>
     </url>
     <url>
+         <loc>https://jengroff.github.io/stroma/tutorial/parallel/</loc>
+         <lastmod>2026-04-01</lastmod>
+    </url>
+    <url>
          <loc>https://jengroff.github.io/stroma/tutorial/retry-and-failures/</loc>
+         <lastmod>2026-04-01</lastmod>
+    </url>
+    <url>
+         <loc>https://jengroff.github.io/stroma/tutorial/shared-context/</loc>
          <lastmod>2026-04-01</lastmod>
     </url>
     <url>

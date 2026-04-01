@@ -614,6 +614,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorial/hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/shared-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallel Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tutorial/langgraph/" class="md-nav__link">
         
   
@@ -877,6 +961,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#stroma.cost.KNOWN_MODELS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KNOWN_MODELS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.cost.estimate_cost_usd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        estimate_cost_usd
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stroma.cost.ExecutionBudget" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -887,6 +993,17 @@
   
     <nav class="md-nav" aria-label="ExecutionBudget">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.cost.ExecutionBudget--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#stroma.cost.ExecutionBudget.unlimited" class="md-nav__link">
@@ -926,6 +1043,17 @@
   
     <nav class="md-nav" aria-label="CostTracker">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.cost.CostTracker--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#stroma.cost.CostTracker.total_tokens" class="md-nav__link">
@@ -1147,6 +1275,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#stroma.cost.KNOWN_MODELS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KNOWN_MODELS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.cost.estimate_cost_usd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        estimate_cost_usd
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stroma.cost.ExecutionBudget" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1157,6 +1307,17 @@
   
     <nav class="md-nav" aria-label="ExecutionBudget">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.cost.ExecutionBudget--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#stroma.cost.ExecutionBudget.unlimited" class="md-nav__link">
@@ -1196,6 +1357,17 @@
   
     <nav class="md-nav" aria-label="CostTracker">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.cost.CostTracker--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#stroma.cost.CostTracker.total_tokens" class="md-nav__link">
@@ -1313,6 +1485,46 @@
 <h1 id="cost-tracking">Cost Tracking</h1>
 
 
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="stroma.cost.KNOWN_MODELS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">KNOWN_MODELS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;gpt-4o&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="s1">&#39;gpt-4o-mini&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span> <span class="s1">&#39;gpt-4-turbo&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">),</span> <span class="s1">&#39;claude-opus-4-6&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">15.0</span><span class="p">,</span> <span class="mf">75.0</span><span class="p">),</span> <span class="s1">&#39;claude-sonnet-4-6&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">),</span> <span class="s1">&#39;claude-haiku-4-5&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">),</span> <span class="s1">&#39;gemini-1.5-pro&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">10.5</span><span class="p">),</span> <span class="s1">&#39;gemini-1.5-flash&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)}</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents first">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="stroma.cost.estimate_cost_usd" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">estimate_cost_usd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_tokens</span><span class="p">,</span> <span class="n">output_tokens</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Estimate the USD cost for a given model and token counts.</p>
+<p>Looks up the model in <code>KNOWN_MODELS</code> and calculates cost based on
+per-million-token pricing. Returns <code>0.0</code> for unknown models.</p>
+
+
+    </div>
+
+</div>
+
 <div class="doc doc-object doc-class">
 
 
@@ -1331,60 +1543,12 @@
 
 
         <p>Optional budget constraints for a pipeline run.</p>
-<p>All fields are optional — <code>None</code> means no limit on that dimension.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.ExecutionBudget.max_tokens_total">max_tokens_total</span></code></td>
-            <td>
-                  <code><span title="int">int</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Maximum total tokens across all nodes.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.ExecutionBudget.max_cost_usd">max_cost_usd</span></code></td>
-            <td>
-                  <code><span title="float">float</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Maximum total cost in USD across all nodes.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.ExecutionBudget.max_latency_ms">max_latency_ms</span></code></td>
-            <td>
-                  <code><span title="int">int</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Maximum total latency in milliseconds across all nodes.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-        <p>Example::</p>
-<div class="highlight"><pre><span></span><code># No limits (default)
-budget = ExecutionBudget.unlimited()
-
-# Constrain tokens and cost
-budget = ExecutionBudget(max_tokens_total=10_000, max_cost_usd=0.50)
+<p>All fields are optional — <code>None</code> means no limit on that dimension.
+Set <code>max_tokens_total</code>, <code>max_cost_usd</code>, and/or <code>max_latency_ms</code> to
+cap resource usage across all nodes.</p>
+<h4 id="stroma.cost.ExecutionBudget--example">Example</h4>
+<div class="highlight"><pre><span></span><code><span class="n">budget</span> <span class="o">=</span> <span class="n">ExecutionBudget</span><span class="o">.</span><span class="n">unlimited</span><span class="p">()</span>
+<span class="n">budget</span> <span class="o">=</span> <span class="n">ExecutionBudget</span><span class="p">(</span><span class="n">max_tokens_total</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">max_cost_usd</span><span class="o">=</span><span class="mf">0.50</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -1458,64 +1622,8 @@ budget = ExecutionBudget(max_tokens_total=10_000, max_cost_usd=0.50)
 
 
         <p>Observed resource usage for a single node execution.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.NodeUsage.node_id">node_id</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The node that was executed.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.NodeUsage.tokens_used">tokens_used</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of tokens consumed.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.NodeUsage.cost_usd">cost_usd</span></code></td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Cost in USD for this execution.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.NodeUsage.latency_ms">latency_ms</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Wall-clock duration in milliseconds.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Records <code>tokens_used</code>, <code>cost_usd</code>, and <code>latency_ms</code> for the given
+<code>node_id</code>.</p>
 
 
 
@@ -1563,12 +1671,12 @@ budget = ExecutionBudget(max_tokens_total=10_000, max_cost_usd=0.50)
 
         <p>Accumulates per-node resource usage and checks it against budgets.</p>
 <p>Usage is keyed by <code>node_id</code> and accumulated across multiple calls to
-:meth:<code>record</code> for the same node.</p>
-<p>Example::</p>
-<div class="highlight"><pre><span></span><code>tracker = CostTracker()
-tracker.record(NodeUsage(node_id=&quot;llm&quot;, tokens_used=500, cost_usd=0.01, latency_ms=200))
-tracker.check_budget(ExecutionBudget(max_tokens_total=1000), &quot;llm&quot;)
-print(tracker.total_tokens)  # 500
+<code>record()</code> for the same node.</p>
+<h4 id="stroma.cost.CostTracker--example">Example</h4>
+<div class="highlight"><pre><span></span><code><span class="n">tracker</span> <span class="o">=</span> <span class="n">CostTracker</span><span class="p">()</span>
+<span class="n">tracker</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">NodeUsage</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span> <span class="n">tokens_used</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">cost_usd</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">latency_ms</span><span class="o">=</span><span class="mi">200</span><span class="p">))</span>
+<span class="n">tracker</span><span class="o">.</span><span class="n">check_budget</span><span class="p">(</span><span class="n">ExecutionBudget</span><span class="p">(</span><span class="n">max_tokens_total</span><span class="o">=</span><span class="mi">1000</span><span class="p">),</span> <span class="s2">&quot;llm&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tracker</span><span class="o">.</span><span class="n">total_tokens</span><span class="p">)</span>  <span class="c1"># 500</span>
 </code></pre></div>
 
 
@@ -1688,29 +1796,7 @@ print(tracker.total_tokens)  # 500
     <div class="doc doc-contents ">
 
         <p>Check aggregate usage across all nodes against the budget.</p>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="BudgetExceeded (stroma.cost.BudgetExceeded)" href="#stroma.cost.BudgetExceeded">BudgetExceeded</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If any budget dimension is exceeded.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Raises <code>BudgetExceeded</code> if any dimension is exceeded.</p>
 
 
     </div>
@@ -1761,60 +1847,9 @@ print(tracker.total_tokens)  # 500
 
 
         <p>Raised when cumulative resource usage exceeds a budget limit.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.BudgetExceeded.dimension">dimension</span></code></td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Which budget dimension was exceeded (<code>"tokens"</code>, <code>"cost"</code>, or <code>"latency"</code>).</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.BudgetExceeded.limit">limit</span></code></td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The budget cap that was exceeded.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.BudgetExceeded.actual">actual</span></code></td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The actual cumulative value that triggered the violation.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.BudgetExceeded.node_id">node_id</span></code></td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The node whose execution caused the budget to be exceeded.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Carries the <code>dimension</code> (<code>"tokens"</code>, <code>"cost"</code>, or <code>"latency"</code>), the
+<code>limit</code> that was exceeded, the <code>actual</code> cumulative value, and the
+<code>node_id</code> that triggered the violation.</p>
 
 
 
@@ -1865,64 +1900,8 @@ print(tracker.total_tokens)  # 500
 
 
         <p>Hint for model selection on a per-node basis.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.ModelHint.node_id">node_id</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Node this hint applies to.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.ModelHint.preferred_model">preferred_model</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Primary model identifier to use.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.ModelHint.fallback_model">fallback_model</span></code></td>
-            <td>
-                  <code><span title="str">str</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Model to fall back to if the preferred model is unavailable.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.cost.ModelHint.max_tokens">max_tokens</span></code></td>
-            <td>
-                  <code><span title="int">int</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Optional token limit for this node's LLM call.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Binds a <code>node_id</code> to a <code>preferred_model</code> with an optional
+<code>fallback_model</code> and per-node <code>max_tokens</code> limit.</p>
 
 
 

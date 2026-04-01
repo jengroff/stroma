@@ -703,6 +703,90 @@
   
   
     <li class="md-nav__item">
+      <a href="tutorial/hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorial/shared-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorial/parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallel Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="tutorial/langgraph/" class="md-nav__link">
         
   
@@ -1112,10 +1196,14 @@
 <ul>
 <li><strong>Contracts</strong> — catch bad data at node boundaries before it propagates downstream</li>
 <li><strong>Failure classification</strong> — automatically distinguish transient errors from permanent ones</li>
-<li><strong>Retry policies</strong> — configurable retries with jittered backoff, tuned per failure type</li>
-<li><strong>Checkpointing</strong> — save progress and resume from where you left off</li>
-<li><strong>Cost tracking</strong> — enforce token, dollar, and latency budgets</li>
+<li><strong>Retry policies</strong> — configurable retries with jittered backoff, per failure class or per node</li>
+<li><strong>Checkpointing</strong> — async-first save and resume across crashes (in-memory or Redis)</li>
+<li><strong>Cost estimation</strong> — model-aware USD cost tracking via built-in pricing data, plus token and latency budgets</li>
+<li><strong>Parallel execution</strong> — fan out work to concurrent nodes with <code>parallel()</code> and merged output</li>
+<li><strong>Node hooks</strong> — async lifecycle callbacks for observability and side effects</li>
+<li><strong>Shared context</strong> — pass runtime configuration through a mutable <code>context</code> dict to every node</li>
 <li><strong>Execution tracing</strong> — full audit trail of every attempt, with diffing and export</li>
+<li><strong>Per-run logging</strong> — structured <code>LoggerAdapter</code> with <code>run_id</code> in every log line</li>
 </ul>
 <p>No framework lock-in. Works with any async Python code. Compose what you need, ignore what you don't.</p>
 <h2 id="quick-start">Quick Start</h2>

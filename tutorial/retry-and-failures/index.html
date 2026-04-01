@@ -620,6 +620,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#per-node-policy-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-node policy overrides
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-happens-when-retries-are-exhausted" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -721,6 +732,90 @@
     
   
     Tracing & Debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shared-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallel Execution
   
 
     
@@ -1135,6 +1230,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#per-node-policy-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-node policy overrides
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-happens-when-retries-are-exhausted" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1324,6 +1430,32 @@
 <li>Return <code>None</code> to pass to the next classifier. If no classifier matches, built-in rules apply.</li>
 <li>Classifiers are checked in order. The first non-<code>None</code> result wins.</li>
 </ol>
+<h2 id="per-node-policy-overrides">Per-node policy overrides</h2>
+<p>The global <code>policy_map</code> applies to every node. When a specific node needs different retry behavior — for example, an LLM call that tolerates more retries vs. a fast transform that should fail immediately — use <code>node_policies</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">FailureClass</span><span class="p">,</span> <span class="n">FailurePolicy</span><span class="p">,</span> <span class="n">RunConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+    <span class="n">policy_map</span><span class="o">=</span><span class="p">{</span>  <span class="c1"># (1)!</span>
+        <span class="n">FailureClass</span><span class="o">.</span><span class="n">RECOVERABLE</span><span class="p">:</span> <span class="n">FailurePolicy</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">backoff_seconds</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="n">FailureClass</span><span class="o">.</span><span class="n">TERMINAL</span><span class="p">:</span> <span class="n">FailurePolicy</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">FailureClass</span><span class="o">.</span><span class="n">AMBIGUOUS</span><span class="p">:</span> <span class="n">FailurePolicy</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">backoff_seconds</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">node_policies</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;llm_call&quot;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># (2)!</span>
+            <span class="n">FailureClass</span><span class="o">.</span><span class="n">RECOVERABLE</span><span class="p">:</span> <span class="n">FailurePolicy</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">backoff_seconds</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;fast_transform&quot;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># (3)!</span>
+            <span class="n">FailureClass</span><span class="o">.</span><span class="n">RECOVERABLE</span><span class="p">:</span> <span class="n">FailurePolicy</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Global defaults — apply to all nodes unless overridden.</li>
+<li><code>llm_call</code> gets 5 retries with longer backoff for recoverable failures.</li>
+<li><code>fast_transform</code> gets zero retries — any failure stops immediately.</li>
+</ol>
+<p>The lookup order is: per-node override → global <code>policy_map</code> → built-in defaults. Only the failure classes you specify in the override are affected; everything else falls through.</p>
 <h2 id="what-happens-when-retries-are-exhausted">What happens when retries are exhausted</h2>
 <p>If a recoverable or ambiguous failure exhausts its retry budget, the pipeline stops with <code>status=PARTIAL</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
@@ -1343,6 +1475,7 @@
 <li><strong>Built-in rules</strong> handle common exceptions automatically</li>
 <li><strong>Custom classifiers</strong> let you override classification for domain-specific errors</li>
 <li><strong>Retry policies</strong> control max retries and backoff per failure class</li>
+<li><strong>Per-node overrides</strong> via <code>node_policies</code> for node-specific retry behavior</li>
 <li>Exhausted retries produce <code>PARTIAL</code> status; terminal failures produce <code>FAILED</code></li>
 </ul>
 <p><strong>Next: <a href="../checkpointing/">Checkpointing</a></strong> — save pipeline progress and resume after crashes.</p>

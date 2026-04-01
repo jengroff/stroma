@@ -614,6 +614,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tutorial/hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/shared-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallel Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tutorial/langgraph/" class="md-nav__link">
         
   
@@ -829,6 +913,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NodeContract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.contracts.NodeContract--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -881,6 +982,17 @@
   
     <nav class="md-nav" aria-label="ContractRegistry">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.contracts.ContractRegistry--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#stroma.contracts.ContractRegistry.register" class="md-nav__link">
@@ -1122,6 +1234,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NodeContract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.contracts.NodeContract--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1174,6 +1303,17 @@
   
     <nav class="md-nav" aria-label="ContractRegistry">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.contracts.ContractRegistry--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#stroma.contracts.ContractRegistry.register" class="md-nav__link">
@@ -1265,61 +1405,16 @@
 
 
         <p>Schema contract binding a node to its expected input and output types.</p>
+<p>Maps a <code>node_id</code> to its <code>input_schema</code> and <code>output_schema</code> Pydantic model
+classes that state must conform to at each boundary.</p>
+<h4 id="stroma.contracts.NodeContract--example">Example</h4>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Query</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.contracts.NodeContract.node_id">node_id</span></code></td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Unique identifier for the node this contract governs.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.contracts.NodeContract.input_schema">input_schema</span></code></td>
-            <td>
-                  <code><span title="type">type</span>[<span title="pydantic.BaseModel">BaseModel</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Pydantic model class that incoming state must conform to.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.contracts.NodeContract.output_schema">output_schema</span></code></td>
-            <td>
-                  <code><span title="type">type</span>[<span title="pydantic.BaseModel">BaseModel</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Pydantic model class that outgoing state must conform to.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-        <p>Example::</p>
-<div class="highlight"><pre><span></span><code>class Query(BaseModel):
-    text: str
-
-class Result(BaseModel):
-    urls: list[str]
-
-contract = NodeContract(node_id=&quot;search&quot;, input_schema=Query, output_schema=Result)
+<span class="n">contract</span> <span class="o">=</span> <span class="n">NodeContract</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;search&quot;</span><span class="p">,</span> <span class="n">input_schema</span><span class="o">=</span><span class="n">Query</span><span class="p">,</span> <span class="n">output_schema</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -1369,60 +1464,8 @@ contract = NodeContract(node_id=&quot;search&quot;, input_schema=Query, output_s
 
 
         <p>Raised when node input or output fails schema validation.</p>
-
-
-<p><span class="doc-section-title">Attributes:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.contracts.ContractViolation.node_id">node_id</span></code></td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The node whose contract was violated.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.contracts.ContractViolation.direction">direction</span></code></td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Whether the violation occurred on <code>"input"</code> or <code>"output"</code>.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.contracts.ContractViolation.raw">raw</span></code></td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The raw dict that failed validation.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="stroma.contracts.ContractViolation.errors">errors</span></code></td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>List of Pydantic validation error details.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Carries the <code>node_id</code>, <code>direction</code> (<code>"input"</code> or <code>"output"</code>), the <code>raw</code>
+dict that failed, and a list of Pydantic validation <code>errors</code>.</p>
 
 
 
@@ -1505,115 +1548,9 @@ contract = NodeContract(node_id=&quot;search&quot;, input_schema=Query, output_s
     <div class="doc doc-contents ">
 
         <p>Validate <em>raw</em> against the appropriate schema of <em>contract</em>.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>contract</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="NodeContract (stroma.contracts.NodeContract)" href="#stroma.contracts.NodeContract">NodeContract</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The node contract containing the schema.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>direction</code>
-            </td>
-            <td>
-                  <code><span title="typing.Literal">Literal</span>[&#39;input&#39;, &#39;output&#39;]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p><code>"input"</code> or <code>"output"</code> — selects which schema to validate against.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>raw</code>
-            </td>
-            <td>
-                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The dict to validate.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="pydantic.BaseModel">BaseModel</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A validated Pydantic model instance.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="ContractViolation (stroma.contracts.ContractViolation)" href="#stroma.contracts.ContractViolation">ContractViolation</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If validation fails.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+<p>Selects the input or output schema based on <em>direction</em> and returns
+a validated Pydantic model instance. Raises <code>ContractViolation</code> on
+validation failure.</p>
 
 
     </div>
@@ -1644,13 +1581,12 @@ contract = NodeContract(node_id=&quot;search&quot;, input_schema=Query, output_s
 
 
         <p>Registry mapping node IDs to their contracts with built-in validation.</p>
-<p>Example::</p>
-<div class="highlight"><pre><span></span><code>registry = ContractRegistry()
-registry.register(NodeContract(node_id=&quot;search&quot;, input_schema=Query, output_schema=Result))
+<h4 id="stroma.contracts.ContractRegistry--example">Example</h4>
+<div class="highlight"><pre><span></span><code><span class="n">registry</span> <span class="o">=</span> <span class="n">ContractRegistry</span><span class="p">()</span>
+<span class="n">registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">NodeContract</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;search&quot;</span><span class="p">,</span> <span class="n">input_schema</span><span class="o">=</span><span class="n">Query</span><span class="p">,</span> <span class="n">output_schema</span><span class="o">=</span><span class="n">Result</span><span class="p">))</span>
 
-# Validate raw data against a node&#39;s schema
-validated_input = registry.validate_input(&quot;search&quot;, {&quot;text&quot;: &quot;python&quot;})
-validated_output = registry.validate_output(&quot;search&quot;, {&quot;urls&quot;: [&quot;https://...&quot;]})
+<span class="n">validated_input</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="s2">&quot;search&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span><span class="p">})</span>
+<span class="n">validated_output</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">validate_output</span><span class="p">(</span><span class="s2">&quot;search&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;urls&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;https://...&quot;</span><span class="p">]})</span>
 </code></pre></div>
 
 
@@ -1703,30 +1639,7 @@ validated_output = registry.validate_output(&quot;search&quot;, {&quot;urls&quot
 
     <div class="doc doc-contents ">
 
-        <p>Return the contract for <em>node_id</em>.</p>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="KeyError">KeyError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If no contract is registered for <em>node_id</em>.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+        <p>Return the contract for <em>node_id</em>, or raise <code>KeyError</code> if not registered.</p>
 
 
     </div>
