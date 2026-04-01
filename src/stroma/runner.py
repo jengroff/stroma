@@ -182,14 +182,15 @@ class StromaRunner:
         budget: ExecutionBudget | None = None,
         policy_map: PolicyMap | None = None,
         classifiers: list[Classifier] | None = None,
+        hooks: "NodeHooks | None" = None,
         **config_kwargs: Any,
     ) -> "StromaRunner":
         """Create a runner with sensible defaults — no boilerplate required.
 
         Sets up an `InMemoryStore`, unlimited `ExecutionBudget`, and
         `default_policy_map()` retry policies. Pass *store*, *budget*,
-        *policy_map*, or *classifiers* to override any of these. Additional
-        keyword arguments are forwarded to `RunConfig`.
+        *policy_map*, *classifiers*, or *hooks* to override any of these.
+        Additional keyword arguments are forwarded to `RunConfig`.
 
         Returns a fully configured `StromaRunner` ready to use.
 
@@ -214,9 +215,64 @@ class StromaRunner:
             budget=budget if budget is not None else ExecutionBudget.unlimited(),
             policy_map=policy_map if policy_map is not None else default_policy_map(),
             classifiers=classifiers if classifiers is not None else [],
+            hooks=hooks if hooks is not None else NodeHooks(),
             **config_kwargs,
         )
         return cls(registry, checkpoint_manager, config)
+
+    def with_redis(self, redis_url: str, ttl_seconds: int = 3600) -> "StromaRunner":
+        """Replace the checkpoint backend with a Redis-backed store.
+
+        Requires the `redis` extra (`pip install stroma[redis]`).
+        """
+        from stroma.checkpoint import RedisStore
+
+        self.checkpoint_manager = CheckpointManager(RedisStore(redis_url, ttl_seconds))
+        return self
+
+    def with_budget(
+        self,
+        *,
+        tokens: int | None = None,
+        cost_usd: float | None = None,
+        latency_ms: int | None = None,
+    ) -> "StromaRunner":
+        """Set execution budget limits for token count, cost, or latency."""
+        self.config = self.config.model_copy(
+            update={
+                "budget": ExecutionBudget(
+                    max_tokens_total=tokens,
+                    max_cost_usd=cost_usd,
+                    max_latency_ms=latency_ms,
+                )
+            }
+        )
+        return self
+
+    def with_classifiers(self, classifiers: list[Classifier]) -> "StromaRunner":
+        """Set custom failure classifiers for error handling."""
+        self.config = self.config.model_copy(update={"classifiers": classifiers})
+        return self
+
+    def with_hooks(self, hooks: "NodeHooks") -> "StromaRunner":
+        """Set node lifecycle hooks for observability."""
+        self.config = self.config.model_copy(update={"hooks": hooks})
+        return self
+
+    def with_context(self, context: dict[str, Any]) -> "StromaRunner":
+        """Set the shared context dict passed to nodes that accept a second argument."""
+        self.config = self.config.model_copy(update={"context": context})
+        return self
+
+    def with_policy_map(self, policy_map: PolicyMap) -> "StromaRunner":
+        """Set the global failure policy map."""
+        self.config = self.config.model_copy(update={"policy_map": policy_map})
+        return self
+
+    def with_node_policies(self, node_policies: dict[str, PolicyMap]) -> "StromaRunner":
+        """Set per-node failure policy overrides."""
+        self.config = self.config.model_copy(update={"node_policies": node_policies})
+        return self
 
     def node(
         self,

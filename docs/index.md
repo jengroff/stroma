@@ -71,30 +71,8 @@ Optional extras:
 
 ## Next Steps
 
-<div class="grid cards" markdown>
-
--   **Tutorial**
-
-    ---
-
-    Build a pipeline step by step, from hello-world to production-grade.
-
-    [:octicons-arrow-right-24: Start the tutorial](tutorial/index.md)
-
--   **Concepts**
-
-    ---
-
-    Understand the architecture and design decisions behind each primitive.
-
-    [:octicons-arrow-right-24: Read the concepts guide](concepts.md)
-
--   **API Reference**
-
-    ---
-
-    Full documentation for every class, function, and decorator.
-
-    [:octicons-arrow-right-24: Browse the API](api/runner.md)
-
-</div>
+| | |
+|---|---|
+| **[Tutorial](tutorial/index.md)** | Build a pipeline step by step, from hello-world to production-grade. |
+| **[Concepts](concepts.md)** | Understand the architecture and design decisions behind each primitive. |
+| **[API Reference](api/runner.md)** | Full documentation for every class, function, and decorator. |

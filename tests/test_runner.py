@@ -582,3 +582,127 @@ async def test_parallel_trace_event_recorded():
     assert len(result.trace) == 1
     event = next(iter(result.trace))
     assert "parallel" in event.node_id
+
+
+# --- Task 11: Fluent builder API tests ---
+
+
+@pytest.mark.asyncio
+async def test_with_budget_builder_enforces_cost():
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def node1(state: InputState) -> tuple:
+        # 1M input tokens at gpt-4o = $2.50, budget is $0.01 — should exceed
+        return ({"result": state.value + 1}, 1_000_000, 0, "gpt-4o")
+
+    runner = StromaRunner(registry, manager, RunConfig()).with_budget(cost_usd=0.01)
+    # BudgetExceeded is RECOVERABLE; with default retries it becomes PARTIAL
+    result = await runner.run([node1], InputState(value=1))
+    assert result.status in (RunStatus.PARTIAL, RunStatus.FAILED)
+
+
+@pytest.mark.asyncio
+async def test_with_classifiers_builder():
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def node1(state: InputState) -> dict:
+        raise ValueError("classified as terminal by custom classifier")
+
+    def make_terminal(exc, ctx):
+        if isinstance(exc, ValueError):
+            return FailureClass.TERMINAL
+        return None
+
+    runner = StromaRunner(registry, manager, RunConfig()).with_classifiers([make_terminal])
+    result = await runner.run([node1], InputState(value=1))
+    assert result.status == RunStatus.FAILED
+    assert len(result.trace) == 1
+
+
+@pytest.mark.asyncio
+async def test_with_context_builder():
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def node1(state: InputState, ctx: dict) -> dict:
+        return {"result": state.value * ctx["factor"]}
+
+    runner = StromaRunner(registry, manager, RunConfig()).with_context({"factor": 3})
+    result = await runner.run([node1], InputState(value=4))
+    assert result.status == RunStatus.COMPLETED
+    assert result.final_state.result == 12
+
+
+def test_with_budget_chain_sets_fields():
+    runner = StromaRunner.quick().with_budget(tokens=100_000, cost_usd=1.50)
+    assert runner.config.budget.max_tokens_total == 100_000
+    assert runner.config.budget.max_cost_usd == 1.50
+
+
+def test_with_context_chain_sets_fields():
+    runner = StromaRunner.quick().with_context({"key": "value"})
+    assert runner.config.context == {"key": "value"}
+
+
+def test_with_hooks_chain_sets_fields():
+    from unittest.mock import AsyncMock
+
+    from stroma.runner import NodeHooks
+
+    on_success = AsyncMock()
+    runner = StromaRunner.quick().with_hooks(NodeHooks(on_node_success=on_success))
+    assert runner.config.hooks.on_node_success is on_success
+
+
+def test_quick_accepts_hooks_kwarg():
+    from unittest.mock import AsyncMock
+
+    from stroma.runner import NodeHooks
+
+    on_success = AsyncMock()
+    runner = StromaRunner.quick(hooks=NodeHooks(on_node_success=on_success))
+    assert runner.config.hooks.on_node_success is on_success
+
+
+def test_full_builder_chain_is_fluent():
+    from unittest.mock import AsyncMock
+
+    from stroma.runner import NodeHooks
+
+    on_success = AsyncMock()
+    runner = (
+        StromaRunner.quick()
+        .with_budget(tokens=100_000)
+        .with_context({"key": "value"})
+        .with_hooks(NodeHooks(on_node_success=on_success))
+    )
+    assert runner.config.budget.max_tokens_total == 100_000
+    assert runner.config.context == {"key": "value"}
+    assert runner.config.hooks.on_node_success is on_success
+
+
+def test_with_redis_builder_raises_import_error_when_redis_missing(monkeypatch):
+    import builtins
+
+    real_import = builtins.__import__
+
+    def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if "redis" in name:
+            raise ImportError("No module named redis")
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    runner = StromaRunner.quick()
+    with pytest.raises(ImportError, match="redis is required"):
+        runner.with_redis("redis://localhost")

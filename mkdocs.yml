@@ -31,6 +31,7 @@ nav:
       - Parallel Execution: tutorial/parallel.md
       - LangGraph Integration: tutorial/langgraph.md
   - Concepts: concepts.md
+  - Extending Stroma: extending.md
   - API Reference:
       - Runner: api/runner.md
       - Contracts: api/contracts.md

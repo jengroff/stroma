@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `RunConfig.context` shared dict passed to nodes that accept a second argument (Task 08)
 - `parallel()` fan-out primitive for running nodes concurrently with merged output (Task 10)
 - Per-run `logging.LoggerAdapter` with `run_id` in structured extra fields (Task 09)
+- Fluent builder methods on `StromaRunner`: `with_redis()`, `with_budget()`, `with_classifiers()`, `with_hooks()`, `with_context()`, `with_policy_map()`, `with_node_policies()` (Task 11)
+- `StromaRunner.quick()` now accepts an explicit `hooks` keyword argument (Task 11)
+- "Extending Stroma" documentation page covering custom checkpoint backends, failure classifiers, OTel integration, and composing all extension points (Task 12)
 
 ### Changed
 - `NodeUsage` now carries `model` and `output_tokens` fields; `_unpack_output` supports 2/3/4-tuple and bare dict returns (Task 01)
