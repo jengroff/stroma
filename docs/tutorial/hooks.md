@@ -7,7 +7,7 @@ Stroma provides async callbacks at node execution boundaries for plugging in ext
 | Hook | Fired when | Arguments |
 |------|-----------|-----------|
 | `on_node_start` | Before the node function runs | `run_id`, `node_id`, `input_state_dict` |
-| `on_node_success` | After a node completes and passes validation | `run_id`, `node_id`, `output_state_dict`, `tokens_used` |
+| `on_node_success` | After a node completes and passes validation | `run_id`, `node_id`, `output_state_dict`, `tokens_used` (input + output tokens for this attempt, `0` if the node didn't report usage) |
 | `on_node_failure` | After a node raises an exception | `run_id`, `node_id`, `exc`, `failure_class` |
 
 ## Basic usage

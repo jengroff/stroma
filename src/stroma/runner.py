@@ -48,15 +48,42 @@ class RunConfig(BaseModel):
     `model_hints`, `classifiers`, or `resume_from` to customize behavior.
     """
 
-    run_id: str = Field(default_factory=lambda: str(uuid4()))
-    budget: ExecutionBudget = Field(default_factory=ExecutionBudget.unlimited)
-    policy_map: PolicyMap = Field(default_factory=default_policy_map)
-    node_policies: dict[str, PolicyMap] = Field(default_factory=dict)
-    hooks: NodeHooks = Field(default_factory=NodeHooks)
-    model_hints: dict[str, ModelHint] = Field(default_factory=dict)
-    classifiers: list[Classifier] = Field(default_factory=list)
-    context: dict[str, Any] = Field(default_factory=dict)
-    resume_from: str | None = None
+    run_id: str = Field(
+        default_factory=lambda: str(uuid4()),
+        description="Unique identifier for this run. Auto-generated UUID if not provided.",
+    )
+    budget: ExecutionBudget = Field(
+        default_factory=ExecutionBudget.unlimited,
+        description="Resource limits (tokens, cost, latency). Defaults to unlimited.",
+    )
+    policy_map: PolicyMap = Field(
+        default_factory=default_policy_map,
+        description="Global retry policies keyed by `FailureClass`. Defaults to `default_policy_map()`.",
+    )
+    node_policies: dict[str, PolicyMap] = Field(
+        default_factory=dict,
+        description="Per-node policy overrides keyed by node ID. Falls back to `policy_map`.",
+    )
+    hooks: NodeHooks = Field(
+        default_factory=NodeHooks,
+        description="Async lifecycle callbacks fired at node execution boundaries.",
+    )
+    model_hints: dict[str, ModelHint] = Field(
+        default_factory=dict,
+        description="Per-node model selection hints keyed by node ID.",
+    )
+    classifiers: list[Classifier] = Field(
+        default_factory=list,
+        description="Custom failure classifiers checked before built-in rules.",
+    )
+    context: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Shared mutable dict passed to nodes that accept a second argument.",
+    )
+    resume_from: str | None = Field(
+        default=None,
+        description="Node ID to resume from. Skips earlier nodes and loads checkpoint.",
+    )
 
     model_config = {"arbitrary_types_allowed": True}
 

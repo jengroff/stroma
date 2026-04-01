@@ -211,7 +211,31 @@ async def summarize(state: Input) -> tuple:
 
 1. Stroma looks up `"gpt-4o"` in `KNOWN_MODELS` and computes cost as `(input_tokens * input_price + output_tokens * output_price) / 1_000_000`. Unknown models default to $0.00.
 
-Built-in pricing covers GPT-4o, GPT-4o-mini, GPT-4-turbo, Claude Opus/Sonnet/Haiku, and Gemini 1.5 Pro/Flash. The `max_cost_usd` budget now enforces actual dollar limits based on model pricing.
+### Built-in pricing
+
+`KNOWN_MODELS` ships with per-million-token pricing for these models:
+
+| Model | Input ($/1M tokens) | Output ($/1M tokens) |
+|-------|--------------------:|---------------------:|
+| `gpt-4o` | 2.50 | 10.00 |
+| `gpt-4o-mini` | 0.15 | 0.60 |
+| `gpt-4-turbo` | 10.00 | 30.00 |
+| `claude-opus-4-6` | 15.00 | 75.00 |
+| `claude-sonnet-4-6` | 3.00 | 15.00 |
+| `claude-haiku-4-5` | 0.80 | 4.00 |
+| `gemini-1.5-pro` | 3.50 | 10.50 |
+| `gemini-1.5-flash` | 0.35 | 1.05 |
+
+Unknown models default to `$0.00` — no error, just no cost tracking. You can inspect or extend `KNOWN_MODELS` at runtime:
+
+```python
+from stroma import KNOWN_MODELS
+
+# Add a custom model
+KNOWN_MODELS["my-fine-tune"] = (5.00, 15.00)
+```
+
+The `max_cost_usd` budget enforces actual dollar limits based on model pricing.
 
 ## Observability Hooks
 
@@ -224,6 +248,7 @@ async def on_start(run_id, node_id, input_state):
     metrics.increment("node.started", tags=[f"node:{node_id}"])
 
 async def on_success(run_id, node_id, output_state, tokens_used):
+    # tokens_used is input_tokens + output_tokens for this attempt (0 if node didn't report usage)
     metrics.increment("node.completed", tags=[f"node:{node_id}"])
 
 async def on_failure(run_id, node_id, exc, failure_class):
@@ -327,7 +352,8 @@ result = await runner.run(
 
 `parallel()` wraps multiple nodes into a single pseudo-node that runs them concurrently with `asyncio.gather`. Child outputs are merged into a single dict (last write wins on key conflicts). On any child failure, remaining tasks are cancelled and the exception propagates to the runner's failure handling.
 
-Parallel nodes bypass individual contract validation — each child returns a raw dict and the merged output is validated by the next sequential node's input contract.
+!!! warning "Parallel nodes bypass per-child contract validation"
+    Each child node inside `parallel()` returns a raw dict. Stroma does **not** validate individual child outputs against their declared contracts — only the merged dict is validated when it reaches the next sequential node's input contract. This means a child can return structurally invalid data that silently merges into the pipeline state. If you need per-child validation, run each child as a separate sequential node or add explicit checks inside the child function.
 
 ### Stateless runner
 

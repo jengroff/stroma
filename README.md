@@ -24,6 +24,8 @@ print(result.final_state)  # result=10
 
 ## Install
 
+Requires **Python 3.12+**.
+
 ```bash
 pip install stroma
 ```
@@ -47,6 +49,7 @@ pip install stroma[langgraph]   # LangGraph adapter
 - **Shared context** — pass a mutable `context` dict through `RunConfig` to every node
 - **Execution tracing** — full record of every node attempt, with diffing and JSON export
 - **Per-run logging** — structured `LoggerAdapter` with `run_id` in every log line
+- **Fluent builder API** — configure runners with chained `.with_budget()`, `.with_hooks()`, `.with_redis()`, etc.
 - **LangGraph adapter** — apply contracts to existing LangGraph graphs
 - **Framework-agnostic** — works with any async Python code, no framework lock-in
 

@@ -71,8 +71,7 @@ Optional extras:
 
 ## Next Steps
 
-| | |
-|---|---|
-| **[Tutorial](tutorial/index.md)** | Build a pipeline step by step, from hello-world to production-grade. |
-| **[Concepts](concepts.md)** | Understand the architecture and design decisions behind each primitive. |
-| **[API Reference](api/runner.md)** | Full documentation for every class, function, and decorator. |
+- **[Tutorial](tutorial/index.md)** — Build a pipeline step by step, from hello-world to production-grade.
+- **[Concepts](concepts.md)** — Understand the architecture and design decisions behind each primitive.
+- **[Extending Stroma](extending.md)** — Write custom backends, classifiers, and OTel integrations.
+- **[API Reference](api/runner.md)** — Full documentation for every class, function, and decorator.

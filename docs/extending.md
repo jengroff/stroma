@@ -159,6 +159,12 @@ _active_spans: dict[tuple[str, str], trace.Span] = {}
 
 
 async def otel_start(run_id: str, node_id: str, input_state: dict) -> None:
+    key = (run_id, node_id)
+    # End any leftover span from a previous attempt so it isn't silently dropped
+    previous = _active_spans.pop(key, None)
+    if previous is not None:
+        previous.set_status(StatusCode.ERROR, description="superseded by retry")
+        previous.end()
     span = tracer.start_span(
         f"stroma.node.{node_id}",
         attributes={
@@ -166,7 +172,7 @@ async def otel_start(run_id: str, node_id: str, input_state: dict) -> None:
             "stroma.node_id": node_id,
         },
     )
-    _active_spans[(run_id, node_id)] = span
+    _active_spans[key] = span
 
 
 async def otel_success(run_id: str, node_id: str, output_state: dict, tokens: int) -> None:
