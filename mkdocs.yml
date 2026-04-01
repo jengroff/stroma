@@ -1,0 +1,56 @@
+site_name: Stroma
+site_description: Framework-agnostic reliability primitives for agent pipelines
+site_url: https://jengroff.github.io/stroma
+repo_url: https://github.com/jengroff/stroma
+repo_name: jengroff/stroma
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - content.code.annotate
+    - navigation.sections
+    - navigation.expand
+    - navigation.tabs
+  palette:
+    - scheme: default
+      primary: indigo
+
+nav:
+  - Home: index.md
+  - Tutorial:
+      - Getting Started: tutorial/index.md
+      - Your First Pipeline: tutorial/first-pipeline.md
+      - Adding Contracts: tutorial/adding-contracts.md
+      - Retry & Failures: tutorial/retry-and-failures.md
+      - Checkpointing: tutorial/checkpointing.md
+      - Cost Control: tutorial/cost-control.md
+      - Tracing & Debugging: tutorial/tracing.md
+      - LangGraph Integration: tutorial/langgraph.md
+  - Concepts: concepts.md
+  - API Reference:
+      - Runner: api/runner.md
+      - Contracts: api/contracts.md
+      - Checkpointing: api/checkpoint.md
+      - Cost Tracking: api/cost.md
+      - Failures: api/failures.md
+      - Tracing: api/trace.md
+      - LangGraph Adapter: api/langgraph.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            members_order: source
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
