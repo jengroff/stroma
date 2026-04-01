@@ -3,9 +3,20 @@ repos:
     rev: v0.11.0
     hooks:
       - id: ruff
-        args: [--fix, src/stroma/, tests/]
+        args: [--fix, --exit-non-zero-on-fix, src/stroma/, tests/]
         pass_filenames: false
       - id: ruff-format
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: debug-statements
 
   - repo: local
     hooks:
