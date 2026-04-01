@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://jengroff.github.io/stroma/tutorial/first-pipeline/">
+        <link rel="canonical" href="https://jengroff.github.io/stroma/vs-langgraph/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../concepts/">
       
       
-        <link rel="next" href="../adding-contracts/">
+        <link rel="next" href="../extending/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Your First Pipeline - Stroma</title>
+        <title>Stroma vs. LangGraph - Stroma</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#your-first-pipeline" class="md-skip">
+        <a href="#stroma-vs-langgraph" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Stroma" class="md-header__button md-logo" aria-label="Stroma" data-md-component="logo">
+    <a href=".." title="Stroma" class="md-header__button md-logo" aria-label="Stroma" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Your First Pipeline
+              Stroma vs. LangGraph
             
           </span>
         </div>
@@ -211,7 +211,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -228,13 +228,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../tutorial/" class="md-tabs__link">
           
   
   
@@ -252,7 +250,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../concepts/" class="md-tabs__link">
+      <a href="../concepts/" class="md-tabs__link">
         
   
   
@@ -269,9 +267,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../../vs-langgraph/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -290,7 +290,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../extending/" class="md-tabs__link">
+      <a href="../extending/" class="md-tabs__link">
         
   
   
@@ -311,7 +311,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../api/runner/" class="md-tabs__link">
+        <a href="../api/runner/" class="md-tabs__link">
           
   
   
@@ -345,7 +345,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Stroma" class="md-nav__button md-logo" aria-label="Stroma" data-md-component="logo">
+    <a href=".." title="Stroma" class="md-nav__button md-logo" aria-label="Stroma" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -375,7 +375,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -399,31 +399,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -441,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -459,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../tutorial/" class="md-nav__link">
         
   
   
@@ -484,37 +481,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Your First Pipeline
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../tutorial/first-pipeline/" class="md-nav__link">
         
   
   
@@ -530,70 +500,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The code
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#chaining-multiple-nodes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Chaining multiple nodes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#whats-happening-under-the-hood" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's happening under the hood
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recap
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -606,7 +512,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adding-contracts/" class="md-nav__link">
+      <a href="../tutorial/adding-contracts/" class="md-nav__link">
         
   
   
@@ -634,7 +540,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../retry-and-failures/" class="md-nav__link">
+      <a href="../tutorial/retry-and-failures/" class="md-nav__link">
         
   
   
@@ -662,7 +568,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../checkpointing/" class="md-nav__link">
+      <a href="../tutorial/checkpointing/" class="md-nav__link">
         
   
   
@@ -690,7 +596,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cost-control/" class="md-nav__link">
+      <a href="../tutorial/cost-control/" class="md-nav__link">
         
   
   
@@ -718,7 +624,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tracing/" class="md-nav__link">
+      <a href="../tutorial/tracing/" class="md-nav__link">
         
   
   
@@ -746,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hooks/" class="md-nav__link">
+      <a href="../tutorial/hooks/" class="md-nav__link">
         
   
   
@@ -774,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../shared-context/" class="md-nav__link">
+      <a href="../tutorial/shared-context/" class="md-nav__link">
         
   
   
@@ -802,7 +708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../parallel/" class="md-nav__link">
+      <a href="../tutorial/parallel/" class="md-nav__link">
         
   
   
@@ -830,7 +736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../langgraph/" class="md-nav__link">
+      <a href="../tutorial/langgraph/" class="md-nav__link">
         
   
   
@@ -865,7 +771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/" class="md-nav__link">
+      <a href="../concepts/" class="md-nav__link">
         
   
   
@@ -889,10 +795,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../vs-langgraph/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stroma vs. LangGraph
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -908,6 +841,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-dbt-analogy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The dbt analogy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-langgraph-provides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What LangGraph provides
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-stroma-is-additive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Stroma is additive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where Stroma is additive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typed-state-contracts-at-node-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed state contracts at node boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formal-failure-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal failure classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-tracing-with-diff-and-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution tracing with diff and replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-aware-execution-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost-aware execution planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-architectural-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The architectural difference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-what" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use what
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -919,7 +977,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../extending/" class="md-nav__link">
+      <a href="../extending/" class="md-nav__link">
         
   
   
@@ -1000,7 +1058,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/runner/" class="md-nav__link">
+      <a href="../api/runner/" class="md-nav__link">
         
   
   
@@ -1028,7 +1086,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/contracts/" class="md-nav__link">
+      <a href="../api/contracts/" class="md-nav__link">
         
   
   
@@ -1056,7 +1114,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/checkpoint/" class="md-nav__link">
+      <a href="../api/checkpoint/" class="md-nav__link">
         
   
   
@@ -1084,7 +1142,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/cost/" class="md-nav__link">
+      <a href="../api/cost/" class="md-nav__link">
         
   
   
@@ -1112,7 +1170,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/failures/" class="md-nav__link">
+      <a href="../api/failures/" class="md-nav__link">
         
   
   
@@ -1140,7 +1198,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/trace/" class="md-nav__link">
+      <a href="../api/trace/" class="md-nav__link">
         
   
   
@@ -1168,7 +1226,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/langgraph/" class="md-nav__link">
+      <a href="../api/langgraph/" class="md-nav__link">
         
   
   
@@ -1223,10 +1281,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-code" class="md-nav__link">
+  <a href="#the-dbt-analogy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The code
+        The dbt analogy
       
     </span>
   </a>
@@ -1234,10 +1292,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#chaining-multiple-nodes" class="md-nav__link">
+  <a href="#what-langgraph-provides" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Chaining multiple nodes
+        What LangGraph provides
       
     </span>
   </a>
@@ -1245,10 +1303,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-happening-under-the-hood" class="md-nav__link">
+  <a href="#where-stroma-is-additive" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's happening under the hood
+        Where Stroma is additive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where Stroma is additive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typed-state-contracts-at-node-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed state contracts at node boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formal-failure-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal failure classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-tracing-with-diff-and-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution tracing with diff and replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-aware-execution-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost-aware execution planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-architectural-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The architectural difference
       
     </span>
   </a>
@@ -1256,10 +1375,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recap" class="md-nav__link">
+  <a href="#when-to-use-what" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recap
+        When to use what
       
     </span>
   </a>
@@ -1286,107 +1405,109 @@
   
 
 
-<h1 id="your-first-pipeline">Your First Pipeline</h1>
-<p>Build a working pipeline in under 10 lines of code.</p>
-<h2 id="the-code">The code</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">StromaRunner</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">Input</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">Output</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">result</span><span class="p">:</span> <span class="nb">int</span>
-
-
-<span class="n">runner</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">()</span>  <span class="c1"># (1)!</span>
-
-
-<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Input</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Output</span><span class="p">)</span>  <span class="c1"># (2)!</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># (3)!</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">}</span>
-
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">double</span><span class="p">],</span> <span class="n">Input</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>  <span class="c1"># (4)!</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>       <span class="c1"># COMPLETED</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">final_state</span><span class="p">)</span>  <span class="c1"># result=10</span>
-
-<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</code></pre></div>
-<ol>
-<li><code>StromaRunner.quick()</code> creates a runner with sensible defaults: in-memory checkpointing, unlimited budget, and standard retry policies.</li>
-<li><code>@runner.node()</code> declares the contract (input/output schemas) and registers it automatically.</li>
-<li>Nodes are async functions that receive a Pydantic model and return a dict matching the output schema.</li>
-<li><code>runner.run()</code> executes nodes in sequence, applying validation, retries, and checkpointing at each step.</li>
-</ol>
-<p>Run it:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>first_pipeline.py
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>COMPLETED
-result=10
-</code></pre></div>
-<h2 id="chaining-multiple-nodes">Chaining multiple nodes</h2>
-<p>Pipelines become useful when you chain nodes together. Each node's output becomes the next node's input:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">StromaRunner</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">Numbers</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">Doubled</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">result</span><span class="p">:</span> <span class="nb">int</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">Final</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">total</span><span class="p">:</span> <span class="nb">int</span>
-
-
-<span class="n">runner</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">()</span>
-
-
-<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Numbers</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Doubled</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Numbers</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">}</span>
-
-
-<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;add_ten&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Doubled</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Final</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_ten</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Doubled</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">result</span> <span class="o">+</span> <span class="mi">10</span><span class="p">}</span>
-
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">double</span><span class="p">,</span> <span class="n">add_ten</span><span class="p">],</span> <span class="n">Numbers</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">final_state</span><span class="p">)</span>  <span class="c1"># total=20</span>
-
-<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</code></pre></div>
-<p>The runner validates the output of <code>double</code> against <code>Doubled</code>, then validates the input of <code>add_ten</code> against <code>Doubled</code>, catching any shape mismatches before they propagate.</p>
-<h2 id="whats-happening-under-the-hood">What's happening under the hood</h2>
-<p>For each node in the sequence, the runner:</p>
-<ol>
-<li>Validates the current state against the node's <strong>input schema</strong></li>
-<li>Calls the async node function</li>
-<li>Validates the return value against the node's <strong>output schema</strong></li>
-<li>Records resource usage and checks budgets</li>
-<li>Saves a <strong>checkpoint</strong> of the output</li>
-<li>Records a <strong>trace event</strong> for debugging</li>
-</ol>
-<p>All of this happens automatically. The next pages show you how to configure each piece.</p>
-<h2 id="recap">Recap</h2>
+<h1 id="stroma-vs-langgraph">Stroma vs. LangGraph</h1>
+<p>LangGraph is an excellent orchestration framework. Stroma is not a replacement for it — it's a reliability layer that sits alongside it. Understanding the distinction matters because the two tools solve different problems at different layers of the stack.</p>
+<h2 id="the-dbt-analogy">The dbt analogy</h2>
+<p>dbt didn't replace your data warehouse. Snowflake already had views, stored procedures, and scheduling. What dbt gave you was a software engineering layer on top — typed models, tested transformations, documented lineage — that worked regardless of which warehouse you were running.</p>
+<p>Stroma does the same thing for agent execution graphs. LangGraph already has checkpointing, retry, and state management. What Stroma gives you is a reliability layer on top — typed state contracts, formal failure classification, portable checkpointing, cost-aware execution planning — that works regardless of which orchestration framework you're running.</p>
+<p>The framework handles the graph. Stroma handles the guarantees.</p>
+<h2 id="what-langgraph-provides">What LangGraph provides</h2>
+<p>LangGraph is a mature, well-designed orchestration framework. It gives you:</p>
 <ul>
-<li><code>StromaRunner.quick()</code> gets you running with zero configuration</li>
-<li><code>@runner.node()</code> declares contracts and registers them in one step</li>
-<li>Nodes are <code>async</code> functions: Pydantic model in, dict out</li>
-<li><code>runner.run()</code> chains nodes sequentially with full instrumentation</li>
+<li><strong>Graph execution</strong> — nodes, edges, conditional routing, cycles</li>
+<li><strong>State management</strong> — TypedDict and Pydantic models for graph state</li>
+<li><strong>Built-in checkpointing</strong> — MemorySaver, SqliteSaver, AsyncPostgresSaver</li>
+<li><strong>Node-level retry</strong> — RetryPolicy for retrying individual nodes on failure</li>
+<li><strong>Streaming</strong> — token and event streaming out of the box</li>
+<li><strong>Human-in-the-loop</strong> — interrupt_before and interrupt_after for manual intervention</li>
 </ul>
-<p><strong>Next: <a href="../adding-contracts/">Adding Contracts</a></strong> — learn what happens when validation fails and how to use contracts explicitly.</p>
+<p>These are real, production-grade features. If you are building a LangGraph application, you should use them.</p>
+<h2 id="where-stroma-is-additive">Where Stroma is additive</h2>
+<p>Stroma does not duplicate LangGraph's orchestration primitives. It addresses a different layer of the problem — one that LangGraph does not currently solve.</p>
+<h3 id="typed-state-contracts-at-node-boundaries">Typed state contracts at node boundaries</h3>
+<p>LangGraph passes state through the graph. It validates that state conforms to your TypedDict or Pydantic model at the graph level, but it does not enforce schema contracts at individual node boundaries — it does not verify that node A's output is structurally valid input for node B before passing it through.</p>
+<p>Stroma's NodeContract does exactly this. Every node boundary is a validation checkpoint. When a node returns malformed data, ContractViolation is raised immediately at that boundary — classified as a terminal failure — rather than propagating corrupt state downstream where it becomes much harder to diagnose.</p>
+<p>This is the load-bearing primitive. Everything else in Stroma composes on top of it.</p>
+<h3 id="formal-failure-classification">Formal failure classification</h3>
+<p>LangGraph's RetryPolicy is binary: retry or don't, up to a maximum number of attempts. It does not distinguish between failures that are transient (and likely to resolve on retry) versus permanent (and not worth retrying) versus ambiguous.</p>
+<p>Stroma's failure taxonomy is a formal three-class system:</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Meaning</th>
+<th>Default behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RECOVERABLE</td>
+<td>Transient — retry with backoff</td>
+<td>3 retries, jittered backoff</td>
+</tr>
+<tr>
+<td>TERMINAL</td>
+<td>Permanent — stop immediately</td>
+<td>No retries</td>
+</tr>
+<tr>
+<td>AMBIGUOUS</td>
+<td>Uncertain — limited retry</td>
+<td>1 retry, short backoff</td>
+</tr>
+</tbody>
+</table>
+<p>Custom classifiers let you extend this taxonomy for domain-specific errors — rate limits, auth failures, service-specific exceptions — without modifying the core retry logic.</p>
+<h3 id="execution-tracing-with-diff-and-replay">Execution tracing with diff and replay</h3>
+<p>LangGraph's observability story is LangSmith — an external, paid service. There is no built-in primitive for capturing a structured, diffable, replayable audit trail of every node execution attempt as a library-level construct.</p>
+<p>Stroma's ExecutionTrace captures every attempt — successes, failures, retries, timing, input and output state — as a first-class in-process object. You can diff two traces across runs, replay events in order, filter to failures, and export to JSON for any monitoring system you choose. No external service required.</p>
+<h3 id="cost-aware-execution-planning">Cost-aware execution planning</h3>
+<p>LangGraph has no built-in mechanism for enforcing token, cost, or latency budgets across a pipeline run, or for routing nodes to cheaper models when budgets are constrained.</p>
+<p>Stroma's ExecutionBudget and CostTracker enforce hard limits on all three dimensions, with BudgetExceeded integrated into the failure classification system so budget violations are handled with the same retry machinery as any other recoverable failure.</p>
+<h2 id="the-architectural-difference">The architectural difference</h2>
+<p>LangGraph's reliability features are framework-internal. They work within LangGraph, through LangGraph's APIs, against LangGraph's state model. If you switch orchestration frameworks, or compose multiple frameworks, or build a custom execution layer, you leave those features behind.</p>
+<p>Stroma's primitives are framework-agnostic by design. The core library has no dependency on LangGraph. The LangGraphAdapter is the only framework-specific code in the entire codebase — a single file that translates between LangGraph's execution model and Stroma's contract system. Everything else — contracts, failure classification, checkpointing, cost tracking, execution tracing — is portable.</p>
+<p>This is a deliberate architectural decision, not an oversight. The reliability spine should not be coupled to the orchestration layer, for the same reason that dbt's transformation logic should not be coupled to a specific warehouse's proprietary SQL dialect.</p>
+<h2 id="when-to-use-what">When to use what</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Building a new pipeline from scratch</td>
+<td>Use StromaRunner directly with LangGraph as your execution backend</td>
+</tr>
+<tr>
+<td>Existing LangGraph graph</td>
+<td>Use LangGraphAdapter to add contract validation without rewriting</td>
+</tr>
+<tr>
+<td>Already using LangGraph's checkpointer</td>
+<td>Keep it — Stroma's checkpointing is additive, not required</td>
+</tr>
+<tr>
+<td>Need formal failure taxonomy and custom classifiers</td>
+<td>Stroma</td>
+</tr>
+<tr>
+<td>Need typed boundary validation between nodes</td>
+<td>Stroma</td>
+</tr>
+<tr>
+<td>Need portable reliability primitives across frameworks</td>
+<td>Stroma</td>
+</tr>
+<tr>
+<td>Need graph routing, cycles, streaming, human-in-the-loop</td>
+<td>LangGraph</td>
+</tr>
+</tbody>
+</table>
+<p>The short version: use LangGraph to build your graph. Use Stroma to make it reliable.</p>
 
 
 
@@ -1436,10 +1557,10 @@ result=10
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "navigation.sections", "navigation.expand", "navigation.tabs"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.sections", "navigation.expand", "navigation.tabs"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
