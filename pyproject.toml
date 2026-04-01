@@ -8,7 +8,10 @@ version = "0.1.1"
 description = "Framework-agnostic agent reliability primitives for enforcing contracts, checkpointing, tracing, and execution."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["pydantic>=2.0"]
+dependencies = [
+    "mkdocs>=1.6.1",
+    "pydantic>=2.0",
+]
 license = "MIT"
 license-files = ["LICENSE"]
 keywords = ["agents", "reliability", "contracts", "checkpointing", "tracing", "llm"]
