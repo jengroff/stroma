@@ -110,9 +110,7 @@ class ExecutionTrace:
                 or left_evt.failure_message != right_evt.failure_message
             )
             if logical_diff:
-                differences.append(
-                    f"Difference for {key[0]} attempt {key[1]}: {left_evt} != {right_evt}"
-                )
+                differences.append(f"Difference for {key[0]} attempt {key[1]}: {left_evt} != {right_evt}")
         return differences
 
     def replay(self) -> Iterator[TraceEvent]:

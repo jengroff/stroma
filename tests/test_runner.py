@@ -130,8 +130,10 @@ async def test_resume_skips_completed_nodes_and_loads_checkpoint():
         raise AssertionError("node1 should not run")
 
     config2 = RunConfig(
-        run_id="run4", budget=ExecutionBudget.unlimited(),
-        policy_map=default_policy_map(), resume_from="node2",
+        run_id="run4",
+        budget=ExecutionBudget.unlimited(),
+        policy_map=default_policy_map(),
+        resume_from="node2",
     )
     runner2 = StromaRunner(registry, manager, config2)
     result = await runner2.run([counted_node1, resumed_node2], InputState(value=1))

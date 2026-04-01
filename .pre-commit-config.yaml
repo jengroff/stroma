@@ -3,14 +3,15 @@ repos:
     rev: v0.11.0
     hooks:
       - id: ruff
-        args: [--fix]
+        args: [--fix, src/stroma/, tests/]
+        pass_filenames: false
       - id: ruff-format
 
   - repo: local
     hooks:
       - id: ty
         name: ty type check
-        entry: uv run ty check
+        entry: uv run ty check src/stroma/
         language: system
         types: [python]
         pass_filenames: false

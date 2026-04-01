@@ -52,6 +52,7 @@ def test_classify_budget_exceeded_returns_recoverable():
 def test_custom_classifier_override():
     def always_terminal(exc, ctx):
         return FailureClass.TERMINAL
+
     context = NodeContext(node_id="node1", attempt=1, run_id="run1")
     result = classify(ValueError("bad"), context, classifiers=[always_terminal])
     assert result is FailureClass.TERMINAL

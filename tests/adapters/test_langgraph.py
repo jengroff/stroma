@@ -21,9 +21,7 @@ class OutputModel(BaseModel):
     y: int
 
 
-NODE1_CONTRACT = NodeContract(
-    node_id="node1", input_schema=StateModel, output_schema=OutputModel
-)
+NODE1_CONTRACT = NodeContract(node_id="node1", input_schema=StateModel, output_schema=OutputModel)
 
 
 class MockStateGraph:

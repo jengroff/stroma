@@ -348,8 +348,8 @@ class StromaRunner:
 
     def _node_contract(self, node: Callable[..., Any]) -> NodeContract:
         """Extract the contract from a decorated function, falling back to the registry."""
-        contract: NodeContract | None = (
-            getattr(node, "_stroma_contract", None) or getattr(node, "_armature_contract", None)
+        contract: NodeContract | None = getattr(node, "_stroma_contract", None) or getattr(
+            node, "_armature_contract", None
         )
         if contract is not None:
             return contract
