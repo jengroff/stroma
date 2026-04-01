@@ -14,6 +14,9 @@ Each page builds on the previous one, but they're also designed to work standalo
 | [Checkpointing](checkpointing.md) | Save progress and resume after crashes |
 | [Cost Control](cost-control.md) | Token, dollar, and latency budgets |
 | [Tracing & Debugging](tracing.md) | Inspect every execution attempt |
+| [Observability Hooks](hooks.md) | Plug in external telemetry at node boundaries |
+| [Shared Context](shared-context.md) | Share resources across nodes without globals |
+| [Parallel Execution](parallel.md) | Run independent nodes concurrently |
 | [LangGraph Integration](langgraph.md) | Apply contracts to existing LangGraph graphs |
 
 ## Prerequisites

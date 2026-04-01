@@ -32,7 +32,25 @@ Set any combination — `None` means no limit on that dimension. `ExecutionBudge
 
 ## Reporting token usage
 
-Nodes report token usage by returning a tuple of `(output_dict, tokens_used)`:
+Nodes report token usage by returning a tuple instead of a plain dict. Four return shapes are supported:
+
+```python
+# No usage tracking — tokens=0, cost=$0.00
+return {"summary": text}
+
+# Report total tokens only
+return ({"summary": text}, 500)
+
+# Report input tokens + model name for automatic cost calculation
+return ({"summary": text}, 500, "gpt-4o")
+
+# Full usage: input tokens, output tokens, model
+return ({"summary": text}, 400, 100, "gpt-4o")
+```
+
+## Model-based cost estimation
+
+When you include a model name in the return tuple, Stroma looks it up in `KNOWN_MODELS` and computes the USD cost automatically:
 
 ```python
 import asyncio
@@ -49,16 +67,17 @@ class Output(BaseModel):
 
 
 runner = StromaRunner.quick(
-    budget=ExecutionBudget(max_tokens_total=1_000)
+    budget=ExecutionBudget(max_cost_usd=0.10)
 )
 
 
 @runner.node("summarize", input=Input, output=Output)
-async def summarize(state: Input) -> tuple:  # (1)!
+async def summarize(state: Input) -> tuple:
     # In real code, this would call an LLM
     summary = state.text[:100]
-    tokens_used = len(state.text.split())
-    return ({"summary": summary}, tokens_used)  # (2)!
+    input_tokens = len(state.text.split())
+    output_tokens = len(summary.split())
+    return ({"summary": summary}, input_tokens, output_tokens, "gpt-4o")  # (1)!
 
 
 async def main():
@@ -67,13 +86,25 @@ async def main():
         Input(text="A short document to summarize."),
     )
     print(f"Tokens used: {result.total_tokens}")
-    print(f"Cost: ${result.total_cost_usd:.4f}")
+    print(f"Cost: ${result.total_cost_usd:.6f}")
 
 asyncio.run(main())
 ```
 
-1. Return type annotation is `tuple` instead of `dict` when reporting tokens.
-2. The second element of the tuple is the token count as an integer. If you return just a dict, token usage is recorded as 0.
+1. The model string `"gpt-4o"` is looked up in `KNOWN_MODELS` to compute per-token pricing. Unknown models default to $0.00.
+
+Built-in pricing is included for:
+
+| Model | Input (per 1M tokens) | Output (per 1M tokens) |
+|-------|----------------------|------------------------|
+| `gpt-4o` | $2.50 | $10.00 |
+| `gpt-4o-mini` | $0.15 | $0.60 |
+| `gpt-4-turbo` | $10.00 | $30.00 |
+| `claude-opus-4-6` | $15.00 | $75.00 |
+| `claude-sonnet-4-6` | $3.00 | $15.00 |
+| `claude-haiku-4-5` | $0.80 | $4.00 |
+| `gemini-1.5-pro` | $3.50 | $10.50 |
+| `gemini-1.5-flash` | $0.35 | $1.05 |
 
 ## What happens when a budget is exceeded
 
@@ -109,16 +140,14 @@ The `ExecutionResult` includes total token and cost counters:
 result = await runner.run(nodes, initial_state)
 
 print(result.total_tokens)    # aggregate tokens across all nodes
-print(result.total_cost_usd)  # aggregate cost across all nodes
+print(result.total_cost_usd)  # aggregate cost in USD across all nodes
 ```
-
-!!! info
-    Latency is tracked automatically from wall-clock time. Token usage comes from your node's return value. Cost in USD is currently recorded as 0.0 — to track actual costs, record them in your node logic and include them in a custom `CostTracker`.
 
 ## Recap
 
 - **`ExecutionBudget`** sets limits on tokens, cost, and latency
-- Nodes report tokens by returning `(dict, tokens_used)` tuples
+- Nodes report usage by returning tuples: `(dict, tokens)`, `(dict, input_tokens, model)`, or `(dict, input_tokens, output_tokens, model)`
+- **Model-based pricing** computes `cost_usd` automatically from `KNOWN_MODELS`
 - **`BudgetExceeded`** is raised when a limit is crossed (classified as recoverable by default)
 - `result.total_tokens` and `result.total_cost_usd` give you post-run totals
 - Use `ExecutionBudget.unlimited()` (the default) to disable all limits

@@ -132,4 +132,4 @@ for event in result.trace.replay():
 - **`.diff(other_trace)`** compares two runs, ignoring timing
 - **`.to_json()`** exports the trace for external systems
 
-**Next: [LangGraph Integration](langgraph.md)** — apply Stroma contracts to existing LangGraph graphs.
+**Next: [Observability Hooks](hooks.md)** — plug in external telemetry at node boundaries.

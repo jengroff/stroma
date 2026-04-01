@@ -99,4 +99,4 @@ If validation fails at either boundary, a `ContractViolation` is raised — just
 - Use **`LangGraphAdapter.wrap(graph)`** to add validation to an existing graph
 - The adapter validates inputs and outputs at every decorated node boundary
 
-**That's the end of the tutorial!** For deeper dives, check out the [Concepts guide](../concepts.md) and the [API Reference](../api/runner.md).
+**That's the end of the tutorial!** For deeper dives, check the [Concepts guide](../concepts.md) and the [API Reference](../api/runner.md).

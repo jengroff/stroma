@@ -1,6 +1,6 @@
 # Concepts
 
-Stroma is built around five core primitives that work together to make agent pipelines reliable. Each can be used independently, but they compose naturally when wired through the `StromaRunner`.
+Stroma is built around core primitives that work together to make agent pipelines reliable. Each can be used independently, but they compose naturally when wired through the `StromaRunner`.
 
 !!! tip "New to Stroma?"
     If you're looking for a hands-on introduction, start with the [Tutorial](tutorial/index.md). This page covers architecture and design decisions — it's a reference, not a walkthrough.
@@ -29,7 +29,13 @@ registry.register(NodeContract(
 ))
 ```
 
-When validation fails, a `ContractViolation` is raised with the node ID, direction (`"input"` or `"output"`), the raw data, and Pydantic's error details. The runner classifies contract violations as **terminal** failures — no retries, because the data shape won't fix itself.
+When validation fails, a `ContractViolation` is raised with the node ID, direction (`"input"` or `"output"`), the raw data, and Pydantic's error details. The `str()` representation includes the first 5 field-level errors so you can diagnose failures without digging into the trace:
+
+```
+Contract violation for 'search' (output): urls: Input should be a valid list; scores: Input should be a valid list
+```
+
+The runner classifies contract violations as **terminal** failures — no retries, because the data shape won't fix itself.
 
 !!! info "Why terminal?"
     A `ContractViolation` means the node produced structurally invalid data. Retrying with the same input will produce the same bad output. The fix is in the node's logic, not in a retry.
@@ -92,6 +98,32 @@ custom_policies = {
 }
 ```
 
+### Per-node policy overrides
+
+The global `policy_map` applies to all nodes. When a specific node needs different retry behavior, use `node_policies` to override on a per-node basis:
+
+```python
+from stroma import RunConfig, FailureClass, FailurePolicy
+
+config = RunConfig(
+    policy_map={  # global defaults
+        FailureClass.RECOVERABLE: FailurePolicy(max_retries=3, backoff_seconds=1.0),
+        FailureClass.TERMINAL: FailurePolicy(max_retries=0),
+        FailureClass.AMBIGUOUS: FailurePolicy(max_retries=1, backoff_seconds=0.5),
+    },
+    node_policies={  # per-node overrides
+        "llm_call": {
+            FailureClass.RECOVERABLE: FailurePolicy(max_retries=5, backoff_seconds=2.0),
+        },
+        "fast_transform": {
+            FailureClass.RECOVERABLE: FailurePolicy(max_retries=0),
+        },
+    },
+)
+```
+
+The lookup order is: per-node override → global `policy_map` → built-in defaults. Unspecified failure classes for a node fall through to the global policy.
+
 !!! note "Jittered backoff"
     The actual delay before each retry is `random.uniform(0, backoff_seconds)` — not a fixed sleep. This prevents thundering herd problems when multiple pipelines retry simultaneously against the same API.
 
@@ -115,14 +147,20 @@ result = await runner.run([node1, node2, node3], initial_state)
 
 1. The `run_id` must match the original run. The runner loads the checkpoint for the node *before* `resume_from` and uses it as input.
 
-Two storage backends are included:
+### Storage backends
 
-| Backend | Use case | Persistence |
-|---------|----------|-------------|
-| `InMemoryStore` | Testing, short-lived pipelines | In-process only |
-| `RedisStore` | Production, distributed systems | Survives restarts |
+Both sync and async backends are available:
 
-Implement the `CheckpointStore` protocol to add your own backend (Postgres, S3, DynamoDB, etc.) — no subclassing required, just implement `save`, `load`, and `delete`.
+| Backend | Interface | Use case |
+|---------|-----------|----------|
+| `InMemoryStore` | sync | Testing, short-lived pipelines |
+| `AsyncInMemoryStore` | async | Testing with async runners (default for `StromaRunner.quick()`) |
+| `RedisStore` | async | Production, distributed systems (uses `redis.asyncio`) |
+| `SyncRedisStore` | sync | Legacy or sync-only environments |
+
+The `CheckpointManager` handles both sync and async stores transparently — its `checkpoint`, `resume`, and `clear` methods are all `async`, and it detects the store type at construction time.
+
+Implement the `CheckpointStore` or `AsyncCheckpointStore` protocol to add your own backend (Postgres, S3, DynamoDB, etc.) — no subclassing required, just implement `save`, `load`, and `delete`.
 
 ## Cost Tracking
 
@@ -146,16 +184,85 @@ budget = ExecutionBudget(
 )
 ```
 
-Nodes report token usage by returning a tuple:
+### Reporting token usage and model
+
+Nodes report usage by returning a tuple. Four shapes are supported:
+
+| Return shape | Fields |
+|-------------|--------|
+| `dict` | No usage tracking (tokens=0, cost=0) |
+| `(dict, tokens)` | Total tokens, no model-based pricing |
+| `(dict, input_tokens, model)` | Input tokens + model name for cost estimation |
+| `(dict, input_tokens, output_tokens, model)` | Full usage with separate input/output tokens |
+
+When a `model` string is provided, `estimate_cost_usd` looks up pricing from `KNOWN_MODELS` and computes the USD cost automatically:
 
 ```python
 @stroma_node("summarize", contract)
-async def summarize(state: Input) -> dict:
+async def summarize(state: Input) -> tuple:
     result = await llm.generate(state.text)
-    return ({"summary": result.text}, result.usage.total_tokens)  # (1)!
+    return (
+        {"summary": result.text},
+        result.usage.input_tokens,
+        result.usage.output_tokens,
+        "gpt-4o",  # (1)!
+    )
 ```
 
-1. Return `(dict, int)` to report tokens. Return just a `dict` if you don't need token tracking — usage defaults to 0.
+1. Stroma looks up `"gpt-4o"` in `KNOWN_MODELS` and computes cost as `(input_tokens * input_price + output_tokens * output_price) / 1_000_000`. Unknown models default to $0.00.
+
+Built-in pricing covers GPT-4o, GPT-4o-mini, GPT-4-turbo, Claude Opus/Sonnet/Haiku, and Gemini 1.5 Pro/Flash. The `max_cost_usd` budget now enforces actual dollar limits based on model pricing.
+
+## Observability Hooks
+
+Plug in external telemetry (Datadog, Prometheus, OpenTelemetry, Sentry) with `NodeHooks` — async callbacks fired at node execution boundaries:
+
+```python
+from stroma import NodeHooks, RunConfig
+
+async def on_start(run_id, node_id, input_state):
+    metrics.increment("node.started", tags=[f"node:{node_id}"])
+
+async def on_success(run_id, node_id, output_state, tokens_used):
+    metrics.increment("node.completed", tags=[f"node:{node_id}"])
+
+async def on_failure(run_id, node_id, exc, failure_class):
+    sentry.capture_exception(exc)
+
+config = RunConfig(
+    hooks=NodeHooks(
+        on_node_start=on_start,
+        on_node_success=on_success,
+        on_node_failure=on_failure,
+    ),
+)
+```
+
+All hooks are optional and add zero overhead when `None`. Hook callables must be async.
+
+## Shared Context
+
+Nodes can share resources (HTTP clients, DB connections, caches, config) through a `context` dict on `RunConfig`:
+
+```python
+import httpx
+from stroma import RunConfig
+
+async with httpx.AsyncClient() as client:
+    config = RunConfig(context={"http": client, "api_key": "sk-..."})
+    result = await runner.run(nodes, state)
+```
+
+Nodes that accept a second parameter receive the context dict automatically:
+
+```python
+@stroma_node("fetch", contract)
+async def fetch(state: Input, ctx: dict) -> dict:
+    resp = await ctx["http"].get(state.url)
+    return {"body": resp.text}
+```
+
+Nodes with a single parameter continue to work — context detection uses `inspect.signature`. Mutations to the context dict in one node are visible in subsequent nodes.
 
 ## Execution Tracing
 
@@ -189,19 +296,43 @@ json_payload = result.trace.to_json()
 The `StromaRunner` ties everything together. For each node in the sequence it:
 
 1. Validates input against the contract
-2. Executes the async node function
-3. Validates output against the contract
-4. Records resource usage and checks the budget
-5. Saves a checkpoint
-6. Records a trace event
+2. Fires `on_node_start` hook (if configured)
+3. Executes the async node function (passing context if the node accepts it)
+4. Validates output against the contract
+5. Records resource usage, computes cost from model pricing, and checks the budget
+6. Saves a checkpoint
+7. Records a trace event
+8. Fires `on_node_success` hook (if configured)
 
-On failure, it classifies the exception, applies the retry policy, and either retries with jittered backoff, stops with a terminal status, or gives up after exhausting retries.
+On failure, it fires `on_node_failure`, classifies the exception, looks up the per-node or global retry policy, and either retries with jittered backoff, stops with a terminal status, or gives up after exhausting retries.
 
 ```
-Input State → [Contract] → Node → [Contract] → [Budget] → [Checkpoint] → Output State
-                              ↑                                              |
-                              └──────── retry (if recoverable) ──────────────┘
+Input State → [Hook:start] → [Contract] → Node → [Contract] → [Budget] → [Checkpoint] → [Hook:success] → Output State
+                                             ↑                                                                   |
+                                             └──────────── retry (if recoverable) ──────────────────────────────┘
 ```
 
-!!! info "Sequential execution"
-    The runner executes nodes sequentially — no branching or parallel execution. This is by design: it keeps the mental model simple and makes checkpointing/resume deterministic. For complex DAG-based workflows, use the [LangGraph adapter](tutorial/langgraph.md) or compose multiple `StromaRunner` pipelines.
+### Parallel fan-out
+
+For independent nodes that can run simultaneously, use `parallel()`:
+
+```python
+from stroma import parallel
+
+result = await runner.run(
+    [node_a, parallel(node_b, node_c), node_d],
+    state,
+)
+```
+
+`parallel()` wraps multiple nodes into a single pseudo-node that runs them concurrently with `asyncio.gather`. Child outputs are merged into a single dict (last write wins on key conflicts). On any child failure, remaining tasks are cancelled and the exception propagates to the runner's failure handling.
+
+Parallel nodes bypass individual contract validation — each child returns a raw dict and the merged output is validated by the next sequential node's input contract.
+
+### Stateless runner
+
+`CostTracker`, `RetryBudget`, and `ExecutionTrace` are created fresh per `run()` call. Calling `runner.run()` multiple times on the same instance does not accumulate state between runs.
+
+### Structured logging
+
+The runner creates a per-run `logging.LoggerAdapter` with `run_id` in its `extra` dict. All node execution log messages use this adapter, so `run_id` is a structured field rather than inline text — making it filterable in JSON log pipelines.

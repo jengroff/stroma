@@ -20,9 +20,9 @@ Use the same `run_id` and set `resume_from` to the node that failed:
 import asyncio
 from pydantic import BaseModel
 from stroma import (
+    AsyncInMemoryStore,
     CheckpointManager,
     ContractRegistry,
-    InMemoryStore,
     NodeContract,
     RunConfig,
     StromaRunner,
@@ -49,7 +49,7 @@ c2 = NodeContract(node_id="step2", input_schema=Processed, output_schema=Final)
 registry.register(c1)
 registry.register(c2)
 
-store = InMemoryStore()  # (1)!
+store = AsyncInMemoryStore()  # (1)!
 checkpoint_mgr = CheckpointManager(store)
 
 fail_once = True
@@ -88,12 +88,12 @@ async def main():
 asyncio.run(main())
 ```
 
-1. The store must be shared across runs. For production, use `RedisStore` so checkpoints survive process restarts.
+1. The store must be shared across runs. `AsyncInMemoryStore` is the default for `StromaRunner.quick()`. For production, use `RedisStore` so checkpoints survive process restarts.
 2. `step2` fails on the first run. After exhausting retries, the pipeline returns `PARTIAL`.
 3. `resume_from="step2"` tells the runner to skip `step1` and load its checkpoint output instead.
 
 !!! warning
-    `InMemoryStore` loses data when the process exits. For real resume-across-crashes, use `RedisStore`.
+    `AsyncInMemoryStore` and `InMemoryStore` lose data when the process exits. For real resume-across-crashes, use `RedisStore`.
 
 ## Redis-backed checkpointing
 
@@ -111,39 +111,74 @@ checkpoint_mgr = CheckpointManager(store)
 
 1. Checkpoints expire after 1 hour by default. Adjust based on your pipeline's expected recovery window.
 
+`RedisStore` is async — it uses `redis.asyncio` under the hood and won't block the event loop.
+
 Install the Redis extra:
 
 ```bash
 pip install stroma[redis]
 ```
 
+!!! info "Sync Redis"
+    If you need a synchronous Redis store (e.g., for non-async code), use `SyncRedisStore` instead. It has the same API but uses the synchronous `redis-py` client.
+
+## Storage backends
+
+| Backend | Interface | Persistence | Use case |
+|---------|-----------|-------------|----------|
+| `InMemoryStore` | sync | In-process only | Testing with sync stores |
+| `AsyncInMemoryStore` | async | In-process only | Testing (default for `quick()`) |
+| `RedisStore` | async | Survives restarts | Production |
+| `SyncRedisStore` | sync | Survives restarts | Legacy/sync environments |
+
 ## Custom storage backends
 
-Implement the `CheckpointStore` protocol to use any storage backend:
+Implement `AsyncCheckpointStore` (async) or `CheckpointStore` (sync) to use any storage backend:
 
-```python
-from pydantic import BaseModel
-from stroma import CheckpointStore
+=== "Async backend"
+
+    ```python
+    from pydantic import BaseModel
 
 
-class PostgresStore:  # (1)!
-    def save(self, run_id: str, node_id: str, state: BaseModel) -> None:
-        ...
+    class PostgresStore:  # (1)!
+        async def save(self, run_id: str, node_id: str, state: BaseModel) -> None:
+            ...
 
-    def load(self, run_id: str, node_id: str) -> BaseModel | None:
-        ...
+        async def load(self, run_id: str, node_id: str) -> BaseModel | None:
+            ...
 
-    def delete(self, run_id: str) -> None:
-        ...
-```
+        async def delete(self, run_id: str) -> None:
+            ...
+    ```
 
-1. No need to subclass anything — just implement `save`, `load`, and `delete`. Stroma uses structural typing (Python protocols).
+    1. No need to subclass anything — just implement `save`, `load`, and `delete` as async methods. Stroma uses structural typing (Python protocols).
+
+=== "Sync backend"
+
+    ```python
+    from pydantic import BaseModel
+
+
+    class PostgresStore:
+        def save(self, run_id: str, node_id: str, state: BaseModel) -> None:
+            ...
+
+        def load(self, run_id: str, node_id: str) -> BaseModel | None:
+            ...
+
+        def delete(self, run_id: str) -> None:
+            ...
+    ```
+
+The `CheckpointManager` auto-detects whether the store is sync or async and handles both transparently.
 
 ## Recap
 
 - The runner **checkpoints automatically** after every successful node
 - Resume with the **same `run_id`** and `resume_from="node_id"`
-- **`InMemoryStore`** for testing, **`RedisStore`** for production
-- Implement the **`CheckpointStore` protocol** for custom backends (Postgres, S3, etc.)
+- **`AsyncInMemoryStore`** for testing (default), **`RedisStore`** for production
+- **`InMemoryStore`** and **`SyncRedisStore`** available for sync use cases
+- Implement **`AsyncCheckpointStore`** or **`CheckpointStore`** for custom backends
 
 **Next: [Cost Control](cost-control.md)** — set budgets on tokens, dollars, and latency.

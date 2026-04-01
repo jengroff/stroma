@@ -1,5 +1,9 @@
 # Cost Tracking
 
+::: stroma.cost.KNOWN_MODELS
+
+::: stroma.cost.estimate_cost_usd
+
 ::: stroma.cost.ExecutionBudget
 
 ::: stroma.cost.NodeUsage

@@ -8,10 +8,14 @@ LLM agent pipelines fail in ways that traditional software doesn't. API calls ti
 
 - **Contracts** — catch bad data at node boundaries before it propagates downstream
 - **Failure classification** — automatically distinguish transient errors from permanent ones
-- **Retry policies** — configurable retries with jittered backoff, tuned per failure type
-- **Checkpointing** — save progress and resume from where you left off
-- **Cost tracking** — enforce token, dollar, and latency budgets
+- **Retry policies** — configurable retries with jittered backoff, per failure class or per node
+- **Checkpointing** — async-first save and resume across crashes (in-memory or Redis)
+- **Cost estimation** — model-aware USD cost tracking via built-in pricing data, plus token and latency budgets
+- **Parallel execution** — fan out work to concurrent nodes with `parallel()` and merged output
+- **Node hooks** — async lifecycle callbacks for observability and side effects
+- **Shared context** — pass runtime configuration through a mutable `context` dict to every node
 - **Execution tracing** — full audit trail of every attempt, with diffing and export
+- **Per-run logging** — structured `LoggerAdapter` with `run_id` in every log line
 
 No framework lock-in. Works with any async Python code. Compose what you need, ignore what you don't.
 

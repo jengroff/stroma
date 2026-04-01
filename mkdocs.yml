@@ -26,6 +26,9 @@ nav:
       - Checkpointing: tutorial/checkpointing.md
       - Cost Control: tutorial/cost-control.md
       - Tracing & Debugging: tutorial/tracing.md
+      - Observability Hooks: tutorial/hooks.md
+      - Shared Context: tutorial/shared-context.md
+      - Parallel Execution: tutorial/parallel.md
       - LangGraph Integration: tutorial/langgraph.md
   - Concepts: concepts.md
   - API Reference:

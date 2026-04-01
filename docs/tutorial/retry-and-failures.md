@@ -118,6 +118,36 @@ runner = StromaRunner.quick(
 2. Return `None` to pass to the next classifier. If no classifier matches, built-in rules apply.
 3. Classifiers are checked in order. The first non-`None` result wins.
 
+## Per-node policy overrides
+
+The global `policy_map` applies to every node. When a specific node needs different retry behavior — for example, an LLM call that tolerates more retries vs. a fast transform that should fail immediately — use `node_policies`:
+
+```python
+from stroma import FailureClass, FailurePolicy, RunConfig
+
+config = RunConfig(
+    policy_map={  # (1)!
+        FailureClass.RECOVERABLE: FailurePolicy(max_retries=3, backoff_seconds=1.0),
+        FailureClass.TERMINAL: FailurePolicy(max_retries=0),
+        FailureClass.AMBIGUOUS: FailurePolicy(max_retries=1, backoff_seconds=0.5),
+    },
+    node_policies={
+        "llm_call": {  # (2)!
+            FailureClass.RECOVERABLE: FailurePolicy(max_retries=5, backoff_seconds=2.0),
+        },
+        "fast_transform": {  # (3)!
+            FailureClass.RECOVERABLE: FailurePolicy(max_retries=0),
+        },
+    },
+)
+```
+
+1. Global defaults — apply to all nodes unless overridden.
+2. `llm_call` gets 5 retries with longer backoff for recoverable failures.
+3. `fast_transform` gets zero retries — any failure stops immediately.
+
+The lookup order is: per-node override → global `policy_map` → built-in defaults. Only the failure classes you specify in the override are affected; everything else falls through.
+
 ## What happens when retries are exhausted
 
 If a recoverable or ambiguous failure exhausts its retry budget, the pipeline stops with `status=PARTIAL`:
@@ -138,6 +168,7 @@ async def main():
 - **Built-in rules** handle common exceptions automatically
 - **Custom classifiers** let you override classification for domain-specific errors
 - **Retry policies** control max retries and backoff per failure class
+- **Per-node overrides** via `node_policies` for node-specific retry behavior
 - Exhausted retries produce `PARTIAL` status; terminal failures produce `FAILED`
 
 **Next: [Checkpointing](checkpointing.md)** — save pipeline progress and resume after crashes.
