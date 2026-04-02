@@ -1,6 +1,12 @@
 # Quickstart
 
-A complete pipeline in 5 minutes — contracts, retries, checkpoint/resume, and trace inspection.
+Stroma's value is clearest when things go wrong. This page leads with failure — a pipeline that crashes, retries, gets caught at the contract boundary, and resumes from checkpoint — then shows what success looks like.
+
+## Install
+
+```bash
+uv add stroma
+```
 
 ## Define your schemas
 
@@ -8,7 +14,7 @@ A complete pipeline in 5 minutes — contracts, retries, checkpoint/resume, and 
 from pydantic import BaseModel
 
 
-class RawText(BaseModel):
+class Document(BaseModel):
     text: str
 
 
@@ -25,8 +31,8 @@ from stroma import StromaRunner
 runner = StromaRunner.quick()
 
 
-@runner.node("summarize", input=RawText, output=Summary)
-async def summarize(state: RawText) -> dict:
+@runner.node("summarize", input=Document, output=Summary)
+async def summarize(state: Document) -> dict:
     words = state.text.split()
     return {"summary": " ".join(words[:10]) + "...", "word_count": len(words)}
 
@@ -38,96 +44,152 @@ async def validate(state: Summary) -> dict:
     return state.model_dump()
 ```
 
-## Run it
+## What happens when things go wrong
+
+### Bad output — caught at the boundary
+
+When a node returns data that doesn't match its output schema, Stroma raises `ContractViolation` immediately at that boundary — classified as **terminal**, so there's no retry. The error surfaces at the node that caused it, not three steps downstream where it would otherwise corrupt state silently.
 
 ```python
 import asyncio
 
+
+@runner.node("bad_summarize", input=Document, output=Summary)
+async def bad_summarize(state: Document) -> dict:
+    return {"wrong_field": "this will be caught"}  # missing summary and word_count
+
+
 async def main():
-    result = await runner.run(
-        [summarize, validate],
-        RawText(text="Stroma adds reliability to async agent pipelines"),
-    )
-    print(result.status)       # COMPLETED
-    print(result.final_state)  # summary='Stroma adds reliability to async agent pipelines...' word_count=7
+    result = await runner.run([bad_summarize], Document(text="hello"))
+    print(result.status)  # FAILED
+
+    for event in result.trace.failures():
+        print(f"{event.node_id}: {event.failure_message}")
+    # summarize (output): summary: Field required; word_count: Field required
+
 
 asyncio.run(main())
 ```
 
-## See what happens when things fail
+### Transient failure — automatic retry
 
-### Contract violation — terminal failure
-
-If a node returns data that doesn't match the output schema, Stroma raises a `ContractViolation` immediately. This is classified as **terminal** — no retries, because the bug is in the node logic, not a transient issue.
-
-```python
-@runner.node("bad_node", input=RawText, output=Summary)
-async def bad_node(state: RawText) -> dict:
-    return {"wrong_field": "oops"}  # missing 'summary' and 'word_count'
-
-result = await runner.run([bad_node], RawText(text="hello"))
-print(result.status)  # FAILED
-print(result.trace.failures())
-# ContractViolation — terminal, no retry
-```
-
-### Transient error — automatic retry
-
-Transient failures like `TimeoutError` are classified as **recoverable**. Stroma retries with jittered backoff, up to the configured limit.
+`TimeoutError` is classified as **recoverable**. Stroma retries with jittered backoff, up to the configured limit, without any code from you.
 
 ```python
 attempt = {"count": 0}
 
-@runner.node("flaky", input=RawText, output=Summary)
-async def flaky(state: RawText) -> dict:
+
+@runner.node("flaky_summarize", input=Document, output=Summary)
+async def flaky_summarize(state: Document) -> dict:
     attempt["count"] += 1
     if attempt["count"] < 3:
-        raise TimeoutError("API timed out")
-    return {"summary": state.text[:20], "word_count": len(state.text.split())}
+        raise TimeoutError("upstream API timed out")
+    words = state.text.split()
+    return {"summary": " ".join(words[:10]) + "...", "word_count": len(words)}
 
-result = await runner.run([flaky], RawText(text="hello world"))
-print(result.status)          # COMPLETED
-print(attempt["count"])       # 3 (failed twice, succeeded on third try)
+
+async def main():
+    result = await runner.run([flaky_summarize], Document(text="hello world from stroma"))
+    print(result.status)       # COMPLETED
+    print(attempt["count"])    # 3 — failed twice, succeeded on third attempt
+
+
+asyncio.run(main())
 ```
 
-### Crash recovery — checkpoint and resume
+### Crash mid-pipeline — resume from checkpoint
 
-After each node succeeds, Stroma checkpoints the output. If a later node fails, you can resume from the checkpoint instead of re-running everything.
+This is the scenario that separates Stroma from a raw execution loop. After each node succeeds, its output is checkpointed. If a later node fails, you resume from where you left off — the completed nodes are skipped entirely, their outputs loaded from the store.
 
 ```python
-from stroma import RunConfig
+from stroma import (
+    AsyncInMemoryStore,
+    CheckpointManager,
+    ContractRegistry,
+    NodeContract,
+    RunConfig,
+    StromaRunner,
+    stroma_node,
+)
 
-# First run — node1 succeeds, node2 fails
-config1 = RunConfig(run_id="run-42")
-result = await runner.run([summarize, failing_node], RawText(text="..."))
-# result.status == FAILED, but summarize's output is checkpointed
 
-# Resume from node2 — summarize is skipped, its output is loaded from checkpoint
-config2 = RunConfig(run_id="run-42", resume_from="failing_node")
-runner2 = StromaRunner(runner.registry, runner.checkpoint_manager, config2)
-result = await runner2.run([summarize, fixed_node], RawText(text="..."))
-# result.status == RESUMED
+registry = ContractRegistry()
+store = AsyncInMemoryStore()
+manager = CheckpointManager(store)
+
+c1 = NodeContract(node_id="summarize", input_schema=Document, output_schema=Summary)
+c2 = NodeContract(node_id="validate", input_schema=Summary, output_schema=Summary)
+registry.register(c1)
+registry.register(c2)
+
+summarize_run_count = {"n": 0}
+
+
+@stroma_node("summarize", c1)
+async def summarize_checkpointed(state: Document) -> dict:
+    summarize_run_count["n"] += 1
+    words = state.text.split()
+    return {"summary": " ".join(words[:10]) + "...", "word_count": len(words)}
+
+
+@stroma_node("validate", c2)
+async def validate_failing(state: Summary) -> dict:
+    raise RuntimeError("downstream service down")
+
+
+@stroma_node("validate", c2)
+async def validate_fixed(state: Summary) -> dict:
+    return state.model_dump()
+
+
+async def main():
+    # First run — summarize succeeds and is checkpointed, validate crashes
+    config1 = RunConfig(run_id="qs-run-1")
+    runner1 = StromaRunner(registry, manager, config1)
+    result1 = await runner1.run(
+        [summarize_checkpointed, validate_failing],
+        Document(text="Stroma adds reliability to async agent pipelines"),
+    )
+    print(result1.status)              # FAILED
+    print(summarize_run_count["n"])    # 1
+
+    # Resume — summarize is skipped, its checkpoint is loaded
+    config2 = RunConfig(run_id="qs-run-1", resume_from="validate")
+    runner2 = StromaRunner(registry, manager, config2)
+    result2 = await runner2.run(
+        [summarize_checkpointed, validate_fixed],
+        Document(text="Stroma adds reliability to async agent pipelines"),
+    )
+    print(result2.status)              # RESUMED
+    print(result2.final_state)         # summary='Stroma adds reliability to async...' word_count=7
+    print(summarize_run_count["n"])    # still 1 — never ran again
+
+    # Diff the two traces to see exactly what changed
+    diffs = result1.trace.diff(result2.trace)
+    for d in diffs:
+        print(d)
+
+
+asyncio.run(main())
 ```
 
-## Inspect the trace
-
-Every node attempt is recorded — successes, failures, retries, timing, and state.
+## When everything works
 
 ```python
-result = await runner.run([summarize, validate], RawText(text="hello world"))
+async def main():
+    result = await runner.run(
+        [summarize, validate],
+        Document(text="Stroma adds reliability to async agent pipelines"),
+    )
+    print(result.status)       # COMPLETED
+    print(result.final_state)  # summary='Stroma adds reliability to async...' word_count=7
 
-for event in result.trace:
-    print(f"{event.node_id} attempt={event.attempt} duration={event.duration_ms}ms")
-    if event.failure:
-        print(f"  FAILED: {event.failure} — {event.failure_message}")
-
-# Export the full trace as JSON
-import json
-print(json.dumps(result.trace.to_json(), indent=2))
+asyncio.run(main())
 ```
 
 ## Next steps
 
 - **[Tutorial](tutorial/index.md)** — Step-by-step walkthrough of every feature.
 - **[Concepts](concepts.md)** — Architecture and design decisions.
+- **[Stroma vs. LangGraph](vs-langgraph.md)** — Where the two tools fit together.
 - **[Extending Stroma](extending.md)** — Custom backends, classifiers, and OTel integration.
