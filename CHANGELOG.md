@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.7] - 2026-04-02
+
+### Changed
+- Project description unified to "Reliability primitives for agent pipelines." across pyproject.toml, mkdocs.yml, README, and docs homepage
+
 ## [0.2.6] - 2026-04-02
 
 ### Added

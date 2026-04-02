@@ -1,5 +1,5 @@
 site_name: Stroma
-site_description: Framework-agnostic reliability primitives for agent pipelines
+site_description: Reliability primitives for agent pipelines
 site_url: https://jengroff.github.io/stroma
 repo_url: https://github.com/jengroff/stroma
 repo_name: jengroff/stroma

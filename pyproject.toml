@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stroma"
-version = "0.2.6"
-description = "Framework-agnostic agent reliability primitives for enforcing contracts, checkpointing, tracing, and execution."
+version = "0.2.7"
+description = "Reliability primitives for agent pipelines."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
