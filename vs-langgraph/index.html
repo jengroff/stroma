@@ -1578,6 +1578,10 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Checkpointing is additive</p>
+<p>If you're already using LangGraph's checkpointer (MemorySaver, SqliteSaver, etc.), keep it. Stroma's checkpointing is for non-LangGraph pipelines or as a complementary layer — it does not replace or conflict with LangGraph's native checkpointing.</p>
+</div>
 <h2 id="when-to-use-what">When to use what</h2>
 <table>
 <thead>
@@ -1588,28 +1592,32 @@
 </thead>
 <tbody>
 <tr>
-<td>Building a new pipeline from scratch</td>
-<td>Use StromaRunner directly, with LangGraph as your execution backend if needed</td>
-</tr>
-<tr>
 <td>Existing LangGraph graph</td>
 <td>Use LangGraphAdapter to add contract validation without rewriting</td>
-</tr>
-<tr>
-<td>Already using LangGraph's checkpointer</td>
-<td>Keep it — Stroma's checkpointing is additive, not required</td>
-</tr>
-<tr>
-<td>Need formal failure taxonomy and custom classifiers</td>
-<td>Stroma</td>
 </tr>
 <tr>
 <td>Need typed boundary validation between nodes</td>
 <td>Stroma</td>
 </tr>
 <tr>
+<td>Need formal failure taxonomy and custom classifiers</td>
+<td>Stroma</td>
+</tr>
+<tr>
+<td>Need cost budget enforcement (tokens / USD / latency)</td>
+<td>Stroma</td>
+</tr>
+<tr>
 <td>Need portable reliability primitives across frameworks</td>
 <td>Stroma</td>
+</tr>
+<tr>
+<td>Already using LangGraph's checkpointer</td>
+<td>Keep it — Stroma's checkpointing is additive, not required</td>
+</tr>
+<tr>
+<td>Building a new pipeline from scratch</td>
+<td>Use StromaRunner directly, with LangGraph as your execution backend if needed</td>
 </tr>
 <tr>
 <td>Need graph routing, cycles, streaming, human-in-the-loop</td>

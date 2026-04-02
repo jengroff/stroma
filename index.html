@@ -1404,11 +1404,18 @@
 <li>Runs the pipeline with contract validation, retry handling, cost tracking, and checkpointing at every step.</li>
 </ol>
 <h2 id="what-you-get">What you get</h2>
+<p><strong>Core reliability primitives:</strong></p>
 <ul>
-<li><strong>Input/output validation at every step</strong> — Pydantic contracts catch bad data at node boundaries before it propagates</li>
-<li><strong>Retry only when failures are recoverable</strong> — three-class failure taxonomy (recoverable, terminal, ambiguous) with configurable policies</li>
-<li><strong>Resume from where execution failed</strong> — async-first checkpointing with in-memory and Redis backends</li>
-<li><strong>Inspect the full execution trace</strong> — structured audit trail of every attempt, with diffing, replay, and JSON export</li>
+<li><strong>Typed node boundary contracts</strong> — Pydantic input/output validation at every node edge, not just graph entry</li>
+<li><strong>Formal failure classification</strong> — three-class taxonomy (recoverable, terminal, ambiguous) with custom classifier support</li>
+<li><strong>Per-node retry policies</strong> — configurable per failure class, per node, with jittered backoff</li>
+<li><strong>Cost budget enforcement</strong> — token, USD, and latency limits with model-aware pricing</li>
+</ul>
+<p><strong>Execution infrastructure (composable, optional):</strong></p>
+<ul>
+<li><strong>Checkpointing</strong> — async-first save and resume with in-memory and Redis backends</li>
+<li><strong>Execution tracing</strong> — structured audit trail of every attempt, with diffing, replay, and JSON export</li>
+<li><strong>Parallel execution, hooks, shared context, structured logging</strong> — fan-out, lifecycle callbacks, runtime config injection</li>
 </ul>
 <h2 id="before-and-after">Before and after</h2>
 <p><strong>Before</strong> — failures are silent, retries are manual, state is lost on crash:</p>

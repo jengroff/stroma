@@ -1462,7 +1462,7 @@
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-        <span class="n">runner</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;http&quot;</span><span class="p">:</span> <span class="n">client</span><span class="p">}</span>  <span class="c1"># (2)!</span>
+        <span class="n">runner</span><span class="o">.</span><span class="n">with_context</span><span class="p">({</span><span class="s2">&quot;http&quot;</span><span class="p">:</span> <span class="n">client</span><span class="p">})</span>  <span class="c1"># (2)!</span>
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">fetch</span><span class="p">],</span> <span class="n">Url</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://example.com&quot;</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">final_state</span><span class="o">.</span><span class="n">body</span><span class="p">))</span>
 
@@ -1470,7 +1470,7 @@
 </code></pre></div>
 <ol>
 <li>Add a second parameter (any name) to receive the context dict. Stroma detects this automatically via <code>inspect.signature</code>.</li>
-<li>Set the context before calling <code>run()</code>. The same dict is passed by reference to every node.</li>
+<li>Set the context with <code>.with_context()</code> before calling <code>run()</code>. The same dict is passed by reference to every node.</li>
 </ol>
 <h2 id="context-detection">Context detection</h2>
 <p>Stroma checks the number of parameters on each node function:</p>

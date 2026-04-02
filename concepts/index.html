@@ -927,34 +927,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#checkpointing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Checkpointing
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Checkpointing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#storage-backends" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage backends
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#cost-tracking" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -994,24 +966,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#observability-hooks" class="md-nav__link">
+  <a href="#checkpointing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Observability Hooks
+        Checkpointing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checkpointing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage backends
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#shared-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Shared Context
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1020,6 +998,17 @@
     <span class="md-ellipsis">
       
         Execution Tracing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks-context-and-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks, Context, and Logging
       
     </span>
   </a>
@@ -1054,17 +1043,6 @@
     <span class="md-ellipsis">
       
         Stateless runner
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#structured-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Structured logging
       
     </span>
   </a>
@@ -1483,34 +1461,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#checkpointing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Checkpointing
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Checkpointing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#storage-backends" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage backends
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#cost-tracking" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1550,24 +1500,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#observability-hooks" class="md-nav__link">
+  <a href="#checkpointing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Observability Hooks
+        Checkpointing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checkpointing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage backends
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#shared-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Shared Context
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1576,6 +1532,17 @@
     <span class="md-ellipsis">
       
         Execution Tracing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks-context-and-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks, Context, and Logging
       
     </span>
   </a>
@@ -1610,17 +1577,6 @@
     <span class="md-ellipsis">
       
         Stateless runner
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#structured-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Structured logging
       
     </span>
   </a>
@@ -1813,58 +1769,6 @@
 <p class="admonition-title">Jittered backoff</p>
 <p>The actual delay before each retry is <code>random.uniform(0, backoff_seconds)</code> — not a fixed sleep. This prevents thundering herd problems when multiple pipelines retry simultaneously against the same API.</p>
 </div>
-<h2 id="checkpointing">Checkpointing</h2>
-<p>After each successful node execution, the output state is <strong>checkpointed</strong>. If a pipeline fails partway through, you can resume from the last checkpoint instead of re-running completed nodes:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
-
-<span class="c1"># First run fails at node3</span>
-<span class="n">config1</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;run-123&quot;</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">],</span> <span class="n">initial_state</span><span class="p">)</span>
-<span class="c1"># result.status == PARTIAL or FAILED</span>
-
-<span class="c1"># Resume from node3 — node1 and node2 are skipped, output loaded from checkpoint</span>
-<span class="n">config2</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;run-123&quot;</span><span class="p">,</span> <span class="n">resume_from</span><span class="o">=</span><span class="s2">&quot;node3&quot;</span><span class="p">)</span>  <span class="c1"># (1)!</span>
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">],</span> <span class="n">initial_state</span><span class="p">)</span>
-<span class="c1"># result.status == RESUMED</span>
-</code></pre></div>
-<ol>
-<li>The <code>run_id</code> must match the original run. The runner loads the checkpoint for the node <em>before</em> <code>resume_from</code> and uses it as input.</li>
-</ol>
-<h3 id="storage-backends">Storage backends</h3>
-<p>Both sync and async backends are available:</p>
-<table>
-<thead>
-<tr>
-<th>Backend</th>
-<th>Interface</th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>InMemoryStore</code></td>
-<td>sync</td>
-<td>Testing, short-lived pipelines</td>
-</tr>
-<tr>
-<td><code>AsyncInMemoryStore</code></td>
-<td>async</td>
-<td>Testing with async runners (default for <code>StromaRunner.quick()</code>)</td>
-</tr>
-<tr>
-<td><code>RedisStore</code></td>
-<td>async</td>
-<td>Production, distributed systems (uses <code>redis.asyncio</code>)</td>
-</tr>
-<tr>
-<td><code>SyncRedisStore</code></td>
-<td>sync</td>
-<td>Legacy or sync-only environments</td>
-</tr>
-</tbody>
-</table>
-<p>The <code>CheckpointManager</code> handles both sync and async stores transparently — its <code>checkpoint</code>, <code>resume</code>, and <code>clear</code> methods are all <code>async</code>, and it detects the store type at construction time.</p>
-<p>Implement the <code>CheckpointStore</code> or <code>AsyncCheckpointStore</code> protocol to add your own backend (Postgres, S3, DynamoDB, etc.) — no subclassing required, just implement <code>save</code>, <code>load</code>, and <code>delete</code>.</p>
 <h2 id="cost-tracking">Cost Tracking</h2>
 <p>Stroma tracks three resource dimensions across your pipeline:</p>
 <table>
@@ -2004,45 +1908,61 @@
 <span class="n">KNOWN_MODELS</span><span class="p">[</span><span class="s2">&quot;my-fine-tune&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">5.00</span><span class="p">,</span> <span class="mf">15.00</span><span class="p">)</span>
 </code></pre></div>
 <p>The <code>max_cost_usd</code> budget enforces actual dollar limits based on model pricing.</p>
-<h2 id="observability-hooks">Observability Hooks</h2>
-<p>Plug in external telemetry (Datadog, Prometheus, OpenTelemetry, Sentry) with <code>NodeHooks</code> — async callbacks fired at node execution boundaries:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeHooks</span><span class="p">,</span> <span class="n">RunConfig</span>
+<hr />
+<h2 id="checkpointing">Checkpointing</h2>
+<p>After each successful node execution, the output state is <strong>checkpointed</strong>. If a pipeline fails partway through, you can resume from the last checkpoint instead of re-running completed nodes:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
 
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_start</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">input_state</span><span class="p">):</span>
-    <span class="n">metrics</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s2">&quot;node.started&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;node:</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+<span class="c1"># First run fails at node3</span>
+<span class="n">config1</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;run-123&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">],</span> <span class="n">initial_state</span><span class="p">)</span>
+<span class="c1"># result.status == PARTIAL or FAILED</span>
 
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">output_state</span><span class="p">,</span> <span class="n">tokens_used</span><span class="p">):</span>
-    <span class="c1"># tokens_used is input_tokens + output_tokens for this attempt (0 if node didn&#39;t report usage)</span>
-    <span class="n">metrics</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="s2">&quot;node.completed&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;node:</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_failure</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">failure_class</span><span class="p">):</span>
-    <span class="n">sentry</span><span class="o">.</span><span class="n">capture_exception</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
-    <span class="n">hooks</span><span class="o">=</span><span class="n">NodeHooks</span><span class="p">(</span>
-        <span class="n">on_node_start</span><span class="o">=</span><span class="n">on_start</span><span class="p">,</span>
-        <span class="n">on_node_success</span><span class="o">=</span><span class="n">on_success</span><span class="p">,</span>
-        <span class="n">on_node_failure</span><span class="o">=</span><span class="n">on_failure</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">)</span>
+<span class="c1"># Resume from node3 — node1 and node2 are skipped, output loaded from checkpoint</span>
+<span class="n">config2</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;run-123&quot;</span><span class="p">,</span> <span class="n">resume_from</span><span class="o">=</span><span class="s2">&quot;node3&quot;</span><span class="p">)</span>  <span class="c1"># (1)!</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">],</span> <span class="n">initial_state</span><span class="p">)</span>
+<span class="c1"># result.status == RESUMED</span>
 </code></pre></div>
-<p>All hooks are optional and add zero overhead when <code>None</code>. Hook callables must be async.</p>
-<h2 id="shared-context">Shared Context</h2>
-<p>Nodes can share resources (HTTP clients, DB connections, caches, config) through a <code>context</code> dict on <code>RunConfig</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
-
-<span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;http&quot;</span><span class="p">:</span> <span class="n">client</span><span class="p">,</span> <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="s2">&quot;sk-...&quot;</span><span class="p">})</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
-</code></pre></div>
-<p>Nodes that accept a second parameter receive the context dict automatically:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@stroma_node</span><span class="p">(</span><span class="s2">&quot;fetch&quot;</span><span class="p">,</span> <span class="n">contract</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ctx</span><span class="p">[</span><span class="s2">&quot;http&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">}</span>
-</code></pre></div>
-<p>Nodes with a single parameter continue to work — context detection uses <code>inspect.signature</code>. Mutations to the context dict in one node are visible in subsequent nodes.</p>
+<ol>
+<li>The <code>run_id</code> must match the original run. The runner loads the checkpoint for the node <em>before</em> <code>resume_from</code> and uses it as input.</li>
+</ol>
+<h3 id="storage-backends">Storage backends</h3>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>Interface</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InMemoryStore</code></td>
+<td>sync</td>
+<td>Testing, short-lived pipelines</td>
+</tr>
+<tr>
+<td><code>AsyncInMemoryStore</code></td>
+<td>async</td>
+<td>Testing with async runners (default for <code>StromaRunner.quick()</code>)</td>
+</tr>
+<tr>
+<td><code>RedisStore</code></td>
+<td>async</td>
+<td>Production, distributed systems (uses <code>redis.asyncio</code>)</td>
+</tr>
+<tr>
+<td><code>SyncRedisStore</code></td>
+<td>sync</td>
+<td>Legacy or sync-only environments</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>CheckpointManager</code> handles both sync and async stores transparently. Implement the <code>CheckpointStore</code> or <code>AsyncCheckpointStore</code> protocol to add your own backend — no subclassing required, just implement <code>save</code>, <code>load</code>, and <code>delete</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Additive with LangGraph</p>
+<p>If you're already using LangGraph's checkpointer (MemorySaver, SqliteSaver, etc.), keep it. Stroma's checkpointing is for non-LangGraph pipelines or as a complementary layer.</p>
+</div>
 <h2 id="execution-tracing">Execution Tracing</h2>
 <p>Every node execution attempt is recorded as a <code>TraceEvent</code> capturing:</p>
 <ul>
@@ -2067,6 +1987,11 @@
 <ol>
 <li><code>diff()</code> compares node IDs, attempts, inputs, outputs, and failure states — ignoring timestamps and durations that naturally vary between runs.</li>
 </ol>
+<h2 id="hooks-context-and-logging">Hooks, Context, and Logging</h2>
+<p>These features are composable and optional — use what your pipeline needs.</p>
+<p><strong>Observability hooks</strong> — <code>NodeHooks</code> provides async callbacks (<code>on_node_start</code>, <code>on_node_success</code>, <code>on_node_failure</code>) at node boundaries for telemetry. All optional, zero overhead when <code>None</code>. See the <a href="../tutorial/hooks/">hooks tutorial</a> and <a href="../extending/">Extending Stroma</a> for full OTel examples.</p>
+<p><strong>Shared context</strong> — a mutable <code>dict</code> on <code>RunConfig</code> passed to nodes that accept a second parameter. Use it for HTTP clients, API keys, caches, or accumulated metadata. See the <a href="../tutorial/shared-context/">shared context tutorial</a>.</p>
+<p><strong>Structured logging</strong> — the runner creates a per-run <code>logging.LoggerAdapter</code> with <code>run_id</code> in its <code>extra</code> dict, making it filterable in JSON log pipelines.</p>
 <h2 id="pipeline-execution">Pipeline Execution</h2>
 <p>The <code>StromaRunner</code> ties everything together. For each node in the sequence it:</p>
 <ol>
@@ -2100,8 +2025,6 @@
 </div>
 <h3 id="stateless-runner">Stateless runner</h3>
 <p><code>CostTracker</code>, <code>RetryBudget</code>, and <code>ExecutionTrace</code> are created fresh per <code>run()</code> call. Calling <code>runner.run()</code> multiple times on the same instance does not accumulate state between runs.</p>
-<h3 id="structured-logging">Structured logging</h3>
-<p>The runner creates a per-run <code>logging.LoggerAdapter</code> with <code>run_id</code> in its <code>extra</code> dict. All node execution log messages use this adapter, so <code>run_id</code> is a structured field rather than inline text — making it filterable in JSON log pipelines.</p>
 <h2 id="stability">Stability</h2>
 <p>Not every primitive is at the same maturity level. Use this as a guide for production planning.</p>
 <table>
