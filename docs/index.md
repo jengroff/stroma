@@ -77,7 +77,7 @@ async def summarize(state: Document) -> dict:
 Requires **Python 3.12+**.
 
 ```bash
-pip install stroma
+uv add stroma
 ```
 
 Optional extras:
@@ -85,13 +85,13 @@ Optional extras:
 === "Redis checkpointing"
 
     ```bash
-    pip install stroma[redis]
+    uv add stroma[redis]
     ```
 
 === "LangGraph adapter"
 
     ```bash
-    pip install stroma[langgraph]
+    uv add stroma[langgraph]
     ```
 
 ## Next Steps

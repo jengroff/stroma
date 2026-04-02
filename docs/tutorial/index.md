@@ -28,7 +28,7 @@ Each page builds on the previous one, but they're also designed to work standalo
 ## Install
 
 ```bash
-pip install stroma
+uv add stroma
 ```
 
 !!! tip

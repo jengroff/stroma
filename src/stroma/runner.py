@@ -246,7 +246,7 @@ class StromaRunner:
     def with_redis(self, redis_url: str, ttl_seconds: int = 3600) -> "StromaRunner":
         """Replace the checkpoint backend with a Redis-backed store.
 
-        Requires the `redis` extra (`pip install stroma[redis]`).
+        Requires the `redis` extra (`uv add stroma[redis]`).
         """
         from stroma.checkpoint import RedisStore
 

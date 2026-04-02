@@ -1,6 +1,6 @@
 """Demonstrates adding Stroma contract validation to a LangGraph graph.
 
-Requires: pip install stroma[langgraph]
+Requires: uv add stroma[langgraph]
 """
 
 import asyncio
@@ -12,7 +12,7 @@ from stroma import ContractRegistry, NodeContract
 try:
     from stroma.adapters.langgraph import LangGraphAdapter
 except ImportError:
-    print("This example requires the langgraph extra: pip install stroma[langgraph]")
+    print("This example requires the langgraph extra: uv add stroma[langgraph]")
     raise SystemExit(1)
 
 

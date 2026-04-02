@@ -116,7 +116,7 @@ checkpoint_mgr = CheckpointManager(store)
 Install the Redis extra:
 
 ```bash
-pip install stroma[redis]
+uv add stroma[redis]
 ```
 
 !!! info "Sync Redis"

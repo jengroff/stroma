@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-04-02
+
+### Added
+- `DeepAgentsAdapter` and `@stroma_deepagents_node` decorator for wrapping deepagents graphs with contract validation and cost tracking
+- `stroma[deepagents]` optional install extra (`deepagents>=0.4.0`, `langgraph>=0.2`)
+- DeepAgents tutorial and API reference docs
+- Conditional adapter exports in `stroma.adapters.__init__` for both LangGraph and DeepAgents
+
+### Changed
+- All `pip install` references across docs, README, source docstrings, and examples replaced with `uv add`
+- README Development section now uses `uv sync --extra dev` instead of `uv pip install -e`
+- `CLAUDE.md` expanded with project layout, quality gate commands, optional extras pattern, testing, and docs conventions
+
 ## [0.2.4] - 2026-04-01
 
 ### Added

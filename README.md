@@ -27,14 +27,15 @@ print(result.final_state)  # result=10
 Requires **Python 3.12+**.
 
 ```bash
-pip install stroma
+uv add stroma
 ```
 
 Optional extras:
 
 ```bash
-pip install stroma[redis]       # Redis-backed checkpointing
-pip install stroma[langgraph]   # LangGraph adapter
+uv add stroma[redis]       # Redis-backed checkpointing
+uv add stroma[langgraph]   # LangGraph adapter
+uv add stroma[deepagents]  # DeepAgents adapter
 ```
 
 ## What You Get
@@ -51,6 +52,7 @@ pip install stroma[langgraph]   # LangGraph adapter
 - **Per-run logging** — structured `LoggerAdapter` with `run_id` in every log line
 - **Fluent builder API** — configure runners with chained `.with_budget()`, `.with_hooks()`, `.with_redis()`, etc.
 - **LangGraph adapter** — apply contracts to existing LangGraph graphs
+- **DeepAgents adapter** — contract validation and cost tracking for deepagents graphs
 - **Framework-agnostic** — works with any async Python code, no framework lock-in
 
 ## Quick Examples
@@ -141,7 +143,7 @@ Full documentation including a tutorial and API reference is available at the [d
 ## Development
 
 ```bash
-uv pip install -e ".[dev]"
+uv sync --extra dev
 uv run pytest tests/ -v --cov=stroma --cov-fail-under=85
 ```
 
