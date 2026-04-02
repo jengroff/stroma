@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.6] - 2026-04-02
+
+### Added
+- Per-child contract validation in `parallel()` — each child's output is validated against its declared contract before merging
+- Full instrumentation for parallel nodes: hooks (`on_node_start`/`on_node_success`/`on_node_failure`), cost tracking, budget checking, and checkpointing
+
+### Changed
+- Parallel failure classification now uses the runner's classifiers instead of hardcoding `AMBIGUOUS`
+- Rewrote "Stroma vs. LangGraph" page as an honest comparison with known limitations section
+
+### Removed
+- `FailurePolicy.fallback_node_id` — was declared in the model but never implemented in the runner; removed to avoid implying unimplemented capability
+
 ## [0.2.5] - 2026-04-02
 
 ### Added

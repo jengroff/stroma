@@ -25,8 +25,7 @@ class FailureClass(StrEnum):
 class FailurePolicy(BaseModel):
     """Retry behavior for a given failure class.
 
-    Controls `max_retries`, `backoff_seconds` (jittered), and an optional
-    `fallback_node_id` to route to instead of retrying.
+    Controls `max_retries` and `backoff_seconds` (jittered).
 
     ## Example
 
@@ -38,7 +37,6 @@ class FailurePolicy(BaseModel):
 
     max_retries: int = 3
     backoff_seconds: float = 1.0
-    fallback_node_id: str | None = None
 
 
 PolicyMap = dict[FailureClass, FailurePolicy]

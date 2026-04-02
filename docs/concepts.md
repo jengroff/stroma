@@ -86,7 +86,6 @@ Each failure class maps to a **retry policy** controlling:
 
 - **`max_retries`** — how many times to retry before giving up
 - **`backoff_seconds`** — maximum backoff (actual delay is jittered between 0 and this value)
-- **`fallback_node_id`** — an alternative node to route to (for future use)
 
 ```python
 from stroma import FailureClass, FailurePolicy

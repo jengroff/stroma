@@ -1,99 +1,77 @@
 # Stroma vs. LangGraph
 
-LangGraph handles orchestration. Stroma adds reliability primitives. They can be used independently or together.
+Stroma and LangGraph solve different problems. LangGraph is a graph execution framework. Stroma is a set of reliability primitives. They can be used independently or together via the `LangGraphAdapter`.
 
-Understanding the distinction matters because the two tools solve different problems at different layers of the stack.
+This page is an honest comparison to help you decide what to use.
 
-## The dbt analogy
+## What each tool does
 
-dbt didn't replace your data warehouse. Snowflake already had views, stored procedures, and scheduling. What dbt gave you was a software engineering layer on top — typed models, tested transformations, documented lineage — that worked regardless of which warehouse you were running.
-
-Stroma does the same thing for agent execution graphs. LangGraph already has checkpointing, retry, and state management. What Stroma gives you is a reliability layer on top — typed state contracts, formal failure classification, portable checkpointing, cost-aware execution planning — that works regardless of which orchestration framework you're running.
-
-The framework handles the graph. Stroma handles the guarantees.
-
-## What LangGraph provides
-
-LangGraph is a mature, well-designed orchestration framework. It gives you:
-
-- **Graph execution** — nodes, edges, conditional routing, cycles
-- **State management** — TypedDict and Pydantic models for graph state
-- **Built-in checkpointing** — MemorySaver, SqliteSaver, AsyncPostgresSaver
-- **Node-level retry** — RetryPolicy for retrying individual nodes on failure
-- **Streaming** — token and event streaming out of the box
-- **Human-in-the-loop** — interrupt_before and interrupt_after for manual intervention
-
-These are real, production-grade features. If you are building a LangGraph application, you should use them.
-
-## Where Stroma is additive
-
-Stroma does not duplicate LangGraph's orchestration primitives. It addresses a different layer of the problem — one that LangGraph does not currently solve.
-
-### Typed state contracts at node boundaries
-
-LangGraph passes state through the graph. It validates state at graph entry — the first node's input — but [run-time validation only occurs on inputs to the first node](https://langchain-ai.github.io/langgraph/concepts/low_level/#state), not on subsequent nodes or outputs. It does not enforce schema contracts at individual node boundaries — it does not verify that node A's output is structurally valid input for node B before passing it through.
-
-Stroma's NodeContract does exactly this. Every node boundary is a validation checkpoint. When a node returns malformed data, ContractViolation is raised immediately at that boundary — classified as a terminal failure — rather than propagating corrupt state downstream where it becomes much harder to diagnose.
-
-This is the load-bearing primitive. Everything else in Stroma composes on top of it.
-
-### Formal failure classification
-
-LangGraph's RetryPolicy is binary: retry or don't, up to a maximum number of attempts. It does not distinguish between failures that are transient (and likely to resolve on retry) versus permanent (and not worth retrying) versus ambiguous.
-
-Stroma's failure taxonomy is a formal three-class system:
-
-| Class | Meaning | Default behavior |
+| | LangGraph | Stroma |
 |---|---|---|
-| RECOVERABLE | Transient — retry with backoff | 3 retries, jittered backoff |
-| TERMINAL | Permanent — stop immediately | No retries |
-| AMBIGUOUS | Uncertain — limited retry | 1 retry, short backoff |
+| **Primary job** | Graph orchestration (routing, cycles, streaming, HITL) | Reliability at node boundaries (contracts, retries, cost, tracing) |
+| **State model** | TypedDict or Pydantic, validated at graph entry | Pydantic, validated at every node boundary (input + output) |
+| **Failure handling** | Binary retry (retry or don't) | Three-class taxonomy (recoverable / terminal / ambiguous) with per-node policies and custom classifiers |
+| **Checkpointing** | Built-in (MemorySaver, Sqlite, Postgres) | Built-in (in-memory, Redis) — independent layer, does not replace LangGraph's |
+| **Cost tracking** | None | Token, USD, and latency budgets with model-aware pricing |
+| **Tracing** | Via LangSmith (external service) | In-process `ExecutionTrace` with diff, replay, JSON export |
+| **Concurrency** | Full graph-level parallelism | `parallel()` fan-out with per-child contract validation |
+| **Streaming** | Yes | No |
+| **Human-in-the-loop** | Yes (`interrupt_before` / `interrupt_after`) | No |
+| **Dynamic routing / cycles** | Yes | No — sequential pipeline or use an external orchestrator |
 
-Custom classifiers let you extend this taxonomy for domain-specific errors — rate limits, auth failures, service-specific exceptions — without modifying the core retry logic.
+## What Stroma adds to LangGraph
 
-### Execution tracing with diff and replay
+If you already have a LangGraph graph, Stroma adds three things LangGraph doesn't provide:
 
-LangGraph's primary observability tool is LangSmith. Stroma takes a different approach: `ExecutionTrace` captures every attempt — successes, failures, retries, timing, input and output state — as a first-class in-process object. You can diff two traces across runs, replay events in order, filter to failures, and export to JSON for any monitoring system you choose.
+**Typed contracts at every node boundary.** LangGraph validates state at graph entry — the first node's input — but [does not enforce schemas at subsequent node boundaries](https://langchain-ai.github.io/langgraph/concepts/low_level/#state). A node can return malformed data and it propagates silently until something downstream breaks. Stroma's `NodeContract` validates both input and output at every decorated node.
 
-### Cost-aware execution planning
+**Formal failure classification.** LangGraph's `RetryPolicy` retries on any exception up to a max count. It doesn't distinguish between a rate limit (retry in 2 seconds) and a schema violation (don't retry at all). Stroma classifies every failure and applies different retry policies per class, per node.
 
-LangGraph has no built-in mechanism for enforcing token, cost, or latency budgets across a pipeline run, or for routing nodes to cheaper models when budgets are constrained.
+**Cost budget enforcement.** LangGraph has no mechanism for capping token spend, USD cost, or latency across a run. Stroma's `ExecutionBudget` enforces hard limits on all three, with `BudgetExceeded` integrated into the failure classification system.
 
-Stroma's ExecutionBudget and CostTracker enforce hard limits on all three dimensions, with BudgetExceeded integrated into the failure classification system so budget violations are handled with the same retry machinery as any other recoverable failure.
+## What Stroma does not do
 
-## The architectural difference
+Stroma is not an orchestrator. It does not provide:
 
-LangGraph's reliability features are framework-internal. They work within LangGraph, through LangGraph's APIs, against LangGraph's state model. If you switch orchestration frameworks, or compose multiple frameworks, or build a custom execution layer, you leave those features behind.
+- **Graph execution** — no conditional edges, cycles, or dynamic routing
+- **Streaming** — no token-level or event-level streaming
+- **Human-in-the-loop** — no interrupt/resume at arbitrary points
+- **Agent loops** — no built-in tool-call loops or ReAct patterns
 
-Stroma's primitives are framework-agnostic by design. The core library has no dependency on LangGraph. The LangGraphAdapter is the only framework-specific code in the entire codebase — a single file that translates between LangGraph's execution model and Stroma's contract system. Everything else — contracts, failure classification, checkpointing, cost tracking, execution tracing — is portable.
+If you need these, use LangGraph (or another orchestrator) and add Stroma on top via the adapter.
 
-This is a deliberate architectural decision, not an oversight. The reliability spine should not be coupled to the orchestration layer, for the same reason that dbt's transformation logic should not be coupled to a specific warehouse's proprietary SQL dialect.
+## Known limitations
 
-## Side-by-side
+Being transparent about where Stroma is still maturing:
 
-| Capability | Stroma | LangGraph |
-|---|---|---|
-| Orchestration (routing, cycles, streaming) | No | Yes |
-| Typed boundary contracts | Yes | Partial |
-| Retry classification (3-class) | Yes | Partial |
-| Checkpoint / resume | Yes | Yes |
-| Execution trace with diff / replay | Yes | Partial |
-| Framework-agnostic | Yes | No |
+- **Adapter maturity** — `LangGraphAdapter` and `DeepAgentsAdapter` are beta. They provide contract validation and cost tracking, but not the full runner feature set (retries, failure classification)
+- **Sequential execution model** — `StromaRunner` runs nodes in a fixed sequence. For graph topologies, you need an external orchestrator
+- **`parallel()` semantics** — fan-out uses `asyncio.gather` with no concurrency limits or cancellation policies. Per-child contract validation is enforced, but there's no per-child retry or checkpointing
 
-!!! note "Checkpointing is additive"
-    If you're already using LangGraph's checkpointer (MemorySaver, SqliteSaver, etc.), keep it. Stroma's checkpointing is for non-LangGraph pipelines or as a complementary layer — it does not replace or conflict with LangGraph's native checkpointing.
+## Using them together
+
+The `LangGraphAdapter` wraps an existing LangGraph graph to add contract validation without rewriting it:
+
+```python
+from stroma import ContractRegistry
+from stroma.adapters.langgraph import LangGraphAdapter, stroma_langgraph_node
+
+adapter = LangGraphAdapter(registry)
+wrapped_graph = adapter.wrap(your_langgraph_graph)
+```
+
+Decorated nodes get input/output validation. Non-decorated nodes are left untouched. LangGraph keeps its own checkpointer — Stroma doesn't interfere.
+
+See the [LangGraph Integration tutorial](tutorial/langgraph.md) for a full walkthrough.
 
 ## When to use what
 
 | Situation | Recommendation |
 |---|---|
-| Existing LangGraph graph | Use LangGraphAdapter to add contract validation without rewriting |
-| Need typed boundary validation between nodes | Stroma |
-| Need formal failure taxonomy and custom classifiers | Stroma |
-| Need cost budget enforcement (tokens / USD / latency) | Stroma |
-| Need portable reliability primitives across frameworks | Stroma |
-| Already using LangGraph's checkpointer | Keep it — Stroma's checkpointing is additive, not required |
-| Building a new pipeline from scratch | Use StromaRunner directly, with LangGraph as your execution backend if needed |
-| Need graph routing, cycles, streaming, human-in-the-loop | LangGraph |
-
-Use LangGraph to build your graph. Use Stroma to make it reliable. Use both when you need both.
+| Building a graph with routing, cycles, or streaming | LangGraph |
+| Need typed validation at every node boundary | Stroma |
+| Need formal failure taxonomy beyond binary retry | Stroma |
+| Need cost/token/latency budget enforcement | Stroma |
+| Existing LangGraph graph, want to add contracts | `LangGraphAdapter` |
+| New sequential pipeline from scratch | `StromaRunner` directly |
+| Need both orchestration and reliability | LangGraph for the graph, Stroma for the guarantees |
