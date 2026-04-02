@@ -577,6 +577,140 @@ async def test_parallel_trace_event_recorded():
     assert "parallel" in event.node_id
 
 
+# --- Parallel instrumentation tests ---
+
+
+@pytest.mark.asyncio
+async def test_parallel_hooks_called():
+    from unittest.mock import AsyncMock
+
+    from stroma.runner import NodeHooks, parallel
+
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def node_a(state: InputState) -> dict:
+        return {"result": state.value + 1}
+
+    on_start = AsyncMock()
+    on_success = AsyncMock()
+
+    config = RunConfig(
+        run_id="run_parallel_hooks",
+        budget=ExecutionBudget.unlimited(),
+        hooks=NodeHooks(on_node_start=on_start, on_node_success=on_success),
+    )
+    runner = StromaRunner(registry, manager, config)
+    result = await runner.run([parallel(node_a)], InputState(value=5))
+
+    assert result.status == RunStatus.COMPLETED
+    on_start.assert_awaited()
+    on_success.assert_awaited()
+    success_args = on_success.call_args[0]
+    assert "parallel" in success_args[1]
+
+
+@pytest.mark.asyncio
+async def test_parallel_failure_hook_called():
+    from unittest.mock import AsyncMock
+
+    from stroma.runner import NodeHooks, parallel
+
+    registry = ContractRegistry()
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def node_fail(state: InputState) -> dict:
+        raise RuntimeError("boom")
+
+    on_failure = AsyncMock()
+
+    config = RunConfig(
+        run_id="run_parallel_fail_hook",
+        budget=ExecutionBudget.unlimited(),
+        hooks=NodeHooks(on_node_failure=on_failure),
+    )
+    runner = StromaRunner(registry, manager, config)
+    result = await runner.run([parallel(node_fail)], InputState(value=1))
+
+    assert result.status == RunStatus.FAILED
+    on_failure.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_parallel_cost_tracking():
+    from stroma.runner import parallel
+
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    registry.register(NodeContract(node_id="node2", input_schema=InputState, output_schema=NodeTwoOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def node_a(state: InputState) -> tuple:
+        return ({"result": state.value + 1}, 100, 50, "gpt-4o")
+
+    @stroma_node("node2", NodeContract(node_id="node2", input_schema=InputState, output_schema=NodeTwoOutput))
+    async def node_b(state: InputState) -> tuple:
+        return ({"total": state.value * 2}, 200, 100, "gpt-4o")
+
+    config = RunConfig(run_id="run_parallel_cost", budget=ExecutionBudget.unlimited())
+    runner = StromaRunner(registry, manager, config)
+    result = await runner.run([parallel(node_a, node_b)], InputState(value=5))
+
+    assert result.status == RunStatus.COMPLETED
+    assert result.total_tokens == 450
+
+
+@pytest.mark.asyncio
+async def test_parallel_checkpoints_output():
+    from stroma.runner import parallel
+
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def node_a(state: InputState) -> dict:
+        return {"result": state.value + 1}
+
+    config = RunConfig(run_id="run_parallel_ckpt", budget=ExecutionBudget.unlimited())
+    runner = StromaRunner(registry, manager, config)
+    result = await runner.run([parallel(node_a)], InputState(value=5))
+
+    assert result.status == RunStatus.COMPLETED
+    loaded = await manager.resume("run_parallel_ckpt", "parallel(node1)", result.final_state.__class__)
+    assert loaded is not None
+
+
+@pytest.mark.asyncio
+async def test_parallel_child_contract_violation():
+    from stroma.runner import parallel
+
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def bad_node(state: InputState) -> dict:
+        return {"wrong_field": "oops"}
+
+    config = RunConfig(run_id="run_parallel_cv", budget=ExecutionBudget.unlimited())
+    runner = StromaRunner(registry, manager, config)
+    result = await runner.run([parallel(bad_node)], InputState(value=1))
+
+    assert result.status == RunStatus.FAILED
+    failure_events = list(result.trace.failures())
+    assert len(failure_events) == 1
+
+
 # --- Task 11: Fluent builder API tests ---
 
 

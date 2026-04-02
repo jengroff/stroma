@@ -47,7 +47,7 @@ uv add stroma[deepagents]  # DeepAgents adapter
 - **Retry policies** — configurable retries with jittered backoff, per failure class or per node
 - **Checkpointing** — async-first save and resume across crashes (in-memory or Redis)
 - **Cost estimation** — model-aware USD cost tracking via `KNOWN_MODELS` and token/dollar/latency budgets
-- **Parallel execution** — fan out work to concurrent nodes with `parallel()` and merged output
+- **Parallel execution** — fan out work to concurrent nodes with `parallel()`, per-child contract validation, and merged output
 - **Node hooks** — async `on_node_start`, `on_node_success`, and `on_node_failure` callbacks
 - **Shared context** — pass a mutable `context` dict through `RunConfig` to every node
 - **Execution tracing** — full record of every node attempt, with diffing and JSON export

@@ -142,8 +142,13 @@ def parallel(*nodes: NodeFunc) -> NodeFunc:  # type: ignore[return-value]
     nodes, runs them concurrently, then merges their output dicts (last write
     wins on key conflicts). All child nodes must accept the same input schema.
 
-    On any child failure, remaining tasks are cancelled and the exception
-    propagates to the runner's failure handling.
+    Each child's output is validated against its declared contract (if decorated
+    with `@stroma_node` or `@runner.node`) before merging. Cost tuples returned
+    by children are accumulated and returned as a 4-tuple so the runner can
+    track token usage.
+
+    On any child failure (including `ContractViolation`), remaining tasks are
+    cancelled and the exception propagates to the runner's failure handling.
 
     ## Example
 
@@ -151,28 +156,44 @@ def parallel(*nodes: NodeFunc) -> NodeFunc:  # type: ignore[return-value]
     result = await runner.run([node_a, parallel(node_b, node_c), node_d], state)
     ```
     """
+    from stroma.contracts import BoundaryValidator
+
     node_ids = [getattr(n, "_stroma_node_id", repr(n)) for n in nodes]
     pseudo_id = f"parallel({', '.join(node_ids)})"
+    validator = BoundaryValidator()
 
-    async def _parallel_node(state: BaseModel, ctx: dict[str, Any] | None = None) -> dict[str, Any]:
+    async def _parallel_node(
+        state: BaseModel, ctx: dict[str, Any] | None = None
+    ) -> tuple[dict[str, Any], int, int, None]:
+        total_input_tokens = 0
+        total_output_tokens = 0
+
         async def _run_one(node: NodeFunc) -> dict[str, Any]:
+            nonlocal total_input_tokens, total_output_tokens
             if _node_accepts_context(node) and ctx is not None:
                 result = await node(state, ctx)  # type: ignore[call-arg]  # ty: ignore[too-many-positional-arguments]
             else:
                 result = await node(state)  # type: ignore[call-arg]
-            output, *_ = _unpack_output(result)
+            output, input_tokens, output_tokens, _model = _unpack_output(result)
+            total_input_tokens += input_tokens
+            total_output_tokens += output_tokens
+
+            contract = getattr(node, "_stroma_contract", None)
+            if contract is not None:
+                validator(contract, "output", output)
+
             return output
 
         results = await asyncio.gather(*[_run_one(n) for n in nodes])
         merged: dict[str, Any] = {}
         for r in results:
             merged.update(r)
-        return merged
+        return (merged, total_input_tokens, total_output_tokens, None)
 
     _parallel_node._stroma_node_id = pseudo_id  # type: ignore[attr-defined]  # ty: ignore[unresolved-attribute]
     _parallel_node._stroma_is_parallel = True  # type: ignore[attr-defined]  # ty: ignore[unresolved-attribute]
     _parallel_node._stroma_child_nodes = nodes  # type: ignore[attr-defined]  # ty: ignore[unresolved-attribute]
-    return _parallel_node  # type: ignore[return-value]
+    return _parallel_node  # type: ignore[return-value]  # ty: ignore[invalid-return-type]
 
 
 class StromaRunner:
@@ -516,13 +537,21 @@ class StromaRunner:
         trace: ExecutionTrace,
         run_logger: logging.LoggerAdapter,  # type: ignore[type-arg]
     ) -> ExecutionResult:
-        """Execute a parallel pseudo-node, merging child outputs into a dynamic model."""
+        """Execute a parallel pseudo-node with full instrumentation.
+
+        Applies the same reliability instrumentation as sequential nodes:
+        hooks, cost tracking, budget checking, and checkpointing.
+        """
         from pydantic import create_model
 
         start_ts = datetime.now(UTC)
         try:
+            if self.config.hooks.on_node_start is not None:
+                await self.config.hooks.on_node_start(self.config.run_id, node_id, current_state.model_dump())
+
             ctx = self.config.context
-            merged = await node(current_state, ctx)  # type: ignore[call-arg]  # ty: ignore[too-many-positional-arguments]
+            raw_result = await node(current_state, ctx)  # type: ignore[call-arg]  # ty: ignore[too-many-positional-arguments]
+            merged, input_tokens, output_tokens, model = self._unpack_output(raw_result)
 
             dynamic_output = create_model(
                 "ParallelOutput", **{k: (type(v), ...) for k, v in merged.items()}
@@ -530,6 +559,22 @@ class StromaRunner:
             output_model = dynamic_output(**merged)
 
             duration_ms = self._elapsed_ms(start_ts)
+            tokens_used = input_tokens + output_tokens
+            cost_usd = estimate_cost_usd(model, input_tokens, output_tokens) if model else 0.0
+
+            cost_tracker.record(
+                NodeUsage(
+                    node_id=node_id,
+                    tokens_used=tokens_used,
+                    cost_usd=cost_usd,
+                    latency_ms=duration_ms,
+                    model=model,
+                    output_tokens=output_tokens,
+                )
+            )
+            cost_tracker.check_budget(self.config.budget, node_id)
+            await self.checkpoint_manager.checkpoint(self.config.run_id, node_id, output_model)
+
             trace.append(
                 TraceEvent(
                     node_id=node_id,
@@ -541,11 +586,18 @@ class StromaRunner:
                     duration_ms=duration_ms,
                 )
             )
-            run_logger.info("Parallel node %s completed", node_id)
+            run_logger.info("Parallel node %s completed (tokens=%d)", node_id, tokens_used)
+
+            if self.config.hooks.on_node_success is not None:
+                await self.config.hooks.on_node_success(self.config.run_id, node_id, merged, tokens_used)
+
             return self._build_result(RunStatus.COMPLETED, output_model, cost_tracker, trace)
 
         except Exception as exc:
             duration_ms = self._elapsed_ms(start_ts)
+            failure_class = classify(
+                exc, NodeContext(node_id=node_id, attempt=1, run_id=self.config.run_id), self.config.classifiers
+            )
             trace.append(
                 TraceEvent(
                     node_id=node_id,
@@ -555,11 +607,15 @@ class StromaRunner:
                     input_state=current_state.model_dump(),
                     output_state=None,
                     duration_ms=duration_ms,
-                    failure=FailureClass.AMBIGUOUS,
+                    failure=failure_class,
                     failure_message=str(exc),
                 )
             )
             run_logger.error("Parallel node %s failed: %s", node_id, exc)
+
+            if self.config.hooks.on_node_failure is not None:
+                await self.config.hooks.on_node_failure(self.config.run_id, node_id, exc, failure_class)
+
             return self._build_result(RunStatus.FAILED, current_state, cost_tracker, trace)
 
     def _resolve_resume_index(self, node_sequence: list[NodeFunc]) -> int | None:
