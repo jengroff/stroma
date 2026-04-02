@@ -2265,8 +2265,12 @@ returning a decorator that marks it as a stroma pipeline node.</p>
 <p>The returned pseudo-node fans out the current pipeline state to all child
 nodes, runs them concurrently, then merges their output dicts (last write
 wins on key conflicts). All child nodes must accept the same input schema.</p>
-<p>On any child failure, remaining tasks are cancelled and the exception
-propagates to the runner's failure handling.</p>
+<p>Each child's output is validated against its declared contract (if decorated
+with <code>@stroma_node</code> or <code>@runner.node</code>) before merging. Cost tuples returned
+by children are accumulated and returned as a 4-tuple so the runner can
+track token usage.</p>
+<p>On any child failure (including <code>ContractViolation</code>), remaining tasks are
+cancelled and the exception propagates to the runner's failure handling.</p>
 <h4 id="stroma.runner.parallel--example">Example</h4>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">node_a</span><span class="p">,</span> <span class="n">parallel</span><span class="p">(</span><span class="n">node_b</span><span class="p">,</span> <span class="n">node_c</span><span class="p">),</span> <span class="n">node_d</span><span class="p">],</span> <span class="n">state</span><span class="p">)</span>
 </code></pre></div>

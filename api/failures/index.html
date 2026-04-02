@@ -1574,8 +1574,7 @@
 
 
         <p>Retry behavior for a given failure class.</p>
-<p>Controls <code>max_retries</code>, <code>backoff_seconds</code> (jittered), and an optional
-<code>fallback_node_id</code> to route to instead of retrying.</p>
+<p>Controls <code>max_retries</code> and <code>backoff_seconds</code> (jittered).</p>
 <h4 id="stroma.failures.FailurePolicy--example">Example</h4>
 <div class="highlight"><pre><span></span><code><span class="n">policy</span> <span class="o">=</span> <span class="n">FailurePolicy</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">backoff_seconds</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="n">policy</span> <span class="o">=</span> <span class="n">FailurePolicy</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">backoff_seconds</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
