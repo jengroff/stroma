@@ -43,10 +43,6 @@ def stroma_langgraph_node(node_id: str, contract: NodeContract) -> Callable[...,
     return decorator
 
 
-# Backwards-compatible alias
-armature_langgraph_node = stroma_langgraph_node
-
-
 class LangGraphAdapter:
     """Wraps a LangGraph graph to apply stroma contract validation on each node.
 
@@ -80,17 +76,9 @@ class LangGraphAdapter:
         for attr in ("nodes", "_nodes"):
             nodes = getattr(graph, attr, None)
             if isinstance(nodes, dict):
-                return {
-                    name: fn
-                    for name, fn in nodes.items()
-                    if hasattr(fn, "_stroma_node_id") or hasattr(fn, "_armature_node_id")
-                }
+                return {name: fn for name, fn in nodes.items() if hasattr(fn, "_stroma_node_id")}
         if hasattr(graph, "iter_nodes"):
-            return {
-                name: fn
-                for name, fn in graph.iter_nodes()
-                if hasattr(fn, "_stroma_node_id") or hasattr(fn, "_armature_node_id")
-            }
+            return {name: fn for name, fn in graph.iter_nodes() if hasattr(fn, "_stroma_node_id")}
         raise AttributeError("Unable to discover LangGraph nodes")
 
     def _replace_node(self, graph: Any, name: str, fn: Any) -> None:
@@ -107,7 +95,7 @@ class LangGraphAdapter:
 
     def _wrap_node(self, fn: Any) -> Any:
         """Create a validating async wrapper around a node function."""
-        contract = getattr(fn, "_stroma_contract", None) or getattr(fn, "_armature_contract", None)
+        contract = getattr(fn, "_stroma_contract", None)
         if contract is None:
             raise TypeError(
                 f"Function '{getattr(fn, '__name__', repr(fn))}' is missing a stroma contract. "

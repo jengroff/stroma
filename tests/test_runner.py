@@ -5,7 +5,7 @@ from stroma.checkpoint import CheckpointManager, InMemoryStore
 from stroma.contracts import ContractRegistry, NodeContract
 from stroma.cost import ExecutionBudget
 from stroma.failures import FailureClass, FailurePolicy, default_policy_map
-from stroma.runner import ArmatureRunner, RunConfig, StromaRunner, armature_node, stroma_node
+from stroma.runner import RunConfig, StromaRunner, stroma_node
 from stroma.trace import RunStatus
 
 
@@ -143,13 +143,6 @@ async def test_resume_skips_completed_nodes_and_loads_checkpoint():
     assert result.final_state.total == 15
     assert call_count["node1"] == 0
     assert call_count["node2"] == 1
-
-
-@pytest.mark.asyncio
-async def test_backwards_compat_aliases():
-    """Verify ArmatureRunner and armature_node still work."""
-    assert ArmatureRunner is StromaRunner
-    assert armature_node is stroma_node
 
 
 @pytest.mark.asyncio

@@ -123,10 +123,6 @@ def stroma_node(node_id: str, contract: NodeContract) -> Callable[..., Any]:
     return decorator
 
 
-# Keep old name as alias for backwards compatibility during transition
-armature_node = stroma_node
-
-
 def _unpack_output(output: Any) -> tuple[dict[str, Any], int, int, str | None]:
     """Normalize node output to `(dict, input_tokens, output_tokens, model)`."""
     if isinstance(output, tuple):
@@ -625,20 +621,14 @@ class StromaRunner:
 
     def _node_id(self, node: Callable[..., Any]) -> str:
         """Extract the stroma node ID from a decorated function."""
-        node_id: str | None = getattr(node, "_stroma_node_id", None) or getattr(node, "_armature_node_id", None)
+        node_id: str | None = getattr(node, "_stroma_node_id", None)
         if node_id is None:
             raise TypeError("Node is missing stroma node_id — did you forget the @stroma_node decorator?")
         return node_id
 
     def _node_contract(self, node: Callable[..., Any]) -> NodeContract:
         """Extract the contract from a decorated function, falling back to the registry."""
-        contract: NodeContract | None = getattr(node, "_stroma_contract", None) or getattr(
-            node, "_armature_contract", None
-        )
+        contract: NodeContract | None = getattr(node, "_stroma_contract", None)
         if contract is not None:
             return contract
         return self.registry.get(self._node_id(node))
-
-
-# Backwards-compatible alias
-ArmatureRunner = StromaRunner

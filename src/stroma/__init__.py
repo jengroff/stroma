@@ -26,14 +26,13 @@ from stroma.failures import (
     classify,
     default_policy_map,
 )
-from stroma.runner import ArmatureRunner, NodeHooks, RunConfig, StromaRunner, armature_node, parallel, stroma_node
+from stroma.runner import NodeHooks, RunConfig, StromaRunner, parallel, stroma_node
 from stroma.trace import ExecutionResult, ExecutionTrace, RunStatus, TraceEvent
 
 __version__ = "0.2.4"
 
 __all__ = [
     "KNOWN_MODELS",
-    "ArmatureRunner",
     "AsyncCheckpointStore",
     "AsyncInMemoryStore",
     "BoundaryValidator",
@@ -62,7 +61,6 @@ __all__ = [
     "StromaRunner",
     "SyncRedisStore",
     "TraceEvent",
-    "armature_node",
     "classify",
     "default_policy_map",
     "estimate_cost_usd",

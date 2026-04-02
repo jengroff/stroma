@@ -6,7 +6,6 @@ from pydantic import BaseModel
 
 from stroma.adapters.langgraph import (
     LangGraphAdapter,
-    armature_langgraph_node,
     extract_state_dict,
     stroma_langgraph_node,
 )
@@ -108,11 +107,6 @@ def test_wrap_passthrough_on_valid_state(registry):
     adapter = LangGraphAdapter(registry, object())
     wrapped = adapter.wrap(graph)
     assert wrapped.execute("node1", {"x": 2}) == {"y": 4}
-
-
-def test_backwards_compat_alias():
-    """Verify armature_langgraph_node still works."""
-    assert armature_langgraph_node is stroma_langgraph_node
 
 
 # --- extract_state_dict edge cases ---
