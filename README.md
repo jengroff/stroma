@@ -1,6 +1,6 @@
 # Stroma
 
-**Reliability primitives for agent pipelines.**
+**Framework-agnostic reliability primitives for agent pipelines.**
 
 ```python
 from pydantic import BaseModel

@@ -1,6 +1,6 @@
 # Stroma
 
-**Contracts, retries, checkpoints, and traceability for async Python agent pipelines.**
+**Framework-agnostic reliability primitives for agent pipelines.**
 
 ## Why Stroma?
 
