@@ -31,7 +31,7 @@ Stroma does not duplicate LangGraph's orchestration primitives. It addresses a d
 
 ### Typed state contracts at node boundaries
 
-LangGraph passes state through the graph. It validates that state conforms to your TypedDict or Pydantic model at the graph level, but it does not enforce schema contracts at individual node boundaries — it does not verify that node A's output is structurally valid input for node B before passing it through.
+LangGraph passes state through the graph. It validates state at graph entry — the first node's input — but [run-time validation only occurs on inputs to the first node](https://langchain-ai.github.io/langgraph/concepts/low_level/#state), not on subsequent nodes or outputs. It does not enforce schema contracts at individual node boundaries — it does not verify that node A's output is structurally valid input for node B before passing it through.
 
 Stroma's NodeContract does exactly this. Every node boundary is a validation checkpoint. When a node returns malformed data, ContractViolation is raised immediately at that boundary — classified as a terminal failure — rather than propagating corrupt state downstream where it becomes much harder to diagnose.
 
