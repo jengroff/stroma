@@ -1,6 +1,8 @@
 # Stroma
 
-**Framework-agnostic reliability primitives for agent pipelines.**
+**dbt didn't replace your data warehouse. Stroma doesn't replace your agent framework.**
+
+Typed node contracts, formal failure classification, and cost-aware execution — portable across whatever orchestration framework you're building on. The framework handles the graph. Stroma handles the guarantees.
 
 ```python
 from pydantic import BaseModel
