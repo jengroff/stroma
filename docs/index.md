@@ -113,6 +113,7 @@ asyncio.run(main())
 - **Execution tracing** — structured audit trail of every attempt, with diffing, replay, and JSON export
 - **Parallel execution, hooks, shared context, structured logging** — fan-out, lifecycle callbacks, runtime config injection
 - **LangGraph adapter** — apply contracts to existing LangGraph graphs without rewriting them
+- **DeepAgents adapter** — contract validation and cost tracking for deepagents graphs
 
 ## Install
 
@@ -134,6 +135,12 @@ Optional extras:
 
     ```bash
     uv add stroma[langgraph]
+    ```
+
+=== "DeepAgents adapter"
+
+    ```bash
+    uv add stroma[deepagents]
     ```
 
 ## Next Steps
