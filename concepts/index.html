@@ -229,6 +229,25 @@
   
   
   
+    <li class="md-tabs__item">
+      <a href="../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quickstart
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
     
     
       <li class="md-tabs__item">
@@ -401,6 +420,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -417,10 +463,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -438,8 +484,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1030,6 +1076,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#stability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stability
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1114,10 +1171,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1135,8 +1192,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1572,6 +1629,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stability
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2034,6 +2102,35 @@
 <p><code>CostTracker</code>, <code>RetryBudget</code>, and <code>ExecutionTrace</code> are created fresh per <code>run()</code> call. Calling <code>runner.run()</code> multiple times on the same instance does not accumulate state between runs.</p>
 <h3 id="structured-logging">Structured logging</h3>
 <p>The runner creates a per-run <code>logging.LoggerAdapter</code> with <code>run_id</code> in its <code>extra</code> dict. All node execution log messages use this adapter, so <code>run_id</code> is a structured field rather than inline text — making it filterable in JSON log pipelines.</p>
+<h2 id="stability">Stability</h2>
+<p>Not every primitive is at the same maturity level. Use this as a guide for production planning.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Primitives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stable</strong></td>
+<td><code>StromaRunner</code>, contracts, failure classification, retry policies, execution tracing</td>
+</tr>
+<tr>
+<td><strong>Stable</strong></td>
+<td>Checkpointing (<code>InMemoryStore</code>, <code>AsyncInMemoryStore</code>, <code>RedisStore</code>)</td>
+</tr>
+<tr>
+<td><strong>Beta</strong></td>
+<td>LangGraph adapter, fluent builder API (<code>.with_budget()</code>, <code>.with_hooks()</code>, etc.)</td>
+</tr>
+<tr>
+<td><strong>Experimental</strong></td>
+<td>Cost tracking / <code>KNOWN_MODELS</code> pricing, <code>ModelHint</code> / fallback routing</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stable</strong> means the API won't change without a major version bump. <strong>Beta</strong> means the API is solid but may see minor adjustments. <strong>Experimental</strong> means useful today but subject to change.</p>
 
 
 

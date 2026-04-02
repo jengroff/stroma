@@ -14,7 +14,7 @@
       
       
       
-        <link rel="next" href="tutorial/">
+        <link rel="next" href="quickstart/">
       
       
         
@@ -218,6 +218,25 @@
     
   
   Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quickstart
 
       </a>
     </li>
@@ -455,6 +474,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#what-you-get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you get
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-and-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before and after
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -490,6 +531,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -506,10 +574,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -527,8 +595,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -956,10 +1024,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -977,8 +1045,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1240,6 +1308,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#what-you-get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you get
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-and-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before and after
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1282,22 +1372,9 @@
 
 
 <h1 id="stroma">Stroma</h1>
-<p><strong>Reliability primitives for agent pipelines.</strong></p>
+<p><strong>Contracts, retries, checkpoints, and traceability for async Python agent pipelines.</strong></p>
 <h2 id="why-stroma">Why Stroma?</h2>
-<p>LLM agent pipelines fail in ways that traditional software doesn't. API calls time out, models return malformed data, costs spiral, and when something breaks mid-pipeline you lose all progress. Stroma gives you the building blocks to handle this:</p>
-<ul>
-<li><strong>Contracts</strong> — catch bad data at node boundaries before it propagates downstream</li>
-<li><strong>Failure classification</strong> — automatically distinguish transient errors from permanent ones</li>
-<li><strong>Retry policies</strong> — configurable retries with jittered backoff, per failure class or per node</li>
-<li><strong>Checkpointing</strong> — async-first save and resume across crashes (in-memory or Redis)</li>
-<li><strong>Cost estimation</strong> — model-aware USD cost tracking via built-in pricing data, plus token and latency budgets</li>
-<li><strong>Parallel execution</strong> — fan out work to concurrent nodes with <code>parallel()</code> and merged output</li>
-<li><strong>Node hooks</strong> — async lifecycle callbacks for observability and side effects</li>
-<li><strong>Shared context</strong> — pass runtime configuration through a mutable <code>context</code> dict to every node</li>
-<li><strong>Execution tracing</strong> — full audit trail of every attempt, with diffing and export</li>
-<li><strong>Per-run logging</strong> — structured <code>LoggerAdapter</code> with <code>run_id</code> in every log line</li>
-</ul>
-<p>No framework lock-in. Works with any async Python code. Compose what you need, ignore what you don't.</p>
+<p>LLM agent pipelines fail in ways that traditional software doesn't. API calls time out, models return malformed data, costs spiral, and when something breaks mid-pipeline you lose all progress. Stroma gives you the building blocks to handle this — without locking you into a framework.</p>
 <h2 id="quick-start">Quick Start</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">StromaRunner</span>
@@ -1322,11 +1399,33 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">final_state</span><span class="p">)</span>  <span class="c1"># result=10</span>
 </code></pre></div>
 <ol>
-<li>Creates a runner with sensible defaults: in-memory checkpointing, unlimited budget, standard retry policies. Override any of these with keyword arguments.</li>
-<li>Declares the node's input/output contract and registers it automatically. No separate registry setup needed.</li>
+<li>Creates a runner with sensible defaults: in-memory checkpointing, unlimited budget, standard retry policies.</li>
+<li>Declares the node's input/output contract and registers it automatically.</li>
 <li>Runs the pipeline with contract validation, retry handling, cost tracking, and checkpointing at every step.</li>
 </ol>
+<h2 id="what-you-get">What you get</h2>
+<ul>
+<li><strong>Input/output validation at every step</strong> — Pydantic contracts catch bad data at node boundaries before it propagates</li>
+<li><strong>Retry only when failures are recoverable</strong> — three-class failure taxonomy (recoverable, terminal, ambiguous) with configurable policies</li>
+<li><strong>Resume from where execution failed</strong> — async-first checkpointing with in-memory and Redis backends</li>
+<li><strong>Inspect the full execution trace</strong> — structured audit trail of every attempt, with diffing, replay, and JSON export</li>
+</ul>
+<h2 id="before-and-after">Before and after</h2>
+<p><strong>Before</strong> — failures are silent, retries are manual, state is lost on crash:</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">call_llm</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<span class="c1"># Did it fail? Was the output valid? Can we retry? Where&#39;s the trace?</span>
+</code></pre></div>
+<p><strong>After</strong> — every step is validated, classified, checkpointed, and traced:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Document</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Document</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">call_llm</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
+
+<span class="c1"># Contract validation, retry on transient failure, checkpoint on success,</span>
+<span class="c1"># full trace on every attempt — all automatic.</span>
+</code></pre></div>
 <h2 id="install">Install</h2>
+<p>Requires <strong>Python 3.12+</strong>.</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>stroma
 </code></pre></div>
 <p>Optional extras:</p>
@@ -1344,6 +1443,7 @@
 </div>
 <h2 id="next-steps">Next Steps</h2>
 <ul>
+<li><strong><a href="quickstart/">Quickstart</a></strong> — Full working pipeline in 5 minutes, including failure and resume demos.</li>
 <li><strong><a href="tutorial/">Tutorial</a></strong> — Build a pipeline step by step, from hello-world to production-grade.</li>
 <li><strong><a href="concepts/">Concepts</a></strong> — Understand the architecture and design decisions behind each primitive.</li>
 <li><strong><a href="extending/">Extending Stroma</a></strong> — Write custom backends, classifiers, and OTel integrations.</li>
