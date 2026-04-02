@@ -80,16 +80,20 @@ This is a deliberate architectural decision, not an oversight. The reliability s
 | Execution trace with diff / replay | Yes | Partial |
 | Framework-agnostic | Yes | No |
 
+!!! note "Checkpointing is additive"
+    If you're already using LangGraph's checkpointer (MemorySaver, SqliteSaver, etc.), keep it. Stroma's checkpointing is for non-LangGraph pipelines or as a complementary layer — it does not replace or conflict with LangGraph's native checkpointing.
+
 ## When to use what
 
 | Situation | Recommendation |
 |---|---|
-| Building a new pipeline from scratch | Use StromaRunner directly, with LangGraph as your execution backend if needed |
 | Existing LangGraph graph | Use LangGraphAdapter to add contract validation without rewriting |
-| Already using LangGraph's checkpointer | Keep it — Stroma's checkpointing is additive, not required |
-| Need formal failure taxonomy and custom classifiers | Stroma |
 | Need typed boundary validation between nodes | Stroma |
+| Need formal failure taxonomy and custom classifiers | Stroma |
+| Need cost budget enforcement (tokens / USD / latency) | Stroma |
 | Need portable reliability primitives across frameworks | Stroma |
+| Already using LangGraph's checkpointer | Keep it — Stroma's checkpointing is additive, not required |
+| Building a new pipeline from scratch | Use StromaRunner directly, with LangGraph as your execution backend if needed |
 | Need graph routing, cycles, streaming, human-in-the-loop | LangGraph |
 
 Use LangGraph to build your graph. Use Stroma to make it reliable. Use both when you need both.

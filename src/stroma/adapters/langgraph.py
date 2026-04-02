@@ -46,13 +46,12 @@ def stroma_langgraph_node(node_id: str, contract: NodeContract) -> Callable[...,
 class LangGraphAdapter:
     """Wraps a LangGraph graph to apply stroma contract validation on each node.
 
-    Takes a `ContractRegistry` for validation and a runner instance for
-    future cost/trace integration.
+    Takes a `ContractRegistry` for validation. Call `.wrap(graph)` to
+    replace decorated nodes with validating wrappers.
     """
 
-    def __init__(self, registry: ContractRegistry, runner: Any) -> None:
+    def __init__(self, registry: ContractRegistry) -> None:
         self.registry = registry
-        self.runner = runner
         self._validator = BoundaryValidator()
 
     def wrap(self, graph: Any) -> Any:

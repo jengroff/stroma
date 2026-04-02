@@ -75,7 +75,7 @@ def test_wrap_intercepts_node_and_validates(registry):
         return {"y": state.x + 1}
 
     graph.add_node("node1", node1)
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
     wrapped = adapter.wrap(graph)
     output = wrapped.execute("node1", StateModel(x=1))
     assert output == {"y": 2}
@@ -89,7 +89,7 @@ def test_wrap_raises_contract_violation_on_bad_output(registry):
         return {"z": state.x}
 
     graph.add_node("node1", node1)
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
     wrapped = adapter.wrap(graph)
 
     with pytest.raises(ContractViolation):
@@ -104,7 +104,7 @@ def test_wrap_passthrough_on_valid_state(registry):
         return {"y": state.x * 2}
 
     graph.add_node("node1", node1)
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
     wrapped = adapter.wrap(graph)
     assert wrapped.execute("node1", {"x": 2}) == {"y": 4}
 
@@ -161,7 +161,7 @@ async def test_discover_nodes_from_private_nodes(registry):
         return {"y": state.x + 1}
 
     graph._nodes["node1"] = node1
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
     adapter.wrap(graph)
     result = await graph._nodes["node1"](StateModel(x=1))
     assert result == {"y": 2}
@@ -175,7 +175,7 @@ def test_discover_nodes_from_iter_nodes(registry):
         return {"y": state.x + 1}
 
     graph._store["node1"] = node1
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
     adapter.wrap(graph)
 
 
@@ -183,7 +183,7 @@ def test_discover_nodes_raises_for_unknown_graph(registry):
     class UnknownGraph:
         pass
 
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
     with pytest.raises(AttributeError, match="Unable to discover"):
         adapter.wrap(UnknownGraph())
 
@@ -193,13 +193,13 @@ def test_replace_node_raises_for_unknown_graph(registry):
         nodes = None
         _nodes = None
 
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
     with pytest.raises(AttributeError, match="Unable to replace"):
         adapter._replace_node(NoReplace(), "test", lambda: None)
 
 
 def test_wrap_node_raises_type_error_for_undecorated_function(registry):
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
 
     async def undecorated(state):
         return {"y": 1}
@@ -209,7 +209,7 @@ def test_wrap_node_raises_type_error_for_undecorated_function(registry):
 
 
 def test_wrap_node_error_message_contains_function_name(registry):
-    adapter = LangGraphAdapter(registry, object())
+    adapter = LangGraphAdapter(registry)
 
     async def my_special_node(state):
         return {}

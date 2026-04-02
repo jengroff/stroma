@@ -33,7 +33,7 @@ async def fetch(state: Url, ctx: dict) -> dict:  # (1)!
 
 async def main():
     async with httpx.AsyncClient() as client:
-        runner.config.context = {"http": client}  # (2)!
+        runner.with_context({"http": client})  # (2)!
         result = await runner.run([fetch], Url(url="https://example.com"))
         print(len(result.final_state.body))
 
@@ -41,7 +41,7 @@ asyncio.run(main())
 ```
 
 1. Add a second parameter (any name) to receive the context dict. Stroma detects this automatically via `inspect.signature`.
-2. Set the context before calling `run()`. The same dict is passed by reference to every node.
+2. Set the context with `.with_context()` before calling `run()`. The same dict is passed by reference to every node.
 
 ## Context detection
 

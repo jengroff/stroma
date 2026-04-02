@@ -127,41 +127,6 @@ The lookup order is: per-node override → global `policy_map` → built-in defa
 !!! note "Jittered backoff"
     The actual delay before each retry is `random.uniform(0, backoff_seconds)` — not a fixed sleep. This prevents thundering herd problems when multiple pipelines retry simultaneously against the same API.
 
-## Checkpointing
-
-After each successful node execution, the output state is **checkpointed**. If a pipeline fails partway through, you can resume from the last checkpoint instead of re-running completed nodes:
-
-```python
-from stroma import RunConfig
-
-# First run fails at node3
-config1 = RunConfig(run_id="run-123")
-result = await runner.run([node1, node2, node3], initial_state)
-# result.status == PARTIAL or FAILED
-
-# Resume from node3 — node1 and node2 are skipped, output loaded from checkpoint
-config2 = RunConfig(run_id="run-123", resume_from="node3")  # (1)!
-result = await runner.run([node1, node2, node3], initial_state)
-# result.status == RESUMED
-```
-
-1. The `run_id` must match the original run. The runner loads the checkpoint for the node *before* `resume_from` and uses it as input.
-
-### Storage backends
-
-Both sync and async backends are available:
-
-| Backend | Interface | Use case |
-|---------|-----------|----------|
-| `InMemoryStore` | sync | Testing, short-lived pipelines |
-| `AsyncInMemoryStore` | async | Testing with async runners (default for `StromaRunner.quick()`) |
-| `RedisStore` | async | Production, distributed systems (uses `redis.asyncio`) |
-| `SyncRedisStore` | sync | Legacy or sync-only environments |
-
-The `CheckpointManager` handles both sync and async stores transparently — its `checkpoint`, `resume`, and `clear` methods are all `async`, and it detects the store type at construction time.
-
-Implement the `CheckpointStore` or `AsyncCheckpointStore` protocol to add your own backend (Postgres, S3, DynamoDB, etc.) — no subclassing required, just implement `save`, `load`, and `delete`.
-
 ## Cost Tracking
 
 Stroma tracks three resource dimensions across your pipeline:
@@ -237,57 +202,41 @@ KNOWN_MODELS["my-fine-tune"] = (5.00, 15.00)
 
 The `max_cost_usd` budget enforces actual dollar limits based on model pricing.
 
-## Observability Hooks
+---
 
-Plug in external telemetry (Datadog, Prometheus, OpenTelemetry, Sentry) with `NodeHooks` — async callbacks fired at node execution boundaries:
+## Checkpointing
 
-```python
-from stroma import NodeHooks, RunConfig
-
-async def on_start(run_id, node_id, input_state):
-    metrics.increment("node.started", tags=[f"node:{node_id}"])
-
-async def on_success(run_id, node_id, output_state, tokens_used):
-    # tokens_used is input_tokens + output_tokens for this attempt (0 if node didn't report usage)
-    metrics.increment("node.completed", tags=[f"node:{node_id}"])
-
-async def on_failure(run_id, node_id, exc, failure_class):
-    sentry.capture_exception(exc)
-
-config = RunConfig(
-    hooks=NodeHooks(
-        on_node_start=on_start,
-        on_node_success=on_success,
-        on_node_failure=on_failure,
-    ),
-)
-```
-
-All hooks are optional and add zero overhead when `None`. Hook callables must be async.
-
-## Shared Context
-
-Nodes can share resources (HTTP clients, DB connections, caches, config) through a `context` dict on `RunConfig`:
+After each successful node execution, the output state is **checkpointed**. If a pipeline fails partway through, you can resume from the last checkpoint instead of re-running completed nodes:
 
 ```python
-import httpx
 from stroma import RunConfig
 
-async with httpx.AsyncClient() as client:
-    config = RunConfig(context={"http": client, "api_key": "sk-..."})
-    result = await runner.run(nodes, state)
+# First run fails at node3
+config1 = RunConfig(run_id="run-123")
+result = await runner.run([node1, node2, node3], initial_state)
+# result.status == PARTIAL or FAILED
+
+# Resume from node3 — node1 and node2 are skipped, output loaded from checkpoint
+config2 = RunConfig(run_id="run-123", resume_from="node3")  # (1)!
+result = await runner.run([node1, node2, node3], initial_state)
+# result.status == RESUMED
 ```
 
-Nodes that accept a second parameter receive the context dict automatically:
+1. The `run_id` must match the original run. The runner loads the checkpoint for the node *before* `resume_from` and uses it as input.
 
-```python
-@stroma_node("fetch", contract)
-async def fetch(state: Input, ctx: dict) -> dict:
-    resp = await ctx["http"].get(state.url)
-    return {"body": resp.text}
-```
+### Storage backends
 
-Nodes with a single parameter continue to work — context detection uses `inspect.signature`. Mutations to the context dict in one node are visible in subsequent nodes.
+| Backend | Interface | Use case |
+|---------|-----------|----------|
+| `InMemoryStore` | sync | Testing, short-lived pipelines |
+| `AsyncInMemoryStore` | async | Testing with async runners (default for `StromaRunner.quick()`) |
+| `RedisStore` | async | Production, distributed systems (uses `redis.asyncio`) |
+| `SyncRedisStore` | sync | Legacy or sync-only environments |
+
+The `CheckpointManager` handles both sync and async stores transparently. Implement the `CheckpointStore` or `AsyncCheckpointStore` protocol to add your own backend — no subclassing required, just implement `save`, `load`, and `delete`.
+
+!!! note "Additive with LangGraph"
+    If you're already using LangGraph's checkpointer (MemorySaver, SqliteSaver, etc.), keep it. Stroma's checkpointing is for non-LangGraph pipelines or as a complementary layer.
 
 ## Execution Tracing
 
@@ -315,6 +264,16 @@ json_payload = result.trace.to_json()
 ```
 
 1. `diff()` compares node IDs, attempts, inputs, outputs, and failure states — ignoring timestamps and durations that naturally vary between runs.
+
+## Hooks, Context, and Logging
+
+These features are composable and optional — use what your pipeline needs.
+
+**Observability hooks** — `NodeHooks` provides async callbacks (`on_node_start`, `on_node_success`, `on_node_failure`) at node boundaries for telemetry. All optional, zero overhead when `None`. See the [hooks tutorial](tutorial/hooks.md) and [Extending Stroma](extending.md) for full OTel examples.
+
+**Shared context** — a mutable `dict` on `RunConfig` passed to nodes that accept a second parameter. Use it for HTTP clients, API keys, caches, or accumulated metadata. See the [shared context tutorial](tutorial/shared-context.md).
+
+**Structured logging** — the runner creates a per-run `logging.LoggerAdapter` with `run_id` in its `extra` dict, making it filterable in JSON log pipelines.
 
 ## Pipeline Execution
 
@@ -358,10 +317,6 @@ result = await runner.run(
 ### Stateless runner
 
 `CostTracker`, `RetryBudget`, and `ExecutionTrace` are created fresh per `run()` call. Calling `runner.run()` multiple times on the same instance does not accumulate state between runs.
-
-### Structured logging
-
-The runner creates a per-run `logging.LoggerAdapter` with `run_id` in its `extra` dict. All node execution log messages use this adapter, so `run_id` is a structured field rather than inline text — making it filterable in JSON log pipelines.
 
 ## Stability
 

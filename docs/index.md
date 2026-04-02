@@ -38,10 +38,18 @@ print(result.final_state)  # result=10
 
 ## What you get
 
-- **Input/output validation at every step** — Pydantic contracts catch bad data at node boundaries before it propagates
-- **Retry only when failures are recoverable** — three-class failure taxonomy (recoverable, terminal, ambiguous) with configurable policies
-- **Resume from where execution failed** — async-first checkpointing with in-memory and Redis backends
-- **Inspect the full execution trace** — structured audit trail of every attempt, with diffing, replay, and JSON export
+**Core reliability primitives:**
+
+- **Typed node boundary contracts** — Pydantic input/output validation at every node edge, not just graph entry
+- **Formal failure classification** — three-class taxonomy (recoverable, terminal, ambiguous) with custom classifier support
+- **Per-node retry policies** — configurable per failure class, per node, with jittered backoff
+- **Cost budget enforcement** — token, USD, and latency limits with model-aware pricing
+
+**Execution infrastructure (composable, optional):**
+
+- **Checkpointing** — async-first save and resume with in-memory and Redis backends
+- **Execution tracing** — structured audit trail of every attempt, with diffing, replay, and JSON export
+- **Parallel execution, hooks, shared context, structured logging** — fan-out, lifecycle callbacks, runtime config injection
 
 ## Before and after
 
