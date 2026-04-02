@@ -18,6 +18,7 @@ theme:
 
 nav:
   - Home: index.md
+  - Quickstart: quickstart.md
   - Tutorial:
       - Getting Started: tutorial/index.md
       - Your First Pipeline: tutorial/first-pipeline.md
@@ -31,6 +32,7 @@ nav:
       - Parallel Execution: tutorial/parallel.md
       - LangGraph Integration: tutorial/langgraph.md
   - Concepts: concepts.md
+  - Stroma vs. LangGraph: vs-langgraph.md
   - Extending Stroma: extending.md
   - API Reference:
       - Runner: api/runner.md

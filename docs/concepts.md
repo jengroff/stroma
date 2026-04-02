@@ -362,3 +362,16 @@ result = await runner.run(
 ### Structured logging
 
 The runner creates a per-run `logging.LoggerAdapter` with `run_id` in its `extra` dict. All node execution log messages use this adapter, so `run_id` is a structured field rather than inline text — making it filterable in JSON log pipelines.
+
+## Stability
+
+Not every primitive is at the same maturity level. Use this as a guide for production planning.
+
+| Status | Primitives |
+|--------|-----------|
+| **Stable** | `StromaRunner`, contracts, failure classification, retry policies, execution tracing |
+| **Stable** | Checkpointing (`InMemoryStore`, `AsyncInMemoryStore`, `RedisStore`) |
+| **Beta** | LangGraph adapter, fluent builder API (`.with_budget()`, `.with_hooks()`, etc.) |
+| **Experimental** | Cost tracking / `KNOWN_MODELS` pricing, `ModelHint` / fallback routing |
+
+**Stable** means the API won't change without a major version bump. **Beta** means the API is solid but may see minor adjustments. **Experimental** means useful today but subject to change.

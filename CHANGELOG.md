@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.2] - 2026-04-01
+## [0.2.4] - 2026-04-01
+
+### Added
+- Quickstart page with contract, retry, checkpoint/resume, and trace demos
+- "Stroma vs. LangGraph" comparison page
+- Stability section in Concepts (stable / beta / experimental primitives)
+- Homepage before/after section and focused "what you get" bullets
+- Runnable examples: `simple_pipeline.py`, `retry_demo.py`, `checkpoint_resume.py`, `langgraph_integration.py`
+- AGENTS.md with Claude Code agent instructions
 
 ### Fixed
 - `RunConfig` API reference now shows per-field descriptions
@@ -19,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README Install section now states the Python 3.12+ requirement
 - Home page Next Steps section replaced broken table-as-cards with a clean bullet list
 - API reference for `stroma_node` now explains when to use it vs `@runner.node`
+- Softened vs-LangGraph tone, added side-by-side capability table
 
 ## [0.2.0] - 2026-04-01
 

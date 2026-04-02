@@ -29,7 +29,7 @@ from stroma.failures import (
 from stroma.runner import ArmatureRunner, NodeHooks, RunConfig, StromaRunner, armature_node, parallel, stroma_node
 from stroma.trace import ExecutionResult, ExecutionTrace, RunStatus, TraceEvent
 
-__version__ = "0.2.2"
+__version__ = "0.2.4"
 
 __all__ = [
     "KNOWN_MODELS",
