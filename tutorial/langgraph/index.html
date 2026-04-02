@@ -16,7 +16,7 @@
         <link rel="prev" href="../parallel/">
       
       
-        <link rel="next" href="../../concepts/">
+        <link rel="next" href="../deepagents/">
       
       
         
@@ -919,6 +919,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deepagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeepAgents Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1257,6 +1285,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/deepagents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeepAgents Adapter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1379,7 +1435,7 @@
 <h1 id="langgraph-integration">LangGraph Integration</h1>
 <p>If you already use <a href="https://github.com/langchain-ai/langgraph">LangGraph</a>, Stroma can add contract validation to your existing graphs without rewriting them.</p>
 <h2 id="install">Install</h2>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>stroma<span class="o">[</span>langgraph<span class="o">]</span>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>stroma<span class="o">[</span>langgraph<span class="o">]</span>
 </code></pre></div>
 <h2 id="decorating-langgraph-nodes">Decorating LangGraph nodes</h2>
 <p>Use <code>@stroma_langgraph_node</code> to attach contracts to your LangGraph node functions:</p>
@@ -1476,7 +1532,7 @@
 </div>
 <h2 id="recap">Recap</h2>
 <ul>
-<li>Install with <code>pip install stroma[langgraph]</code></li>
+<li>Install with <code>uv add stroma[langgraph]</code></li>
 <li>Decorate nodes with <strong><code>@stroma_langgraph_node</code></strong> to attach contracts</li>
 <li>Use <strong><code>LangGraphAdapter.wrap(graph)</code></strong> to add validation to an existing graph</li>
 <li>The adapter validates inputs and outputs at every decorated node boundary</li>

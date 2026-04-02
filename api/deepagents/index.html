@@ -10,31 +10,29 @@
       
       
       
-        <link rel="canonical" href="https://jengroff.github.io/stroma/vs-langgraph/">
+        <link rel="canonical" href="https://jengroff.github.io/stroma/api/deepagents/">
       
       
-        <link rel="prev" href="../concepts/">
+        <link rel="prev" href="../langgraph/">
       
-      
-        <link rel="next" href="../extending/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Stroma vs. LangGraph - Stroma</title>
+        <title>DeepAgents Adapter - Stroma</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +51,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#stroma-vs-langgraph" class="md-skip">
+        <a href="#deepagents-adapter" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Stroma" class="md-header__button md-logo" aria-label="Stroma" data-md-component="logo">
+    <a href="../.." title="Stroma" class="md-header__button md-logo" aria-label="Stroma" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Stroma vs. LangGraph
+              DeepAgents Adapter
             
           </span>
         </div>
@@ -211,7 +209,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -230,7 +228,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../quickstart/" class="md-tabs__link">
+      <a href="../../quickstart/" class="md-tabs__link">
         
   
   
@@ -251,7 +249,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../tutorial/" class="md-tabs__link">
+        <a href="../../tutorial/" class="md-tabs__link">
           
   
   
@@ -269,7 +267,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../concepts/" class="md-tabs__link">
+      <a href="../../concepts/" class="md-tabs__link">
         
   
   
@@ -286,11 +284,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../../vs-langgraph/" class="md-tabs__link">
         
   
   
@@ -309,7 +305,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../extending/" class="md-tabs__link">
+      <a href="../../extending/" class="md-tabs__link">
         
   
   
@@ -326,11 +322,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../api/runner/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../runner/" class="md-tabs__link">
           
   
   
@@ -364,7 +362,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Stroma" class="md-nav__button md-logo" aria-label="Stroma" data-md-component="logo">
+    <a href="../.." title="Stroma" class="md-nav__button md-logo" aria-label="Stroma" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -394,7 +392,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -421,7 +419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/" class="md-nav__link">
+      <a href="../../quickstart/" class="md-nav__link">
         
   
   
@@ -502,7 +500,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/" class="md-nav__link">
+      <a href="../../tutorial/" class="md-nav__link">
         
   
   
@@ -530,7 +528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/first-pipeline/" class="md-nav__link">
+      <a href="../../tutorial/first-pipeline/" class="md-nav__link">
         
   
   
@@ -558,7 +556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/adding-contracts/" class="md-nav__link">
+      <a href="../../tutorial/adding-contracts/" class="md-nav__link">
         
   
   
@@ -586,7 +584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/retry-and-failures/" class="md-nav__link">
+      <a href="../../tutorial/retry-and-failures/" class="md-nav__link">
         
   
   
@@ -614,7 +612,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/checkpointing/" class="md-nav__link">
+      <a href="../../tutorial/checkpointing/" class="md-nav__link">
         
   
   
@@ -642,7 +640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/cost-control/" class="md-nav__link">
+      <a href="../../tutorial/cost-control/" class="md-nav__link">
         
   
   
@@ -670,7 +668,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/tracing/" class="md-nav__link">
+      <a href="../../tutorial/tracing/" class="md-nav__link">
         
   
   
@@ -698,7 +696,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/hooks/" class="md-nav__link">
+      <a href="../../tutorial/hooks/" class="md-nav__link">
         
   
   
@@ -726,7 +724,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/shared-context/" class="md-nav__link">
+      <a href="../../tutorial/shared-context/" class="md-nav__link">
         
   
   
@@ -754,7 +752,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/parallel/" class="md-nav__link">
+      <a href="../../tutorial/parallel/" class="md-nav__link">
         
   
   
@@ -782,7 +780,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/langgraph/" class="md-nav__link">
+      <a href="../../tutorial/langgraph/" class="md-nav__link">
         
   
   
@@ -810,7 +808,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/deepagents/" class="md-nav__link">
+      <a href="../../tutorial/deepagents/" class="md-nav__link">
         
   
   
@@ -845,7 +843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/" class="md-nav__link">
+      <a href="../../concepts/" class="md-nav__link">
         
   
   
@@ -869,37 +867,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Stroma vs. LangGraph
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../vs-langgraph/" class="md-nav__link">
         
   
   
@@ -915,142 +886,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-dbt-analogy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The dbt analogy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-langgraph-provides" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What LangGraph provides
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-stroma-is-additive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where Stroma is additive
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Where Stroma is additive">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#typed-state-contracts-at-node-boundaries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Typed state contracts at node boundaries
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#formal-failure-classification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Formal failure classification
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#execution-tracing-with-diff-and-replay" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Execution tracing with diff and replay
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cost-aware-execution-planning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cost-aware execution planning
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-architectural-difference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The architectural difference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#side-by-side" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Side-by-side
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-to-use-what" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to use what
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1062,7 +897,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../extending/" class="md-nav__link">
+      <a href="../../extending/" class="md-nav__link">
         
   
   
@@ -1086,28 +921,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   
@@ -1125,7 +963,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1143,7 +981,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/runner/" class="md-nav__link">
+      <a href="../runner/" class="md-nav__link">
         
   
   
@@ -1171,7 +1009,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/contracts/" class="md-nav__link">
+      <a href="../contracts/" class="md-nav__link">
         
   
   
@@ -1199,7 +1037,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/checkpoint/" class="md-nav__link">
+      <a href="../checkpoint/" class="md-nav__link">
         
   
   
@@ -1227,7 +1065,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/cost/" class="md-nav__link">
+      <a href="../cost/" class="md-nav__link">
         
   
   
@@ -1255,7 +1093,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/failures/" class="md-nav__link">
+      <a href="../failures/" class="md-nav__link">
         
   
   
@@ -1283,7 +1121,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/trace/" class="md-nav__link">
+      <a href="../trace/" class="md-nav__link">
         
   
   
@@ -1311,7 +1149,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/langgraph/" class="md-nav__link">
+      <a href="../langgraph/" class="md-nav__link">
         
   
   
@@ -1336,10 +1174,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../api/deepagents/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeepAgents Adapter
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1355,6 +1220,104 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.adapters.deepagents.DeepAgentsAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DeepAgentsAdapter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DeepAgentsAdapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.adapters.deepagents.DeepAgentsAdapter--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroma.adapters.deepagents.DeepAgentsAdapter.cost_tracker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cost_tracker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroma.adapters.deepagents.DeepAgentsAdapter.wrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.adapters.deepagents.stroma_deepagents_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stroma_deepagents_node
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stroma_deepagents_node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.adapters.deepagents.stroma_deepagents_node--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1394,44 +1357,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-dbt-analogy" class="md-nav__link">
+  <a href="#stroma.adapters.deepagents.DeepAgentsAdapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The dbt analogy
+        DeepAgentsAdapter
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-langgraph-provides" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What LangGraph provides
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-stroma-is-additive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where Stroma is additive
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Where Stroma is additive">
+    <nav class="md-nav" aria-label="DeepAgentsAdapter">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#typed-state-contracts-at-node-boundaries" class="md-nav__link">
+  <a href="#stroma.adapters.deepagents.DeepAgentsAdapter--example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Typed state contracts at node boundaries
+        Example
       
     </span>
   </a>
@@ -1439,10 +1380,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#formal-failure-classification" class="md-nav__link">
+  <a href="#stroma.adapters.deepagents.DeepAgentsAdapter.cost_tracker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Formal failure classification
+        cost_tracker
       
     </span>
   </a>
@@ -1450,21 +1391,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#execution-tracing-with-diff-and-replay" class="md-nav__link">
+  <a href="#stroma.adapters.deepagents.DeepAgentsAdapter.wrap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Execution tracing with diff and replay
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cost-aware-execution-planning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cost-aware execution planning
+        wrap
       
     </span>
   </a>
@@ -1477,35 +1407,30 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-architectural-difference" class="md-nav__link">
+  <a href="#stroma.adapters.deepagents.stroma_deepagents_node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The architectural difference
+        stroma_deepagents_node
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stroma_deepagents_node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.adapters.deepagents.stroma_deepagents_node--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#side-by-side" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Side-by-side
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-to-use-what" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to use what
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1529,159 +1454,158 @@
   
 
 
-<h1 id="stroma-vs-langgraph">Stroma vs. LangGraph</h1>
-<p>LangGraph handles orchestration. Stroma adds reliability primitives. They can be used independently or together.</p>
-<p>Understanding the distinction matters because the two tools solve different problems at different layers of the stack.</p>
-<h2 id="the-dbt-analogy">The dbt analogy</h2>
-<p>dbt didn't replace your data warehouse. Snowflake already had views, stored procedures, and scheduling. What dbt gave you was a software engineering layer on top — typed models, tested transformations, documented lineage — that worked regardless of which warehouse you were running.</p>
-<p>Stroma does the same thing for agent execution graphs. LangGraph already has checkpointing, retry, and state management. What Stroma gives you is a reliability layer on top — typed state contracts, formal failure classification, portable checkpointing, cost-aware execution planning — that works regardless of which orchestration framework you're running.</p>
-<p>The framework handles the graph. Stroma handles the guarantees.</p>
-<h2 id="what-langgraph-provides">What LangGraph provides</h2>
-<p>LangGraph is a mature, well-designed orchestration framework. It gives you:</p>
-<ul>
-<li><strong>Graph execution</strong> — nodes, edges, conditional routing, cycles</li>
-<li><strong>State management</strong> — TypedDict and Pydantic models for graph state</li>
-<li><strong>Built-in checkpointing</strong> — MemorySaver, SqliteSaver, AsyncPostgresSaver</li>
-<li><strong>Node-level retry</strong> — RetryPolicy for retrying individual nodes on failure</li>
-<li><strong>Streaming</strong> — token and event streaming out of the box</li>
-<li><strong>Human-in-the-loop</strong> — interrupt_before and interrupt_after for manual intervention</li>
-</ul>
-<p>These are real, production-grade features. If you are building a LangGraph application, you should use them.</p>
-<h2 id="where-stroma-is-additive">Where Stroma is additive</h2>
-<p>Stroma does not duplicate LangGraph's orchestration primitives. It addresses a different layer of the problem — one that LangGraph does not currently solve.</p>
-<h3 id="typed-state-contracts-at-node-boundaries">Typed state contracts at node boundaries</h3>
-<p>LangGraph passes state through the graph. It validates state at graph entry — the first node's input — but <a href="https://langchain-ai.github.io/langgraph/concepts/low_level/#state">run-time validation only occurs on inputs to the first node</a>, not on subsequent nodes or outputs. It does not enforce schema contracts at individual node boundaries — it does not verify that node A's output is structurally valid input for node B before passing it through.</p>
-<p>Stroma's NodeContract does exactly this. Every node boundary is a validation checkpoint. When a node returns malformed data, ContractViolation is raised immediately at that boundary — classified as a terminal failure — rather than propagating corrupt state downstream where it becomes much harder to diagnose.</p>
-<p>This is the load-bearing primitive. Everything else in Stroma composes on top of it.</p>
-<h3 id="formal-failure-classification">Formal failure classification</h3>
-<p>LangGraph's RetryPolicy is binary: retry or don't, up to a maximum number of attempts. It does not distinguish between failures that are transient (and likely to resolve on retry) versus permanent (and not worth retrying) versus ambiguous.</p>
-<p>Stroma's failure taxonomy is a formal three-class system:</p>
-<table>
-<thead>
-<tr>
-<th>Class</th>
-<th>Meaning</th>
-<th>Default behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RECOVERABLE</td>
-<td>Transient — retry with backoff</td>
-<td>3 retries, jittered backoff</td>
-</tr>
-<tr>
-<td>TERMINAL</td>
-<td>Permanent — stop immediately</td>
-<td>No retries</td>
-</tr>
-<tr>
-<td>AMBIGUOUS</td>
-<td>Uncertain — limited retry</td>
-<td>1 retry, short backoff</td>
-</tr>
-</tbody>
-</table>
-<p>Custom classifiers let you extend this taxonomy for domain-specific errors — rate limits, auth failures, service-specific exceptions — without modifying the core retry logic.</p>
-<h3 id="execution-tracing-with-diff-and-replay">Execution tracing with diff and replay</h3>
-<p>LangGraph's primary observability tool is LangSmith. Stroma takes a different approach: <code>ExecutionTrace</code> captures every attempt — successes, failures, retries, timing, input and output state — as a first-class in-process object. You can diff two traces across runs, replay events in order, filter to failures, and export to JSON for any monitoring system you choose.</p>
-<h3 id="cost-aware-execution-planning">Cost-aware execution planning</h3>
-<p>LangGraph has no built-in mechanism for enforcing token, cost, or latency budgets across a pipeline run, or for routing nodes to cheaper models when budgets are constrained.</p>
-<p>Stroma's ExecutionBudget and CostTracker enforce hard limits on all three dimensions, with BudgetExceeded integrated into the failure classification system so budget violations are handled with the same retry machinery as any other recoverable failure.</p>
-<h2 id="the-architectural-difference">The architectural difference</h2>
-<p>LangGraph's reliability features are framework-internal. They work within LangGraph, through LangGraph's APIs, against LangGraph's state model. If you switch orchestration frameworks, or compose multiple frameworks, or build a custom execution layer, you leave those features behind.</p>
-<p>Stroma's primitives are framework-agnostic by design. The core library has no dependency on LangGraph. The LangGraphAdapter is the only framework-specific code in the entire codebase — a single file that translates between LangGraph's execution model and Stroma's contract system. Everything else — contracts, failure classification, checkpointing, cost tracking, execution tracing — is portable.</p>
-<p>This is a deliberate architectural decision, not an oversight. The reliability spine should not be coupled to the orchestration layer, for the same reason that dbt's transformation logic should not be coupled to a specific warehouse's proprietary SQL dialect.</p>
-<h2 id="side-by-side">Side-by-side</h2>
-<table>
-<thead>
-<tr>
-<th>Capability</th>
-<th>Stroma</th>
-<th>LangGraph</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Orchestration (routing, cycles, streaming)</td>
-<td>No</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Typed boundary contracts</td>
-<td>Yes</td>
-<td>Partial</td>
-</tr>
-<tr>
-<td>Retry classification (3-class)</td>
-<td>Yes</td>
-<td>Partial</td>
-</tr>
-<tr>
-<td>Checkpoint / resume</td>
-<td>Yes</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Execution trace with diff / replay</td>
-<td>Yes</td>
-<td>Partial</td>
-</tr>
-<tr>
-<td>Framework-agnostic</td>
-<td>Yes</td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="admonition-title">Checkpointing is additive</p>
-<p>If you're already using LangGraph's checkpointer (MemorySaver, SqliteSaver, etc.), keep it. Stroma's checkpointing is for non-LangGraph pipelines or as a complementary layer — it does not replace or conflict with LangGraph's native checkpointing.</p>
+<h1 id="deepagents-adapter">DeepAgents Adapter</h1>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="stroma.adapters.deepagents.DeepAgentsAdapter" class="doc doc-heading">
+            <code>DeepAgentsAdapter</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Wraps a deepagents graph to apply stroma contract validation and cost tracking.</p>
+<p>deepagents builds on LangGraph internally, so the compiled graph returned by
+<code>deepagents.create_deep_agent()</code> exposes the same node interface. This adapter
+discovers nodes decorated with <code>@stroma_deepagents_node</code>, replaces them with
+async validating wrappers, and returns the modified graph.</p>
+<p><strong>Checkpointing boundary</strong>: deepagents manages its own LangGraph checkpointer.
+Stroma does <strong>not</strong> inject checkpointing by default. Pass <em>checkpoint_store</em>
+only if you need a secondary stroma-managed checkpoint layer — you are then
+responsible for ensuring it does not conflict with deepagents' internal
+checkpointer.</p>
+<p><strong>Cost tracking</strong>: if a node returns a tuple matching stroma's 4-shape cost
+convention <code>(dict, input_tokens, output_tokens, model)</code>, usage is recorded
+via the adapter's <code>CostTracker</code>. Plain dict returns record zero tokens.</p>
+<h4 id="stroma.adapters.deepagents.DeepAgentsAdapter--example">Example</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma.contracts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContractRegistry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stroma.adapters.deepagents</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeepAgentsAdapter</span><span class="p">,</span> <span class="n">stroma_deepagents_node</span>
+
+<span class="n">registry</span> <span class="o">=</span> <span class="n">ContractRegistry</span><span class="p">()</span>
+<span class="c1"># ... register contracts, decorate nodes ...</span>
+
+<span class="n">adapter</span> <span class="o">=</span> <span class="n">DeepAgentsAdapter</span><span class="p">(</span><span class="n">registry</span><span class="p">)</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_deep_agent</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">wrapped</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">wrapped</span><span class="o">.</span><span class="n">ainvoke</span><span class="p">({</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">})</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="stroma.adapters.deepagents.DeepAgentsAdapter.cost_tracker" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">cost_tracker</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The <code>CostTracker</code> accumulating usage across all wrapped node calls.</p>
+
+    </div>
+
 </div>
-<h2 id="when-to-use-what">When to use what</h2>
-<table>
-<thead>
-<tr>
-<th>Situation</th>
-<th>Recommendation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Existing LangGraph graph</td>
-<td>Use LangGraphAdapter to add contract validation without rewriting</td>
-</tr>
-<tr>
-<td>Need typed boundary validation between nodes</td>
-<td>Stroma</td>
-</tr>
-<tr>
-<td>Need formal failure taxonomy and custom classifiers</td>
-<td>Stroma</td>
-</tr>
-<tr>
-<td>Need cost budget enforcement (tokens / USD / latency)</td>
-<td>Stroma</td>
-</tr>
-<tr>
-<td>Need portable reliability primitives across frameworks</td>
-<td>Stroma</td>
-</tr>
-<tr>
-<td>Already using LangGraph's checkpointer</td>
-<td>Keep it — Stroma's checkpointing is additive, not required</td>
-</tr>
-<tr>
-<td>Building a new pipeline from scratch</td>
-<td>Use StromaRunner directly, with LangGraph as your execution backend if needed</td>
-</tr>
-<tr>
-<td>Need graph routing, cycles, streaming, human-in-the-loop</td>
-<td>LangGraph</td>
-</tr>
-</tbody>
-</table>
-<p>Use LangGraph to build your graph. Use Stroma to make it reliable. Use both when you need both.</p>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="stroma.adapters.deepagents.DeepAgentsAdapter.wrap" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wrap</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Discover stroma-decorated nodes in <em>agent</em> and replace them with validating wrappers.</p>
+<p><em>agent</em> is the compiled graph returned by <code>deepagents.create_deep_agent()</code>.
+Raises <code>ImportError</code> if deepagents is not installed.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="stroma.adapters.deepagents.stroma_deepagents_node" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">stroma_deepagents_node</span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span> <span class="n">contract</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Decorator that attaches stroma contract metadata to a deepagents node function.</p>
+<p>Binds <em>node_id</em> and <em>contract</em> as attributes on the decorated function so
+<code>DeepAgentsAdapter</code> can discover and validate it. Works identically to
+<code>stroma_langgraph_node</code> — deepagents nodes are LangGraph nodes under the hood.</p>
+<h4 id="stroma.adapters.deepagents.stroma_deepagents_node--example">Example</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stroma.contracts</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeContract</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stroma.adapters.deepagents</span><span class="w"> </span><span class="kn">import</span> <span class="n">stroma_deepagents_node</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Query</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Answer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">response</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">contract</span> <span class="o">=</span> <span class="n">NodeContract</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;answer&quot;</span><span class="p">,</span> <span class="n">input_schema</span><span class="o">=</span><span class="n">Query</span><span class="p">,</span> <span class="n">output_schema</span><span class="o">=</span><span class="n">Answer</span><span class="p">)</span>
+
+<span class="nd">@stroma_deepagents_node</span><span class="p">(</span><span class="s2">&quot;answer&quot;</span><span class="p">,</span> <span class="n">contract</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">answer</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Query</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;response&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Got: </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+</code></pre></div>
+
+
+    </div>
+
+</div>
 
 
 
@@ -1731,10 +1655,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.sections", "navigation.expand", "navigation.tabs"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "navigation.sections", "navigation.expand", "navigation.tabs"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
