@@ -5,7 +5,7 @@ If you already use [LangGraph](https://github.com/langchain-ai/langgraph), Strom
 ## Install
 
 ```bash
-pip install stroma[langgraph]
+uv add stroma[langgraph]
 ```
 
 ## Decorating LangGraph nodes
@@ -94,7 +94,7 @@ If validation fails at either boundary, a `ContractViolation` is raised — just
 
 ## Recap
 
-- Install with `pip install stroma[langgraph]`
+- Install with `uv add stroma[langgraph]`
 - Decorate nodes with **`@stroma_langgraph_node`** to attach contracts
 - Use **`LangGraphAdapter.wrap(graph)`** to add validation to an existing graph
 - The adapter validates inputs and outputs at every decorated node boundary

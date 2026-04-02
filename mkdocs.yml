@@ -31,6 +31,7 @@ nav:
       - Shared Context: tutorial/shared-context.md
       - Parallel Execution: tutorial/parallel.md
       - LangGraph Integration: tutorial/langgraph.md
+      - DeepAgents Integration: tutorial/deepagents.md
   - Concepts: concepts.md
   - Stroma vs. LangGraph: vs-langgraph.md
   - Extending Stroma: extending.md
@@ -42,6 +43,7 @@ nav:
       - Failures: api/failures.md
       - Tracing: api/trace.md
       - LangGraph Adapter: api/langgraph.md
+      - DeepAgents Adapter: api/deepagents.md
 
 plugins:
   - search

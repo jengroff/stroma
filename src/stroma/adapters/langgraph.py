@@ -62,7 +62,7 @@ class LangGraphAdapter:
                 importlib.import_module("langgraph")
             except ImportError as exc:
                 raise ImportError(
-                    "LangGraph is required for LangGraphAdapter; install with pip install stroma[langgraph]"
+                    "LangGraph is required for LangGraphAdapter; install with uv add stroma[langgraph]"
                 ) from exc
         nodes = self._discover_nodes(graph)
         for name, fn in nodes.items():

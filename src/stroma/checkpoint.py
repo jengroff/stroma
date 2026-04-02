@@ -168,7 +168,7 @@ def _resolve_schema(ref: str) -> type[BaseModel]:
 class SyncRedisStore:
     """Synchronous Redis-backed checkpoint store for durable, distributed pipelines.
 
-    Requires the `redis` extra: `pip install stroma[redis]`.
+    Requires the `redis` extra: `uv add stroma[redis]`.
 
     Pass a `redis_url` (e.g. `redis://localhost:6379`) and an optional
     `ttl_seconds` (defaults to 3600) to control key expiration.
@@ -185,7 +185,7 @@ class SyncRedisStore:
         try:
             import redis  # ty: ignore[unresolved-import]
         except ImportError as exc:
-            raise ImportError("redis is required for SyncRedisStore; install with pip install stroma[redis]") from exc
+            raise ImportError("redis is required for SyncRedisStore; install with uv add stroma[redis]") from exc
         self._client = redis.from_url(redis_url, decode_responses=True)
         self._ttl = ttl_seconds
 
@@ -239,7 +239,7 @@ class SyncRedisStore:
 class RedisStore:
     """Async Redis-backed checkpoint store for durable, distributed pipelines.
 
-    Requires the `redis` extra: `pip install stroma[redis]`. Uses
+    Requires the `redis` extra: `uv add stroma[redis]`. Uses
     `redis.asyncio` under the hood so all operations are non-blocking.
 
     Pass a `redis_url` (e.g. `redis://localhost:6379`) and an optional
@@ -257,7 +257,7 @@ class RedisStore:
         try:
             from redis.asyncio import from_url  # ty: ignore[unresolved-import]
         except ImportError as exc:
-            raise ImportError("redis is required for RedisStore; install with pip install stroma[redis]") from exc
+            raise ImportError("redis is required for RedisStore; install with uv add stroma[redis]") from exc
         self._client = from_url(redis_url, decode_responses=True)
         self._ttl = ttl_seconds
 
