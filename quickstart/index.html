@@ -481,6 +481,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#define-your-schemas" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -503,33 +514,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-it" class="md-nav__link">
+  <a href="#what-happens-when-things-go-wrong" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run it
+        What happens when things go wrong
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-what-happens-when-things-fail" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See what happens when things fail
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="See what happens when things fail">
+    <nav class="md-nav" aria-label="What happens when things go wrong">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#contract-violation-terminal-failure" class="md-nav__link">
+  <a href="#bad-output-caught-at-the-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Contract violation — terminal failure
+        Bad output — caught at the boundary
       
     </span>
   </a>
@@ -537,10 +537,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#transient-error-automatic-retry" class="md-nav__link">
+  <a href="#transient-failure-automatic-retry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transient error — automatic retry
+        Transient failure — automatic retry
       
     </span>
   </a>
@@ -548,10 +548,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#crash-recovery-checkpoint-and-resume" class="md-nav__link">
+  <a href="#crash-mid-pipeline-resume-from-checkpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Crash recovery — checkpoint and resume
+        Crash mid-pipeline — resume from checkpoint
       
     </span>
   </a>
@@ -564,10 +564,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inspect-the-trace" class="md-nav__link">
+  <a href="#when-everything-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inspect the trace
+        When everything works
       
     </span>
   </a>
@@ -1383,6 +1383,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#define-your-schemas" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1405,33 +1416,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-it" class="md-nav__link">
+  <a href="#what-happens-when-things-go-wrong" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run it
+        What happens when things go wrong
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-what-happens-when-things-fail" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See what happens when things fail
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="See what happens when things fail">
+    <nav class="md-nav" aria-label="What happens when things go wrong">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#contract-violation-terminal-failure" class="md-nav__link">
+  <a href="#bad-output-caught-at-the-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Contract violation — terminal failure
+        Bad output — caught at the boundary
       
     </span>
   </a>
@@ -1439,10 +1439,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#transient-error-automatic-retry" class="md-nav__link">
+  <a href="#transient-failure-automatic-retry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transient error — automatic retry
+        Transient failure — automatic retry
       
     </span>
   </a>
@@ -1450,10 +1450,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#crash-recovery-checkpoint-and-resume" class="md-nav__link">
+  <a href="#crash-mid-pipeline-resume-from-checkpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Crash recovery — checkpoint and resume
+        Crash mid-pipeline — resume from checkpoint
       
     </span>
   </a>
@@ -1466,10 +1466,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inspect-the-trace" class="md-nav__link">
+  <a href="#when-everything-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inspect the trace
+        When everything works
       
     </span>
   </a>
@@ -1508,12 +1508,15 @@
 
 
 <h1 id="quickstart">Quickstart</h1>
-<p>A complete pipeline in 5 minutes — contracts, retries, checkpoint/resume, and trace inspection.</p>
+<p>Stroma's value is clearest when things go wrong. This page leads with failure — a pipeline that crashes, retries, gets caught at the contract boundary, and resumes from checkpoint — then shows what success looks like.</p>
+<h2 id="install">Install</h2>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>stroma
+</code></pre></div>
 <h2 id="define-your-schemas">Define your schemas</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">RawText</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Document</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
 
 
@@ -1527,8 +1530,8 @@
 <span class="n">runner</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">()</span>
 
 
-<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">RawText</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RawText</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Document</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Document</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">words</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;word_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)}</span>
 
@@ -1539,78 +1542,138 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Empty summary&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">state</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
 </code></pre></div>
-<h2 id="run-it">Run it</h2>
+<h2 id="what-happens-when-things-go-wrong">What happens when things go wrong</h2>
+<h3 id="bad-output-caught-at-the-boundary">Bad output — caught at the boundary</h3>
+<p>When a node returns data that doesn't match its output schema, Stroma raises <code>ContractViolation</code> immediately at that boundary — classified as <strong>terminal</strong>, so there's no retry. The error surfaces at the node that caused it, not three steps downstream where it would otherwise corrupt state silently.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 
+
+<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;bad_summarize&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Document</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">bad_summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Document</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;wrong_field&quot;</span><span class="p">:</span> <span class="s2">&quot;this will be caught&quot;</span><span class="p">}</span>  <span class="c1"># missing summary and word_count</span>
+
+
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">summarize</span><span class="p">,</span> <span class="n">validate</span><span class="p">],</span>
-        <span class="n">RawText</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Stroma adds reliability to async agent pipelines&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>       <span class="c1"># COMPLETED</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">final_state</span><span class="p">)</span>  <span class="c1"># summary=&#39;Stroma adds reliability to async agent pipelines...&#39; word_count=7</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">bad_summarize</span><span class="p">],</span> <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;hello&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>  <span class="c1"># FAILED</span>
+
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">failures</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">node_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">failure_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># summarize (output): summary: Field required; word_count: Field required</span>
+
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
-<h2 id="see-what-happens-when-things-fail">See what happens when things fail</h2>
-<h3 id="contract-violation-terminal-failure">Contract violation — terminal failure</h3>
-<p>If a node returns data that doesn't match the output schema, Stroma raises a <code>ContractViolation</code> immediately. This is classified as <strong>terminal</strong> — no retries, because the bug is in the node logic, not a transient issue.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;bad_node&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">RawText</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">bad_node</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RawText</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;wrong_field&quot;</span><span class="p">:</span> <span class="s2">&quot;oops&quot;</span><span class="p">}</span>  <span class="c1"># missing &#39;summary&#39; and &#39;word_count&#39;</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">bad_node</span><span class="p">],</span> <span class="n">RawText</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;hello&quot;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>  <span class="c1"># FAILED</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">failures</span><span class="p">())</span>
-<span class="c1"># ContractViolation — terminal, no retry</span>
-</code></pre></div>
-<h3 id="transient-error-automatic-retry">Transient error — automatic retry</h3>
-<p>Transient failures like <code>TimeoutError</code> are classified as <strong>recoverable</strong>. Stroma retries with jittered backoff, up to the configured limit.</p>
+<h3 id="transient-failure-automatic-retry">Transient failure — automatic retry</h3>
+<p><code>TimeoutError</code> is classified as <strong>recoverable</strong>. Stroma retries with jittered backoff, up to the configured limit, without any code from you.</p>
 <div class="highlight"><pre><span></span><code><span class="n">attempt</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
 
-<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;flaky&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">RawText</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">flaky</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">RawText</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+<span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;flaky_summarize&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Document</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">flaky_summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Document</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">attempt</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">attempt</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s2">&quot;API timed out&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">20</span><span class="p">],</span> <span class="s2">&quot;word_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())}</span>
+        <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s2">&quot;upstream API timed out&quot;</span><span class="p">)</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;word_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)}</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">flaky</span><span class="p">],</span> <span class="n">RawText</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;hello world&quot;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>          <span class="c1"># COMPLETED</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">attempt</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">])</span>       <span class="c1"># 3 (failed twice, succeeded on third try)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">flaky_summarize</span><span class="p">],</span> <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;hello world from stroma&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>       <span class="c1"># COMPLETED</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">attempt</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">])</span>    <span class="c1"># 3 — failed twice, succeeded on third attempt</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
-<h3 id="crash-recovery-checkpoint-and-resume">Crash recovery — checkpoint and resume</h3>
-<p>After each node succeeds, Stroma checkpoints the output. If a later node fails, you can resume from the checkpoint instead of re-running everything.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
+<h3 id="crash-mid-pipeline-resume-from-checkpoint">Crash mid-pipeline — resume from checkpoint</h3>
+<p>This is the scenario that separates Stroma from a raw execution loop. After each node succeeds, its output is checkpointed. If a later node fails, you resume from where you left off — the completed nodes are skipped entirely, their outputs loaded from the store.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AsyncInMemoryStore</span><span class="p">,</span>
+    <span class="n">CheckpointManager</span><span class="p">,</span>
+    <span class="n">ContractRegistry</span><span class="p">,</span>
+    <span class="n">NodeContract</span><span class="p">,</span>
+    <span class="n">RunConfig</span><span class="p">,</span>
+    <span class="n">StromaRunner</span><span class="p">,</span>
+    <span class="n">stroma_node</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="c1"># First run — node1 succeeds, node2 fails</span>
-<span class="n">config1</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;run-42&quot;</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">summarize</span><span class="p">,</span> <span class="n">failing_node</span><span class="p">],</span> <span class="n">RawText</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">))</span>
-<span class="c1"># result.status == FAILED, but summarize&#39;s output is checkpointed</span>
 
-<span class="c1"># Resume from node2 — summarize is skipped, its output is loaded from checkpoint</span>
-<span class="n">config2</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;run-42&quot;</span><span class="p">,</span> <span class="n">resume_from</span><span class="o">=</span><span class="s2">&quot;failing_node&quot;</span><span class="p">)</span>
-<span class="n">runner2</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">registry</span><span class="p">,</span> <span class="n">runner</span><span class="o">.</span><span class="n">checkpoint_manager</span><span class="p">,</span> <span class="n">config2</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner2</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">summarize</span><span class="p">,</span> <span class="n">fixed_node</span><span class="p">],</span> <span class="n">RawText</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">))</span>
-<span class="c1"># result.status == RESUMED</span>
+<span class="n">registry</span> <span class="o">=</span> <span class="n">ContractRegistry</span><span class="p">()</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">AsyncInMemoryStore</span><span class="p">()</span>
+<span class="n">manager</span> <span class="o">=</span> <span class="n">CheckpointManager</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+
+<span class="n">c1</span> <span class="o">=</span> <span class="n">NodeContract</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="n">input_schema</span><span class="o">=</span><span class="n">Document</span><span class="p">,</span> <span class="n">output_schema</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">NodeContract</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;validate&quot;</span><span class="p">,</span> <span class="n">input_schema</span><span class="o">=</span><span class="n">Summary</span><span class="p">,</span> <span class="n">output_schema</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
+<span class="n">registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+
+<span class="n">summarize_run_count</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+
+<span class="nd">@stroma_node</span><span class="p">(</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="n">c1</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">summarize_checkpointed</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Document</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">summarize_run_count</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;word_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)}</span>
+
+
+<span class="nd">@stroma_node</span><span class="p">(</span><span class="s2">&quot;validate&quot;</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">validate_failing</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Summary</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;downstream service down&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@stroma_node</span><span class="p">(</span><span class="s2">&quot;validate&quot;</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">validate_fixed</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Summary</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">state</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># First run — summarize succeeds and is checkpointed, validate crashes</span>
+    <span class="n">config1</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;qs-run-1&quot;</span><span class="p">)</span>
+    <span class="n">runner1</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="p">(</span><span class="n">registry</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">config1</span><span class="p">)</span>
+    <span class="n">result1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner1</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">summarize_checkpointed</span><span class="p">,</span> <span class="n">validate_failing</span><span class="p">],</span>
+        <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Stroma adds reliability to async agent pipelines&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result1</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>              <span class="c1"># FAILED</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">summarize_run_count</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">])</span>    <span class="c1"># 1</span>
+
+    <span class="c1"># Resume — summarize is skipped, its checkpoint is loaded</span>
+    <span class="n">config2</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;qs-run-1&quot;</span><span class="p">,</span> <span class="n">resume_from</span><span class="o">=</span><span class="s2">&quot;validate&quot;</span><span class="p">)</span>
+    <span class="n">runner2</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="p">(</span><span class="n">registry</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">config2</span><span class="p">)</span>
+    <span class="n">result2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner2</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">summarize_checkpointed</span><span class="p">,</span> <span class="n">validate_fixed</span><span class="p">],</span>
+        <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Stroma adds reliability to async agent pipelines&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>              <span class="c1"># RESUMED</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">final_state</span><span class="p">)</span>         <span class="c1"># summary=&#39;Stroma adds reliability to async...&#39; word_count=7</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">summarize_run_count</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">])</span>    <span class="c1"># still 1 — never ran again</span>
+
+    <span class="c1"># Diff the two traces to see exactly what changed</span>
+    <span class="n">diffs</span> <span class="o">=</span> <span class="n">result1</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">diffs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
-<h2 id="inspect-the-trace">Inspect the trace</h2>
-<p>Every node attempt is recorded — successes, failures, retries, timing, and state.</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">summarize</span><span class="p">,</span> <span class="n">validate</span><span class="p">],</span> <span class="n">RawText</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;hello world&quot;</span><span class="p">))</span>
+<h2 id="when-everything-works">When everything works</h2>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">summarize</span><span class="p">,</span> <span class="n">validate</span><span class="p">],</span>
+        <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Stroma adds reliability to async agent pipelines&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>       <span class="c1"># COMPLETED</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">final_state</span><span class="p">)</span>  <span class="c1"># summary=&#39;Stroma adds reliability to async...&#39; word_count=7</span>
 
-<span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">node_id</span><span class="si">}</span><span class="s2"> attempt=</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">attempt</span><span class="si">}</span><span class="s2"> duration=</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">duration_ms</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">failure</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  FAILED: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">failure</span><span class="si">}</span><span class="s2"> — </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">failure_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Export the full trace as JSON</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">to_json</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
 <h2 id="next-steps">Next steps</h2>
 <ul>
 <li><strong><a href="../tutorial/">Tutorial</a></strong> — Step-by-step walkthrough of every feature.</li>
 <li><strong><a href="../concepts/">Concepts</a></strong> — Architecture and design decisions.</li>
+<li><strong><a href="../vs-langgraph/">Stroma vs. LangGraph</a></strong> — Where the two tools fit together.</li>
 <li><strong><a href="../extending/">Extending Stroma</a></strong> — Custom backends, classifiers, and OTel integration.</li>
 </ul>
 
