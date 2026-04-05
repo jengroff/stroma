@@ -14,6 +14,8 @@ Stroma gives you the building blocks to handle this — without locking you into
 
 ## See it in action
 
+This example uses the explicit API — [Quickstart](quickstart.md) shows the same concepts using the fluent `StromaRunner.quick()` form.
+
 The scenario below is the kind that breaks raw LangGraph pipelines: a multi-step run that crashes midway, resumes from checkpoint, and gives you a diff of what changed between the failed and successful run.
 
 ```python

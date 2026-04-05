@@ -1,5 +1,5 @@
 site_name: Stroma
-site_description: Reliability primitives for agent pipelines
+site_description: The framework handles the graph. Stroma handles the guarantees.
 site_url: https://jengroff.github.io/stroma
 repo_url: https://github.com/jengroff/stroma
 repo_name: jengroff/stroma
@@ -43,6 +43,7 @@ nav:
       - Tracing: api/trace.md
       - LangGraph Adapter: api/langgraph.md
       - DeepAgents Adapter: api/deepagents.md
+  - Changelog: changelog.md
 
 plugins:
   - search
