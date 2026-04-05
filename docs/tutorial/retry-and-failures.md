@@ -148,6 +148,29 @@ config = RunConfig(
 
 The lookup order is: per-node override → global `policy_map` → built-in defaults. Only the failure classes you specify in the override are affected; everything else falls through.
 
+## Per-node timeouts
+
+Guard against hanging LLM calls by setting per-node timeouts. When a node exceeds its timeout, `asyncio.wait_for` raises `TimeoutError`, which is classified as `RECOVERABLE` and retried automatically:
+
+```python
+runner = StromaRunner.quick().with_node_timeouts({
+    "llm_call": 30_000,   # 30 seconds
+    "embedding": 10_000,  # 10 seconds
+})
+```
+
+Timeouts are specified in milliseconds and keyed by node ID. Nodes without an entry run without a timeout. You can also set timeouts directly on `RunConfig`:
+
+```python
+from stroma import RunConfig
+
+config = RunConfig(
+    node_timeouts={"llm_call": 30_000, "embedding": 10_000},
+)
+```
+
+Because `TimeoutError` is `RECOVERABLE`, a timed-out node gets retried according to the retry policy. If the node keeps timing out and exhausts its retries, the pipeline finishes with `PARTIAL` status.
+
 ## What happens when retries are exhausted
 
 If a recoverable or ambiguous failure exhausts its retry budget, the pipeline stops with `status=PARTIAL`:
@@ -169,6 +192,7 @@ async def main():
 - **Custom classifiers** let you override classification for domain-specific errors
 - **Retry policies** control max retries and backoff per failure class
 - **Per-node overrides** via `node_policies` for node-specific retry behavior
+- **Per-node timeouts** via `node_timeouts` — timed-out nodes are retried as `RECOVERABLE`
 - Exhausted retries produce `PARTIAL` status; terminal failures produce `FAILED`
 
 **Next: [Checkpointing](checkpointing.md)** — save pipeline progress and resume after crashes.

@@ -280,7 +280,7 @@ The `StromaRunner` ties everything together. For each node in the sequence it:
 
 1. Validates input against the contract
 2. Fires `on_node_start` hook (if configured)
-3. Executes the async node function (passing context if the node accepts it)
+3. Executes the async node function, applying per-node timeout if configured
 4. Validates output against the contract
 5. Records resource usage, computes cost from model pricing, and checks the budget
 6. Saves a checkpoint
@@ -288,6 +288,19 @@ The `StromaRunner` ties everything together. For each node in the sequence it:
 8. Fires `on_node_success` hook (if configured)
 
 On failure, it fires `on_node_failure`, classifies the exception, looks up the per-node or global retry policy, and either retries with jittered backoff, stops with a terminal status, or gives up after exhausting retries.
+
+### Per-node timeouts
+
+Set per-node timeouts to guard against hanging calls. Timeouts are specified in milliseconds and keyed by node ID:
+
+```python
+runner = StromaRunner.quick().with_node_timeouts({
+    "llm_call": 30_000,   # 30 seconds
+    "embedding": 10_000,  # 10 seconds
+})
+```
+
+When a node exceeds its timeout, `asyncio.wait_for` raises `TimeoutError`. This is classified as `RECOVERABLE` (see the [failure classification table](#failure-classification)), so timed-out nodes are retried automatically. Nodes without a configured timeout run without any time limit. Timeouts apply to both sequential and parallel nodes.
 
 ```
 Input State → [Hook:start] → [Contract] → Node → [Contract] → [Budget] → [Checkpoint] → [Hook:success] → Output State
@@ -322,7 +335,7 @@ Not every primitive is at the same maturity level. Use this as a guide for produ
 |--------|-----------|
 | **Stable** | `StromaRunner`, contracts, failure classification, retry policies, execution tracing |
 | **Stable** | Checkpointing (`InMemoryStore`, `AsyncInMemoryStore`, `RedisStore`) |
-| **Beta** | LangGraph adapter, fluent builder API (`.with_budget()`, `.with_hooks()`, etc.) |
+| **Beta** | LangGraph adapter, fluent builder API (`.with_budget()`, `.with_hooks()`, etc.), per-node timeouts |
 | **Experimental** | Cost tracking / `KNOWN_MODELS` pricing, `ModelHint` / fallback routing |
 
 **Stable** means the API won't change without a major version bump. **Beta** means the API is solid but may see minor adjustments. **Experimental** means useful today but subject to change.

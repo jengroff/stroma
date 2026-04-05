@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Parallel node failure tests updated to expect `PARTIAL` (retries exhausted) instead of `FAILED` (immediate), matching the new retry behavior
+- Added regression tests for `CostTracker.record()` field accumulation (`model`, `output_tokens`, `None` fallback)
+- Added tests for per-node timeout behavior (retry on timeout, exhaustion, fluent builder)
+- Updated parallel execution and retry/failure tutorial docs to cover timeouts and parallel retries
 
 ### Removed
 - `RunConfig.model_hints` field — was accepted but never read by the runner; removed to avoid implying unimplemented capability
