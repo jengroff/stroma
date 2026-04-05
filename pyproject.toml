@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "stroma"
 version = "0.3.0"
-description = "Reliability primitives for agent pipelines."
+description = "The framework handles the graph. Stroma handles the guarantees."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

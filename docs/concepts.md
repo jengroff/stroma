@@ -323,6 +323,9 @@ result = await runner.run(
 
 `parallel()` wraps multiple nodes into a single pseudo-node that runs them concurrently with `asyncio.gather`. Child outputs are merged into a single dict (last write wins on key conflicts). Each child's output is validated against its declared contract before merging, so structurally invalid data is caught immediately. On any child failure (including `ContractViolation`), remaining tasks are cancelled and the exception propagates to the runner's failure handling. Parallel nodes also support retries — transient failures are retried with the same backoff policies as sequential nodes.
 
+!!! warning
+    **Parallel nodes bypass individual contract validation.** Each child node returns a raw dict. The merged output is validated by the next sequential node's input contract — not by each child's declared output contract. If you rely on contracts for per-node correctness guarantees, this is a gap to be aware of.
+
 ### Stateless runner
 
 `CostTracker`, `RetryBudget`, and `ExecutionTrace` are created fresh per `run()` call. Calling `runner.run()` multiple times on the same instance does not accumulate state between runs.
