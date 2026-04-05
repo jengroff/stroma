@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-05
+
+### Added
+- Per-node timeout support via `RunConfig.node_timeouts` — wraps node execution with `asyncio.wait_for`, raising `TimeoutError` (classified as `RECOVERABLE`) when exceeded
+- `StromaRunner.with_node_timeouts()` fluent builder method
+- Retry support for parallel nodes — `_execute_parallel_node` now uses the same `_handle_failure` retry/backoff path as sequential nodes
+
+### Fixed
+- `CostTracker.record()` now preserves `model` and `output_tokens` fields when accumulating retries (previously dropped silently)
+
+### Changed
+- Parallel node failure tests updated to expect `PARTIAL` (retries exhausted) instead of `FAILED` (immediate), matching the new retry behavior
+
+### Removed
+- `RunConfig.model_hints` field — was accepted but never read by the runner; removed to avoid implying unimplemented capability
+- Duplicate `StromaRunner._unpack_output` static method — consolidated to module-level `_unpack_output`
+
 ## [0.2.7] - 2026-04-02
 
 ### Changed

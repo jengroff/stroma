@@ -308,10 +308,7 @@ result = await runner.run(
 )
 ```
 
-`parallel()` wraps multiple nodes into a single pseudo-node that runs them concurrently with `asyncio.gather`. Child outputs are merged into a single dict (last write wins on key conflicts). On any child failure, remaining tasks are cancelled and the exception propagates to the runner's failure handling.
-
-!!! warning "Parallel nodes bypass per-child contract validation"
-    Each child node inside `parallel()` returns a raw dict. Stroma does **not** validate individual child outputs against their declared contracts — only the merged dict is validated when it reaches the next sequential node's input contract. This means a child can return structurally invalid data that silently merges into the pipeline state. If you need per-child validation, run each child as a separate sequential node or add explicit checks inside the child function.
+`parallel()` wraps multiple nodes into a single pseudo-node that runs them concurrently with `asyncio.gather`. Child outputs are merged into a single dict (last write wins on key conflicts). Each child's output is validated against its declared contract before merging, so structurally invalid data is caught immediately. On any child failure (including `ContractViolation`), remaining tasks are cancelled and the exception propagates to the runner's failure handling. Parallel nodes also support retries — transient failures are retried with the same backoff policies as sequential nodes.
 
 ### Stateless runner
 

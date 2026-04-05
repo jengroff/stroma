@@ -130,6 +130,8 @@ class CostTracker:
             tokens_used=existing.tokens_used + usage.tokens_used,
             cost_usd=existing.cost_usd + usage.cost_usd,
             latency_ms=existing.latency_ms + usage.latency_ms,
+            model=usage.model or existing.model,
+            output_tokens=existing.output_tokens + usage.output_tokens,
         )
 
     def check_budget(self, budget: ExecutionBudget, node_id: str) -> None:
