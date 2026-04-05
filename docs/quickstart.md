@@ -191,5 +191,4 @@ asyncio.run(main())
 
 - **[Tutorial](tutorial/index.md)** — Step-by-step walkthrough of every feature.
 - **[Concepts](concepts.md)** — Architecture and design decisions.
-- **[Stroma vs. LangGraph](vs-langgraph.md)** — Where the two tools fit together.
 - **[Extending Stroma](extending.md)** — Custom backends, classifiers, and OTel integration.

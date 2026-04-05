@@ -33,7 +33,6 @@ nav:
       - LangGraph Integration: tutorial/langgraph.md
       - DeepAgents Integration: tutorial/deepagents.md
   - Concepts: concepts.md
-  - Stroma vs. LangGraph: vs-langgraph.md
   - Extending Stroma: extending.md
   - API Reference:
       - Runner: api/runner.md
