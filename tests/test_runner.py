@@ -553,7 +553,7 @@ async def test_parallel_failure_propagates():
     runner = StromaRunner(registry, manager, config)
 
     result = await runner.run([parallel(node_ok, node_fail)], InputState(value=5))
-    assert result.status == RunStatus.FAILED
+    assert result.status == RunStatus.PARTIAL
 
 
 @pytest.mark.asyncio
@@ -637,8 +637,8 @@ async def test_parallel_failure_hook_called():
     runner = StromaRunner(registry, manager, config)
     result = await runner.run([parallel(node_fail)], InputState(value=1))
 
-    assert result.status == RunStatus.FAILED
-    on_failure.assert_awaited_once()
+    assert result.status == RunStatus.PARTIAL
+    assert on_failure.await_count >= 1
 
 
 @pytest.mark.asyncio
@@ -833,3 +833,76 @@ def test_with_redis_builder_raises_import_error_when_redis_missing(monkeypatch):
     runner = StromaRunner.quick()
     with pytest.raises(ImportError, match="redis is required"):
         runner.with_redis("redis://localhost")
+
+
+# --- Per-node timeout tests ---
+
+
+@pytest.mark.asyncio
+async def test_node_timeout_triggers_retry():
+    """A node that exceeds its configured timeout is retried as RECOVERABLE."""
+    import asyncio
+
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    call_count = {"node1": 0}
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def slow_node(state: InputState) -> dict:
+        call_count["node1"] += 1
+        if call_count["node1"] < 2:
+            await asyncio.sleep(5)
+        return {"result": state.value + 1}
+
+    policy_map = default_policy_map()
+    policy_map[FailureClass.RECOVERABLE] = FailurePolicy(max_retries=3, backoff_seconds=0.0)
+    config = RunConfig(
+        run_id="run_timeout",
+        budget=ExecutionBudget.unlimited(),
+        policy_map=policy_map,
+        node_timeouts={"node1": 50},  # 50ms — first call sleeps 5s, will timeout
+    )
+    runner = StromaRunner(registry, manager, config)
+    result = await runner.run([slow_node], InputState(value=7))
+
+    assert result.status == RunStatus.COMPLETED
+    assert call_count["node1"] == 2
+    assert result.final_state.result == 8
+
+
+@pytest.mark.asyncio
+async def test_node_timeout_exhausts_retries():
+    """A node that always times out exhausts retries and returns PARTIAL."""
+    import asyncio
+
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def always_slow(state: InputState) -> dict:
+        await asyncio.sleep(5)
+        return {"result": 0}
+
+    policy_map = default_policy_map()
+    policy_map[FailureClass.RECOVERABLE] = FailurePolicy(max_retries=2, backoff_seconds=0.0)
+    config = RunConfig(
+        run_id="run_timeout_exhaust",
+        budget=ExecutionBudget.unlimited(),
+        policy_map=policy_map,
+        node_timeouts={"node1": 50},
+    )
+    runner = StromaRunner(registry, manager, config)
+    result = await runner.run([always_slow], InputState(value=1))
+
+    assert result.status == RunStatus.PARTIAL
+    assert all(event.failure == FailureClass.RECOVERABLE for event in result.trace)
+
+
+def test_with_node_timeouts_builder():
+    runner = StromaRunner.quick().with_node_timeouts({"embed": 60_000})
+    assert runner.config.node_timeouts == {"embed": 60_000}

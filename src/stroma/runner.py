@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 
 from stroma.checkpoint import CheckpointManager
 from stroma.contracts import ContractRegistry, NodeContract
-from stroma.cost import CostTracker, ExecutionBudget, ModelHint, NodeUsage, estimate_cost_usd
+from stroma.cost import CostTracker, ExecutionBudget, NodeUsage, estimate_cost_usd
 from stroma.failures import (
     Classifier,
     FailureClass,
@@ -45,7 +45,7 @@ class RunConfig(BaseModel):
     """Configuration for a single pipeline run.
 
     A `run_id` is auto-generated if not provided. Set `budget`, `policy_map`,
-    `model_hints`, `classifiers`, or `resume_from` to customize behavior.
+    `classifiers`, or `resume_from` to customize behavior.
     """
 
     run_id: str = Field(
@@ -68,10 +68,6 @@ class RunConfig(BaseModel):
         default_factory=NodeHooks,
         description="Async lifecycle callbacks fired at node execution boundaries.",
     )
-    model_hints: dict[str, ModelHint] = Field(
-        default_factory=dict,
-        description="Per-node model selection hints keyed by node ID.",
-    )
     classifiers: list[Classifier] = Field(
         default_factory=list,
         description="Custom failure classifiers checked before built-in rules.",
@@ -79,6 +75,10 @@ class RunConfig(BaseModel):
     context: dict[str, Any] = Field(
         default_factory=dict,
         description="Shared mutable dict passed to nodes that accept a second argument.",
+    )
+    node_timeouts: dict[str, int] = Field(
+        default_factory=dict,
+        description="Per-node timeout in milliseconds keyed by node ID. Raises `TimeoutError` on expiry.",
     )
     resume_from: str | None = Field(
         default=None,
@@ -318,6 +318,16 @@ class StromaRunner:
         self.config = self.config.model_copy(update={"node_policies": node_policies})
         return self
 
+    def with_node_timeouts(self, node_timeouts: dict[str, int]) -> "StromaRunner":
+        """Set per-node execution timeouts in milliseconds.
+
+        Nodes that exceed their timeout raise `TimeoutError`, which is
+        classified as `RECOVERABLE` by default and retried according to
+        the applicable retry policy.
+        """
+        self.config = self.config.model_copy(update={"node_timeouts": node_timeouts})
+        return self
+
     def node(
         self,
         node_id: str,
@@ -377,7 +387,7 @@ class StromaRunner:
 
             if getattr(node, "_stroma_is_parallel", False):
                 result = await self._execute_parallel_node(
-                    node, node_id, current_state, cost_tracker, trace, run_logger
+                    node, node_id, current_state, cost_tracker, retry_budget, trace, run_logger
                 )
             else:
                 contract = self._node_contract(node)
@@ -412,11 +422,8 @@ class StromaRunner:
             try:
                 if self.config.hooks.on_node_start is not None:
                     await self.config.hooks.on_node_start(self.config.run_id, node_id, input_model.model_dump())
-                if _node_accepts_context(node):
-                    raw_output = await node(input_model, self.config.context)  # type: ignore[call-arg]  # ty: ignore[too-many-positional-arguments]
-                else:
-                    raw_output = await node(input_model)
-                output_raw, input_tokens, output_tokens, model = self._unpack_output(raw_output)
+                raw_output = await self._invoke_node(node, node_id, input_model)
+                output_raw, input_tokens, output_tokens, model = _unpack_output(raw_output)
                 output_model = self.registry.validate_output(node_id, output_raw)
                 duration_ms = self._elapsed_ms(start_ts)
                 cost_usd = estimate_cost_usd(model, input_tokens, output_tokens) if model else 0.0
@@ -534,89 +541,83 @@ class StromaRunner:
         node_id: str,
         current_state: BaseModel,
         cost_tracker: CostTracker,
+        retry_budget: RetryBudget,
         trace: ExecutionTrace,
         run_logger: logging.LoggerAdapter,  # type: ignore[type-arg]
     ) -> ExecutionResult:
         """Execute a parallel pseudo-node with full instrumentation.
 
         Applies the same reliability instrumentation as sequential nodes:
-        hooks, cost tracking, budget checking, and checkpointing.
+        hooks, cost tracking, budget checking, checkpointing, and retries.
         """
         from pydantic import create_model
 
-        start_ts = datetime.now(UTC)
-        try:
-            if self.config.hooks.on_node_start is not None:
-                await self.config.hooks.on_node_start(self.config.run_id, node_id, current_state.model_dump())
+        attempt = 1
+        while True:
+            start_ts = datetime.now(UTC)
+            try:
+                if self.config.hooks.on_node_start is not None:
+                    await self.config.hooks.on_node_start(self.config.run_id, node_id, current_state.model_dump())
 
-            ctx = self.config.context
-            raw_result = await node(current_state, ctx)  # type: ignore[call-arg]  # ty: ignore[too-many-positional-arguments]
-            merged, input_tokens, output_tokens, model = self._unpack_output(raw_result)
+                raw_result = await self._invoke_node(node, node_id, current_state)
+                merged, input_tokens, output_tokens, model = _unpack_output(raw_result)
 
-            dynamic_output = create_model(
-                "ParallelOutput", **{k: (type(v), ...) for k, v in merged.items()}
-            )  # ty: ignore[no-matching-overload]
-            output_model = dynamic_output(**merged)
+                dynamic_output = create_model(
+                    "ParallelOutput", **{k: (type(v), ...) for k, v in merged.items()}
+                )  # ty: ignore[no-matching-overload]
+                output_model = dynamic_output(**merged)
 
-            duration_ms = self._elapsed_ms(start_ts)
-            tokens_used = input_tokens + output_tokens
-            cost_usd = estimate_cost_usd(model, input_tokens, output_tokens) if model else 0.0
+                duration_ms = self._elapsed_ms(start_ts)
+                tokens_used = input_tokens + output_tokens
+                cost_usd = estimate_cost_usd(model, input_tokens, output_tokens) if model else 0.0
 
-            cost_tracker.record(
-                NodeUsage(
-                    node_id=node_id,
-                    tokens_used=tokens_used,
-                    cost_usd=cost_usd,
-                    latency_ms=duration_ms,
-                    model=model,
-                    output_tokens=output_tokens,
+                cost_tracker.record(
+                    NodeUsage(
+                        node_id=node_id,
+                        tokens_used=tokens_used,
+                        cost_usd=cost_usd,
+                        latency_ms=duration_ms,
+                        model=model,
+                        output_tokens=output_tokens,
+                    )
                 )
-            )
-            cost_tracker.check_budget(self.config.budget, node_id)
-            await self.checkpoint_manager.checkpoint(self.config.run_id, node_id, output_model)
+                cost_tracker.check_budget(self.config.budget, node_id)
+                await self.checkpoint_manager.checkpoint(self.config.run_id, node_id, output_model)
 
-            trace.append(
-                TraceEvent(
-                    node_id=node_id,
-                    run_id=self.config.run_id,
-                    attempt=1,
-                    timestamp_utc=start_ts,
-                    input_state=current_state.model_dump(),
-                    output_state=merged,
-                    duration_ms=duration_ms,
+                trace.append(
+                    TraceEvent(
+                        node_id=node_id,
+                        run_id=self.config.run_id,
+                        attempt=attempt,
+                        timestamp_utc=start_ts,
+                        input_state=current_state.model_dump(),
+                        output_state=merged,
+                        duration_ms=duration_ms,
+                    )
                 )
-            )
-            run_logger.info("Parallel node %s completed (tokens=%d)", node_id, tokens_used)
+                run_logger.info("Parallel node %s completed (attempt=%d, tokens=%d)", node_id, attempt, tokens_used)
 
-            if self.config.hooks.on_node_success is not None:
-                await self.config.hooks.on_node_success(self.config.run_id, node_id, merged, tokens_used)
+                if self.config.hooks.on_node_success is not None:
+                    await self.config.hooks.on_node_success(self.config.run_id, node_id, merged, tokens_used)
 
-            return self._build_result(RunStatus.COMPLETED, output_model, cost_tracker, trace)
+                return self._build_result(RunStatus.COMPLETED, output_model, cost_tracker, trace)
 
-        except Exception as exc:
-            duration_ms = self._elapsed_ms(start_ts)
-            failure_class = classify(
-                exc, NodeContext(node_id=node_id, attempt=1, run_id=self.config.run_id), self.config.classifiers
-            )
-            trace.append(
-                TraceEvent(
-                    node_id=node_id,
-                    run_id=self.config.run_id,
-                    attempt=1,
-                    timestamp_utc=start_ts,
-                    input_state=current_state.model_dump(),
-                    output_state=None,
-                    duration_ms=duration_ms,
-                    failure=failure_class,
-                    failure_message=str(exc),
+            except Exception as exc:
+                result = await self._handle_failure(
+                    exc,
+                    node_id,
+                    attempt,
+                    start_ts,
+                    current_state,
+                    current_state,
+                    cost_tracker,
+                    retry_budget,
+                    trace,
+                    run_logger,
                 )
-            )
-            run_logger.error("Parallel node %s failed: %s", node_id, exc)
-
-            if self.config.hooks.on_node_failure is not None:
-                await self.config.hooks.on_node_failure(self.config.run_id, node_id, exc, failure_class)
-
-            return self._build_result(RunStatus.FAILED, current_state, cost_tracker, trace)
+                if result is not None:
+                    return result
+                attempt += 1
 
     def _resolve_resume_index(self, node_sequence: list[NodeFunc]) -> int | None:
         """Find the start index for resume, or 0 for fresh runs. Returns None if resume target not found."""
@@ -657,18 +658,17 @@ class StromaRunner:
             total_tokens=cost_tracker.total_tokens,
         )
 
-    @staticmethod
-    def _unpack_output(output: Any) -> tuple[dict[str, Any], int, int, str | None]:
-        """Normalize node output to `(dict, input_tokens, output_tokens, model)`.
-
-        Handles three tuple shapes returned by node functions:
-
-        - **4-tuple** `(dict, input_tokens, output_tokens, model)`
-        - **3-tuple** `(dict, input_tokens, model)` — output_tokens defaults to `0`
-        - **2-tuple** `(dict, input_tokens)` — output_tokens `0`, model `None`
-        - **bare dict** — all token counts `0`, model `None`
-        """
-        return _unpack_output(output)
+    async def _invoke_node(self, node: NodeFunc, node_id: str, input_state: BaseModel) -> Any:
+        """Call a node function, applying per-node timeout if configured."""
+        coro = (
+            node(input_state, self.config.context)  # type: ignore[call-arg]  # ty: ignore[too-many-positional-arguments]
+            if _node_accepts_context(node)
+            else node(input_state)  # type: ignore[call-arg]
+        )
+        timeout_ms = self.config.node_timeouts.get(node_id)
+        if timeout_ms is not None:
+            return await asyncio.wait_for(coro, timeout=timeout_ms / 1000)
+        return await coro
 
     @staticmethod
     def _elapsed_ms(start: datetime) -> int:

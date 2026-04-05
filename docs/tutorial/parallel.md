@@ -93,9 +93,9 @@ The execution flow is:
 3. Their outputs merge into a single state
 4. `postprocess` runs (sequential) with the merged state
 
-## Error handling
+## Error handling and retries
 
-If any child node raises an exception, `asyncio.gather` cancels the remaining tasks and the exception propagates to the runner's failure handling. The pipeline records a `FAILED` status:
+If any child node raises an exception, the remaining tasks are cancelled and the exception propagates to the runner's failure handling. Parallel nodes use the same retry path as sequential nodes — transient failures are retried with jittered backoff according to the configured policy. If retries are exhausted, the pipeline records `PARTIAL` status:
 
 ```python
 @stroma_node("failing", contract)
@@ -106,8 +106,10 @@ result = await runner.run(
     [parallel(good_node, failing)],
     state,
 )
-assert result.status == RunStatus.FAILED
+assert result.status == RunStatus.PARTIAL  # (1)!
 ```
+
+1. `RuntimeError` is classified as `AMBIGUOUS` (1 retry by default). After exhausting retries, the status is `PARTIAL`, not `FAILED`. Terminal failures like `ContractViolation` still produce `FAILED` immediately.
 
 ## Context support
 
@@ -138,7 +140,8 @@ merged = await parallel(node_a, node_b)(state)
 - **`parallel(node_a, node_b, ...)`** runs nodes concurrently with `asyncio.gather`
 - Child outputs are **merged** into a single dict (last-write-wins on key conflicts)
 - Mix **sequential and parallel** freely: `[seq, parallel(a, b), seq]`
-- **Failures propagate** — any child exception fails the parallel node
+- **Retries** work the same as sequential nodes — transient failures are retried with backoff
+- **Failures propagate** — terminal exceptions fail immediately; exhausted retries produce `PARTIAL`
 - **Context** is passed through to children that accept it
 - One **trace event** per parallel pseudo-node
 

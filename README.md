@@ -47,7 +47,8 @@ uv add stroma[deepagents]  # DeepAgents adapter
 - **Retry policies** — configurable retries with jittered backoff, per failure class or per node
 - **Checkpointing** — async-first save and resume across crashes (in-memory or Redis)
 - **Cost estimation** — model-aware USD cost tracking via `KNOWN_MODELS` and token/dollar/latency budgets
-- **Parallel execution** — fan out work to concurrent nodes with `parallel()`, per-child contract validation, and merged output
+- **Per-node timeouts** — configurable `node_timeouts` with `asyncio.wait_for`; timeouts are classified as recoverable and retried automatically
+- **Parallel execution** — fan out work to concurrent nodes with `parallel()`, per-child contract validation, merged output, and full retry support
 - **Node hooks** — async `on_node_start`, `on_node_success`, and `on_node_failure` callbacks
 - **Shared context** — pass a mutable `context` dict through `RunConfig` to every node
 - **Execution tracing** — full record of every node attempt, with diffing and JSON export
@@ -123,6 +124,17 @@ config = RunConfig(
         }
     }
 )
+```
+
+### Per-node timeouts
+
+Guard against hanging LLM calls with per-node timeouts. Timeouts raise `TimeoutError`, which is classified as recoverable and retried automatically:
+
+```python
+runner = StromaRunner.quick().with_node_timeouts({
+    "llm_call": 30_000,   # 30 seconds
+    "embedding": 10_000,  # 10 seconds
+})
 ```
 
 ### Async checkpointing

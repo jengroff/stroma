@@ -94,6 +94,35 @@ def test_estimate_cost_unknown_model_returns_zero():
     assert estimate_cost_usd("unknown-model-xyz", 100, 100) == 0.0
 
 
+def test_record_accumulates_model_and_output_tokens():
+    """model and output_tokens must survive accumulation across retries."""
+    tracker = CostTracker()
+    tracker.record(
+        NodeUsage(node_id="llm", tokens_used=100, cost_usd=0.01, latency_ms=200, model="gpt-4o", output_tokens=50)
+    )
+    tracker.record(
+        NodeUsage(node_id="llm", tokens_used=80, cost_usd=0.008, latency_ms=150, model="gpt-4o", output_tokens=40)
+    )
+    usage = tracker.summary()["llm"]
+    assert usage.model == "gpt-4o"
+    assert usage.output_tokens == 90
+    assert usage.tokens_used == 180
+
+
+def test_record_accumulates_model_fallback_when_none():
+    """If a retry omits model, the existing model is preserved."""
+    tracker = CostTracker()
+    tracker.record(
+        NodeUsage(node_id="llm", tokens_used=100, cost_usd=0.01, latency_ms=200, model="gpt-4o", output_tokens=50)
+    )
+    tracker.record(
+        NodeUsage(node_id="llm", tokens_used=80, cost_usd=0.008, latency_ms=150, model=None, output_tokens=30)
+    )
+    usage = tracker.summary()["llm"]
+    assert usage.model == "gpt-4o"
+    assert usage.output_tokens == 80
+
+
 def test_known_models_registry_is_not_empty():
     assert len(KNOWN_MODELS) > 0
     assert all(len(v) == 2 for v in KNOWN_MODELS.values())
