@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reliability primitives for agent pipelines">
+        <meta name="description" content="The framework handles the graph. Stroma handles the guarantees.">
       
       
       
@@ -320,6 +320,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
   
 
       
@@ -1405,6 +1424,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -2058,6 +2104,10 @@
 <span class="p">)</span>
 </code></pre></div>
 <p><code>parallel()</code> wraps multiple nodes into a single pseudo-node that runs them concurrently with <code>asyncio.gather</code>. Child outputs are merged into a single dict (last write wins on key conflicts). Each child's output is validated against its declared contract before merging, so structurally invalid data is caught immediately. On any child failure (including <code>ContractViolation</code>), remaining tasks are cancelled and the exception propagates to the runner's failure handling. Parallel nodes also support retries — transient failures are retried with the same backoff policies as sequential nodes.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Parallel nodes bypass individual contract validation.</strong> Each child node returns a raw dict. The merged output is validated by the next sequential node's input contract — not by each child's declared output contract. If you rely on contracts for per-node correctness guarantees, this is a gap to be aware of.</p>
+</div>
 <h3 id="stateless-runner">Stateless runner</h3>
 <p><code>CostTracker</code>, <code>RetryBudget</code>, and <code>ExecutionTrace</code> are created fresh per <code>run()</code> call. Calling <code>runner.run()</code> multiple times on the same instance does not accumulate state between runs.</p>
 <h2 id="stability">Stability</h2>
