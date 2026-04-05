@@ -148,6 +148,5 @@ Optional extras:
 - **[Quickstart](quickstart.md)** — Contracts, retries, checkpoint/resume, and trace inspection in 5 minutes.
 - **[Tutorial](tutorial/index.md)** — Build a pipeline step by step, from hello-world to production-grade.
 - **[Concepts](concepts.md)** — Architecture and design decisions behind each primitive.
-- **[Stroma vs. LangGraph](vs-langgraph.md)** — Where the two tools differ and how to use them together.
 - **[Extending Stroma](extending.md)** — Custom backends, classifiers, and OTel integrations.
 - **[API Reference](api/runner.md)** — Full documentation for every class, function, and decorator.
