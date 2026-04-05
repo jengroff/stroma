@@ -75,7 +75,7 @@ async def main():
         [extract, summarize_failing],
         Document(text="Stroma adds reliability to agent pipelines"),
     )
-    print(result1.status)  # FAILED — extract checkpointed, summarize exhausted retries
+    print(result1.status)  # PARTIAL — extract checkpointed, summarize exhausted retries
 
     config2 = RunConfig(run_id="doc-run-1", resume_from="summarize")  # (2)!
     runner2 = StromaRunner(registry, manager, config2)
@@ -92,6 +92,7 @@ async def main():
 
 
 asyncio.run(main())
+# In a Jupyter notebook, replace the line above with: await main()
 ```
 
 1. `TimeoutError` is classified as `RECOVERABLE`. Stroma retries with jittered backoff. After exhausting retries, the run fails — but `extract`'s output is already checkpointed.
