@@ -290,25 +290,6 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../vs-langgraph/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Stroma vs. LangGraph
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
       <a href="../../extending/" class="md-tabs__link">
         
   
@@ -850,10 +831,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
+  <a href="#error-handling-and-retries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Error handling
+        Error handling and retries
       
     </span>
   </a>
@@ -1010,33 +991,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../vs-langgraph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Stroma vs. LangGraph
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../extending/" class="md-nav__link">
         
   
@@ -1079,10 +1033,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -1100,8 +1054,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1402,10 +1356,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
+  <a href="#error-handling-and-retries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Error handling
+        Error handling and retries
       
     </span>
   </a>
@@ -1559,8 +1513,8 @@
 <li>Their outputs merge into a single state</li>
 <li><code>postprocess</code> runs (sequential) with the merged state</li>
 </ol>
-<h2 id="error-handling">Error handling</h2>
-<p>If any child node raises an exception, <code>asyncio.gather</code> cancels the remaining tasks and the exception propagates to the runner's failure handling. The pipeline records a <code>FAILED</code> status:</p>
+<h2 id="error-handling-and-retries">Error handling and retries</h2>
+<p>If any child node raises an exception, the remaining tasks are cancelled and the exception propagates to the runner's failure handling. Parallel nodes use the same retry path as sequential nodes — transient failures are retried with jittered backoff according to the configured policy. If retries are exhausted, the pipeline records <code>PARTIAL</code> status:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@stroma_node</span><span class="p">(</span><span class="s2">&quot;failing&quot;</span><span class="p">,</span> <span class="n">contract</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">failing</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;something broke&quot;</span><span class="p">)</span>
@@ -1569,8 +1523,11 @@
     <span class="p">[</span><span class="n">parallel</span><span class="p">(</span><span class="n">good_node</span><span class="p">,</span> <span class="n">failing</span><span class="p">)],</span>
     <span class="n">state</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">RunStatus</span><span class="o">.</span><span class="n">FAILED</span>
+<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">RunStatus</span><span class="o">.</span><span class="n">PARTIAL</span>  <span class="c1"># (1)!</span>
 </code></pre></div>
+<ol>
+<li><code>RuntimeError</code> is classified as <code>AMBIGUOUS</code> (1 retry by default). After exhausting retries, the status is <code>PARTIAL</code>, not <code>FAILED</code>. Terminal failures like <code>ContractViolation</code> still produce <code>FAILED</code> immediately.</li>
+</ol>
 <h2 id="context-support">Context support</h2>
 <p>Parallel child nodes that accept a context parameter receive it just like sequential nodes:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@stroma_node</span><span class="p">(</span><span class="s2">&quot;fetch_a&quot;</span><span class="p">,</span> <span class="n">contract</span><span class="p">)</span>
@@ -1590,7 +1547,8 @@
 <li><strong><code>parallel(node_a, node_b, ...)</code></strong> runs nodes concurrently with <code>asyncio.gather</code></li>
 <li>Child outputs are <strong>merged</strong> into a single dict (last-write-wins on key conflicts)</li>
 <li>Mix <strong>sequential and parallel</strong> freely: <code>[seq, parallel(a, b), seq]</code></li>
-<li><strong>Failures propagate</strong> — any child exception fails the parallel node</li>
+<li><strong>Retries</strong> work the same as sequential nodes — transient failures are retried with backoff</li>
+<li><strong>Failures propagate</strong> — terminal exceptions fail immediately; exhausted retries produce <code>PARTIAL</code></li>
 <li><strong>Context</strong> is passed through to children that accept it</li>
 <li>One <strong>trace event</strong> per parallel pseudo-node</li>
 </ul>

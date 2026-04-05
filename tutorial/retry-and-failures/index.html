@@ -290,25 +290,6 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../vs-langgraph/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Stroma vs. LangGraph
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
       <a href="../../extending/" class="md-tabs__link">
         
   
@@ -715,6 +696,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#per-node-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-node timeouts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-happens-when-retries-are-exhausted" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1010,33 +1002,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../vs-langgraph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Stroma vs. LangGraph
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../extending/" class="md-nav__link">
         
   
@@ -1079,10 +1044,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -1100,8 +1065,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1435,6 +1400,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#per-node-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-node timeouts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-happens-when-retries-are-exhausted" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1650,6 +1626,21 @@
 <li><code>fast_transform</code> gets zero retries — any failure stops immediately.</li>
 </ol>
 <p>The lookup order is: per-node override → global <code>policy_map</code> → built-in defaults. Only the failure classes you specify in the override are affected; everything else falls through.</p>
+<h2 id="per-node-timeouts">Per-node timeouts</h2>
+<p>Guard against hanging LLM calls by setting per-node timeouts. When a node exceeds its timeout, <code>asyncio.wait_for</code> raises <code>TimeoutError</code>, which is classified as <code>RECOVERABLE</code> and retried automatically:</p>
+<div class="highlight"><pre><span></span><code><span class="n">runner</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">()</span><span class="o">.</span><span class="n">with_node_timeouts</span><span class="p">({</span>
+    <span class="s2">&quot;llm_call&quot;</span><span class="p">:</span> <span class="mi">30_000</span><span class="p">,</span>   <span class="c1"># 30 seconds</span>
+    <span class="s2">&quot;embedding&quot;</span><span class="p">:</span> <span class="mi">10_000</span><span class="p">,</span>  <span class="c1"># 10 seconds</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>Timeouts are specified in milliseconds and keyed by node ID. Nodes without an entry run without a timeout. You can also set timeouts directly on <code>RunConfig</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">stroma</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+    <span class="n">node_timeouts</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;llm_call&quot;</span><span class="p">:</span> <span class="mi">30_000</span><span class="p">,</span> <span class="s2">&quot;embedding&quot;</span><span class="p">:</span> <span class="mi">10_000</span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Because <code>TimeoutError</code> is <code>RECOVERABLE</code>, a timed-out node gets retried according to the retry policy. If the node keeps timing out and exhausts its retries, the pipeline finishes with <code>PARTIAL</code> status.</p>
 <h2 id="what-happens-when-retries-are-exhausted">What happens when retries are exhausted</h2>
 <p>If a recoverable or ambiguous failure exhausts its retry budget, the pipeline stops with <code>status=PARTIAL</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
@@ -1670,6 +1661,7 @@
 <li><strong>Custom classifiers</strong> let you override classification for domain-specific errors</li>
 <li><strong>Retry policies</strong> control max retries and backoff per failure class</li>
 <li><strong>Per-node overrides</strong> via <code>node_policies</code> for node-specific retry behavior</li>
+<li><strong>Per-node timeouts</strong> via <code>node_timeouts</code> — timed-out nodes are retried as <code>RECOVERABLE</code></li>
 <li>Exhausted retries produce <code>PARTIAL</code> status; terminal failures produce <code>FAILED</code></li>
 </ul>
 <p><strong>Next: <a href="../checkpointing/">Checkpointing</a></strong> — save pipeline progress and resume after crashes.</p>

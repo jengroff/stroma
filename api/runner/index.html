@@ -288,25 +288,6 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../vs-langgraph/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Stroma vs. LangGraph
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
       <a href="../../extending/" class="md-tabs__link">
         
   
@@ -872,33 +853,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../vs-langgraph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Stroma vs. LangGraph
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../extending/" class="md-nav__link">
         
   
@@ -944,10 +898,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -965,8 +919,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1186,6 +1140,17 @@
     <span class="md-ellipsis">
       
         with_node_policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroma.runner.StromaRunner.with_node_timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        with_node_timeouts
       
     </span>
   </a>
@@ -1692,6 +1657,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#stroma.runner.StromaRunner.with_node_timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        with_node_timeouts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stroma.runner.StromaRunner.node" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1899,7 +1875,7 @@
 
         <p>Configuration for a single pipeline run.</p>
 <p>A <code>run_id</code> is auto-generated if not provided. Set <code>budget</code>, <code>policy_map</code>,
-<code>model_hints</code>, <code>classifiers</code>, or <code>resume_from</code> to customize behavior.</p>
+<code>classifiers</code>, or <code>resume_from</code> to customize behavior.</p>
 
 
 
@@ -2134,6 +2110,27 @@ Additional keyword arguments are forwarded to <code>RunConfig</code>.</p>
     <div class="doc doc-contents ">
 
         <p>Set per-node failure policy overrides.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="stroma.runner.StromaRunner.with_node_timeouts" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">with_node_timeouts</span><span class="p">(</span><span class="n">node_timeouts</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Set per-node execution timeouts in milliseconds.</p>
+<p>Nodes that exceed their timeout raise <code>TimeoutError</code>, which is
+classified as <code>RECOVERABLE</code> by default and retried according to
+the applicable retry policy.</p>
 
 
     </div>

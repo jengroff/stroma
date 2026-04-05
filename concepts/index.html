@@ -16,7 +16,7 @@
         <link rel="prev" href="../tutorial/deepagents/">
       
       
-        <link rel="next" href="../vs-langgraph/">
+        <link rel="next" href="../extending/">
       
       
         
@@ -278,25 +278,6 @@
     
   
   Concepts
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../vs-langgraph/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Stroma vs. LangGraph
 
       </a>
     </li>
@@ -1056,6 +1037,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#per-node-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-node timeouts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#parallel-fan-out" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1097,33 +1089,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../vs-langgraph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Stroma vs. LangGraph
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1177,10 +1142,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -1198,8 +1163,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1616,6 +1581,17 @@
   
     <nav class="md-nav" aria-label="Pipeline Execution">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#per-node-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-node timeouts
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#parallel-fan-out" class="md-nav__link">
@@ -2052,7 +2028,7 @@
 <ol>
 <li>Validates input against the contract</li>
 <li>Fires <code>on_node_start</code> hook (if configured)</li>
-<li>Executes the async node function (passing context if the node accepts it)</li>
+<li>Executes the async node function, applying per-node timeout if configured</li>
 <li>Validates output against the contract</li>
 <li>Records resource usage, computes cost from model pricing, and checks the budget</li>
 <li>Saves a checkpoint</li>
@@ -2060,6 +2036,14 @@
 <li>Fires <code>on_node_success</code> hook (if configured)</li>
 </ol>
 <p>On failure, it fires <code>on_node_failure</code>, classifies the exception, looks up the per-node or global retry policy, and either retries with jittered backoff, stops with a terminal status, or gives up after exhausting retries.</p>
+<h3 id="per-node-timeouts">Per-node timeouts</h3>
+<p>Set per-node timeouts to guard against hanging calls. Timeouts are specified in milliseconds and keyed by node ID:</p>
+<div class="highlight"><pre><span></span><code><span class="n">runner</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">()</span><span class="o">.</span><span class="n">with_node_timeouts</span><span class="p">({</span>
+    <span class="s2">&quot;llm_call&quot;</span><span class="p">:</span> <span class="mi">30_000</span><span class="p">,</span>   <span class="c1"># 30 seconds</span>
+    <span class="s2">&quot;embedding&quot;</span><span class="p">:</span> <span class="mi">10_000</span><span class="p">,</span>  <span class="c1"># 10 seconds</span>
+<span class="p">})</span>
+</code></pre></div>
+<p>When a node exceeds its timeout, <code>asyncio.wait_for</code> raises <code>TimeoutError</code>. This is classified as <code>RECOVERABLE</code> (see the <a href="#failure-classification">failure classification table</a>), so timed-out nodes are retried automatically. Nodes without a configured timeout run without any time limit. Timeouts apply to both sequential and parallel nodes.</p>
 <div class="highlight"><pre><span></span><code>Input State → [Hook:start] → [Contract] → Node → [Contract] → [Budget] → [Checkpoint] → [Hook:success] → Output State
                                              ↑                                                                   |
                                              └──────────── retry (if recoverable) ──────────────────────────────┘
@@ -2073,11 +2057,7 @@
     <span class="n">state</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p><code>parallel()</code> wraps multiple nodes into a single pseudo-node that runs them concurrently with <code>asyncio.gather</code>. Child outputs are merged into a single dict (last write wins on key conflicts). On any child failure, remaining tasks are cancelled and the exception propagates to the runner's failure handling.</p>
-<div class="admonition warning">
-<p class="admonition-title">Parallel nodes bypass per-child contract validation</p>
-<p>Each child node inside <code>parallel()</code> returns a raw dict. Stroma does <strong>not</strong> validate individual child outputs against their declared contracts — only the merged dict is validated when it reaches the next sequential node's input contract. This means a child can return structurally invalid data that silently merges into the pipeline state. If you need per-child validation, run each child as a separate sequential node or add explicit checks inside the child function.</p>
-</div>
+<p><code>parallel()</code> wraps multiple nodes into a single pseudo-node that runs them concurrently with <code>asyncio.gather</code>. Child outputs are merged into a single dict (last write wins on key conflicts). Each child's output is validated against its declared contract before merging, so structurally invalid data is caught immediately. On any child failure (including <code>ContractViolation</code>), remaining tasks are cancelled and the exception propagates to the runner's failure handling. Parallel nodes also support retries — transient failures are retried with the same backoff policies as sequential nodes.</p>
 <h3 id="stateless-runner">Stateless runner</h3>
 <p><code>CostTracker</code>, <code>RetryBudget</code>, and <code>ExecutionTrace</code> are created fresh per <code>run()</code> call. Calling <code>runner.run()</code> multiple times on the same instance does not accumulate state between runs.</p>
 <h2 id="stability">Stability</h2>
@@ -2100,7 +2080,7 @@
 </tr>
 <tr>
 <td><strong>Beta</strong></td>
-<td>LangGraph adapter, fluent builder API (<code>.with_budget()</code>, <code>.with_hooks()</code>, etc.)</td>
+<td>LangGraph adapter, fluent builder API (<code>.with_budget()</code>, <code>.with_hooks()</code>, etc.), per-node timeouts</td>
 </tr>
 <tr>
 <td><strong>Experimental</strong></td>
