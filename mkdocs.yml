@@ -32,6 +32,10 @@ nav:
       - Parallel Execution: tutorial/parallel.md
       - LangGraph Integration: tutorial/langgraph.md
       - DeepAgents Integration: tutorial/deepagents.md
+  - Examples:
+      - Agentic Loop: examples/agentic_loop/README.md
+      - Conversation-Driven: examples/conversation_driven/README.md
+      - Declarative / Compiler: examples/declarative/README.md
   - Concepts: concepts.md
   - Architecture:
       - Universal Reliability Layer: architecture/universal-reliability-layer.md
