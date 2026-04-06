@@ -289,6 +289,26 @@
   
   
   
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/universal-reliability-layer/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
     <li class="md-tabs__item">
       <a href="../../extending/" class="md-tabs__link">
         
@@ -760,6 +780,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#model-fallback-at-budget-threshold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model fallback at budget threshold
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#inspecting-cost-after-a-run" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -998,6 +1029,95 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/universal-reliability-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Universal Reliability Layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../extending/" class="md-nav__link">
         
@@ -1041,10 +1161,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1062,8 +1182,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1088,6 +1208,34 @@
     
   
     Runner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/middleware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Middleware
   
 
     
@@ -1276,6 +1424,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../api/crewai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CrewAI Adapter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api/deepagents/" class="md-nav__link">
         
   
@@ -1406,6 +1582,17 @@
     <span class="md-ellipsis">
       
         What happens when a budget is exceeded
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-fallback-at-budget-threshold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model fallback at budget threshold
       
     </span>
   </a>
@@ -1629,6 +1816,32 @@
 <span class="n">runner</span> <span class="o">=</span> <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="n">classifiers</span><span class="o">=</span><span class="p">[</span><span class="n">budget_is_terminal</span><span class="p">])</span>
 </code></pre></div>
 </div>
+<h2 id="model-fallback-at-budget-threshold">Model fallback at budget threshold</h2>
+<p>Instead of failing when costs get high, you can automatically downgrade to a cheaper model. The <code>with_model_fallback</code> builder sets a threshold: when cumulative spend reaches a percentage of the budget, subsequent nodes receive a fallback model signal via <code>ctx["_stroma_model"]</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">runner</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">with_budget</span><span class="p">(</span><span class="n">cost_usd</span><span class="o">=</span><span class="mf">1.00</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">with_model_fallback</span><span class="p">(</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">at_budget_pct</span><span class="o">=</span><span class="mf">0.80</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>When the pipeline has spent 80% of its $1.00 budget, any node that would use <code>gpt-4o</code> gets <code>gpt-4o-mini</code> instead. Nodes read the signal from the context dict:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@runner</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">Input</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Output</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_stroma_model&quot;</span><span class="p">,</span> <span class="s2">&quot;gpt-4o&quot;</span><span class="p">)</span>  <span class="c1"># (1)!</span>
+    <span class="c1"># Pass `model` to your LLM client</span>
+    <span class="k">return</span> <span class="p">({</span><span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span> <span class="n">input_tokens</span><span class="p">,</span> <span class="n">output_tokens</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Falls back to <code>"gpt-4o"</code> when below threshold (key absent from context).</li>
+</ol>
+<p>You can chain multiple fallback rules for different models or thresholds:</p>
+<div class="highlight"><pre><span></span><code><span class="n">runner</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">StromaRunner</span><span class="o">.</span><span class="n">quick</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">with_budget</span><span class="p">(</span><span class="n">cost_usd</span><span class="o">=</span><span class="mf">5.00</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">with_model_fallback</span><span class="p">(</span><span class="s2">&quot;gpt-4-turbo&quot;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="n">at_budget_pct</span><span class="o">=</span><span class="mf">0.60</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">with_model_fallback</span><span class="p">(</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">at_budget_pct</span><span class="o">=</span><span class="mf">0.80</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
 <h2 id="inspecting-cost-after-a-run">Inspecting cost after a run</h2>
 <p>The <code>ExecutionResult</code> includes total token and cost counters:</p>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">)</span>

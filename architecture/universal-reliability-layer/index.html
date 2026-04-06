@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://jengroff.github.io/stroma/api/trace/">
+        <link rel="canonical" href="https://jengroff.github.io/stroma/architecture/universal-reliability-layer/">
       
       
-        <link rel="prev" href="../failures/">
+        <link rel="prev" href="../../concepts/">
       
       
-        <link rel="next" href="../langgraph/">
+        <link rel="next" href="../../extending/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Tracing - Stroma</title>
+        <title>Universal Reliability Layer - Stroma</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tracing" class="md-skip">
+        <a href="#universal-reliability-layer-architecture-plan" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tracing
+              Universal Reliability Layer
             
           </span>
         </div>
@@ -286,11 +286,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../architecture/universal-reliability-layer/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -325,13 +327,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../runner/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../api/runner/" class="md-tabs__link">
           
   
   
@@ -889,28 +889,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -928,7 +931,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -943,10 +946,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../architecture/universal-reliability-layer/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Universal Reliability Layer
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -962,6 +992,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#four-agent-orchestration-paradigms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Four Agent Orchestration Paradigms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-abstractions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Abstractions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Abstractions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reliabilitycontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReliabilityContext
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute_step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        execute_step()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stromastep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StromaStep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapter-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adapter Protocols
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-stays-the-same" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Stays the Same
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1005,31 +1160,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1047,7 +1199,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1065,7 +1217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../runner/" class="md-nav__link">
+      <a href="../../api/runner/" class="md-nav__link">
         
   
   
@@ -1093,7 +1245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../middleware/" class="md-nav__link">
+      <a href="../../api/middleware/" class="md-nav__link">
         
   
   
@@ -1121,7 +1273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contracts/" class="md-nav__link">
+      <a href="../../api/contracts/" class="md-nav__link">
         
   
   
@@ -1149,7 +1301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../checkpoint/" class="md-nav__link">
+      <a href="../../api/checkpoint/" class="md-nav__link">
         
   
   
@@ -1177,7 +1329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cost/" class="md-nav__link">
+      <a href="../../api/cost/" class="md-nav__link">
         
   
   
@@ -1205,7 +1357,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../failures/" class="md-nav__link">
+      <a href="../../api/failures/" class="md-nav__link">
         
   
   
@@ -1230,37 +1382,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tracing
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../api/trace/" class="md-nav__link">
         
   
   
@@ -1276,170 +1401,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.TraceEvent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TraceEvent
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="TraceEvent">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.TraceEvent.step_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        step_id
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ExecutionTrace
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ExecutionTrace">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace--example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.append" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        append
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.events_for" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        events_for
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        failures
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.to_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        to_json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.diff" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        diff
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.replay" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        replay
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.RunStatus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RunStatus
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ExecutionResult
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1452,7 +1413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../langgraph/" class="md-nav__link">
+      <a href="../../api/langgraph/" class="md-nav__link">
         
   
   
@@ -1480,7 +1441,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../crewai/" class="md-nav__link">
+      <a href="../../api/crewai/" class="md-nav__link">
         
   
   
@@ -1508,7 +1469,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../deepagents/" class="md-nav__link">
+      <a href="../../api/deepagents/" class="md-nav__link">
         
   
   
@@ -1590,22 +1551,77 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#stroma.trace.TraceEvent" class="md-nav__link">
+  <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TraceEvent
+        Context
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="TraceEvent">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#four-agent-orchestration-paradigms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Four Agent Orchestration Paradigms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-abstractions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Abstractions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Abstractions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stroma.trace.TraceEvent.step_id" class="md-nav__link">
+  <a href="#reliabilitycontext" class="md-nav__link">
     <span class="md-ellipsis">
       
-        step_id
+        ReliabilityContext
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute_step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        execute_step()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stromastep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StromaStep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapter-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adapter Protocols
       
     </span>
   </a>
@@ -1618,104 +1634,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace" class="md-nav__link">
+  <a href="#what-stays-the-same" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ExecutionTrace
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ExecutionTrace">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace--example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.append" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        append
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.events_for" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        events_for
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        failures
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.to_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        to_json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.diff" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        diff
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.replay" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        replay
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.RunStatus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RunStatus
+        What Stays the Same
       
     </span>
   </a>
@@ -1723,10 +1645,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionResult" class="md-nav__link">
+  <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ExecutionResult
+        Next Steps
       
     </span>
   </a>
@@ -1753,362 +1675,82 @@
   
 
 
-<h1 id="tracing">Tracing</h1>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="stroma.trace.TraceEvent" class="doc doc-heading">
-            <code>TraceEvent</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>A single recorded execution attempt for a node.</p>
-<p>Captures the <code>node_id</code>, <code>run_id</code>, 1-based <code>attempt</code> number,
-<code>timestamp_utc</code>, <code>input_state</code>, and <code>output_state</code> (or <code>None</code> on
-failure). On failure, <code>failure</code> holds the <code>FailureClass</code> and
-<code>failure_message</code> provides a human-readable description.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="stroma.trace.TraceEvent.step_id" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">step_id</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Alias for <code>node_id</code> — paradigm-neutral name for the execution step.</p>
-
-    </div>
-
-</div>
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="stroma.trace.ExecutionTrace" class="doc doc-heading">
-            <code>ExecutionTrace</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Ordered collection of <code>TraceEvent</code> instances for a pipeline run.</p>
-<p>Provides filtering, diffing, serialization, and iteration over events.</p>
-<h4 id="stroma.trace.ExecutionTrace--example">Example</h4>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
-
-<span class="c1"># Inspect failures</span>
-<span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">failures</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">node_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">failure_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Compare two traces</span>
-<span class="n">diffs</span> <span class="o">=</span> <span class="n">trace_a</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">trace_b</span><span class="p">)</span>
-
-<span class="c1"># Export to JSON</span>
-<span class="n">json_str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+<h1 id="universal-reliability-layer-architecture-plan">Universal Reliability Layer — Architecture Plan</h1>
+<p><strong>Status</strong>: Phases 1-6 implemented in v0.3.2. Concrete adapters for non-graph paradigms are the next step.</p>
+<h2 id="context">Context</h2>
+<p>Stroma's reliability primitives — contract validation, cost control, failure handling, observability — are portable across agent orchestration paradigms, not just graph-based frameworks. This document describes the architecture that makes that possible.</p>
+<p>The analogy: dbt abstracted data transformation guarantees (typed models, tests, lineage) across warehouses. Stroma abstracts reliability guarantees across agent orchestration patterns.</p>
+<h2 id="four-agent-orchestration-paradigms">Four Agent Orchestration Paradigms</h2>
+<table>
+<thead>
+<tr>
+<th>Paradigm</th>
+<th>Examples</th>
+<th>Natural boundary</th>
+<th>Adapter shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pre-defined topology</td>
+<td>LangGraph, CrewAI Flows, Haystack</td>
+<td>Graph node</td>
+<td><code>FrameworkAdapter</code></td>
+</tr>
+<tr>
+<td>Agentic loop</td>
+<td>Claude Agent SDK, OpenAI Agents SDK, Pydantic AI</td>
+<td>Tool call</td>
+<td><code>LoopAdapter</code></td>
+</tr>
+<tr>
+<td>Conversation-driven</td>
+<td>AutoGen</td>
+<td>Message turn</td>
+<td><code>TurnAdapter</code></td>
+</tr>
+<tr>
+<td>Declarative/compiler</td>
+<td>DSPy</td>
+<td>Module call</td>
+<td><code>StepInterceptor</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="core-abstractions">Core Abstractions</h2>
+<h3 id="reliabilitycontext">ReliabilityContext</h3>
+<p>Per-run bundle of every reliability primitive: cost tracker, retry budget, execution trace, budget, policies, hooks, and checkpoint manager. Created once per run, threaded through whichever execution strategy drives the steps.</p>
+<div class="highlight"><pre><span></span><code><span class="n">ctx</span> <span class="o">=</span> <span class="n">ReliabilityContext</span><span class="o">.</span><span class="n">for_run</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">registry</span><span class="p">,</span> <span class="n">checkpoint_manager</span><span class="p">)</span>
 </code></pre></div>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.append" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Append a trace event.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.events_for" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">events_for</span><span class="p">(</span><span class="n">node_id</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Return all events for the given node.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.failures" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">failures</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Return all events that represent failures.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.to_json" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">to_json</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Serialize all events to a JSON string.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.diff" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">diff</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Compare this trace against <em>other</em>, ignoring timestamps and durations.</p>
-<p>Returns a list of human-readable difference descriptions. An empty
-list means the traces are logically equivalent.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.replay" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">replay</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Yield events in the order they were recorded.</p>
-
-
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="stroma.trace.RunStatus" class="doc doc-heading">
-            <code>RunStatus</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
-
-
-
-        <p>Terminal status of a pipeline run.</p>
+<h3 id="execute_step">execute_step()</h3>
+<p>The freestanding reliability loop. Applies contract validation, cost tracking, budget enforcement, model fallback, retry logic, checkpointing, and trace recording to a single async callable. Works without <code>StromaRunner</code> or any framework adapter.</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">execute_step</span><span class="p">(</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="n">my_func</span><span class="p">,</span> <span class="n">input_state</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="stromastep">StromaStep</h3>
+<p>Paradigm-agnostic decorator/wrapper backed by <code>execute_step()</code>. Equivalent to <code>StromaRunner.node()</code> but independent of any execution strategy.</p>
+<div class="highlight"><pre><span></span><code><span class="n">step</span> <span class="o">=</span> <span class="n">StromaStep</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">DocInput</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">Summary</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">DocInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">}</span>
+</code></pre></div>
+<h3 id="adapter-protocols">Adapter Protocols</h3>
 <ul>
-<li><code>COMPLETED</code>: All nodes executed successfully.</li>
-<li><code>FAILED</code>: A terminal failure stopped the pipeline.</li>
-<li><code>PARTIAL</code>: Retries were exhausted on a recoverable/ambiguous failure.</li>
-<li><code>RESUMED</code>: The pipeline completed after resuming from a checkpoint.</li>
+<li><code>FrameworkAdapter</code> — for graph-based frameworks (<code>wrap(graph)</code> + <code>node_decorator()</code>)</li>
+<li><code>StepInterceptor</code> — wraps individual step functions (<code>wrap_step()</code>)</li>
+<li><code>LoopAdapter</code> — intercepts tool call boundaries (<code>on_tool_call()</code> + <code>on_tool_result()</code>)</li>
+<li><code>TurnAdapter</code> — intercepts conversation turn boundaries (<code>on_turn_start()</code> + <code>on_turn_end()</code>)</li>
 </ul>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="stroma.trace.ExecutionResult" class="doc doc-heading">
-            <code>ExecutionResult</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Final output of a pipeline run.</p>
-<p>Contains the <code>run_id</code>, terminal <code>status</code>, <code>final_state</code> (the last valid
-state produced, or the initial state on early failure), the complete
-<code>trace</code> with all attempts, and aggregate <code>total_cost_usd</code> /
-<code>total_tokens</code> across all nodes.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
+<h2 id="what-stays-the-same">What Stays the Same</h2>
+<p><code>StromaRunner</code> remains as the execution strategy for linear node pipelines. All existing node-based APIs (<code>NodeContract</code>, <code>stroma_node</code>, <code>NodeHooks</code>, etc.) are unchanged. Step aliases (<code>StepContract</code>, <code>stroma_step</code>, <code>StepHooks</code>, etc.) provide paradigm-neutral naming without breaking anything.</p>
+<h2 id="next-steps">Next Steps</h2>
+<p>Build concrete adapters for non-graph paradigms when there is a real integration to test against:</p>
+<ol>
+<li><strong>Pydantic AI adapter</strong> — natural fit because it already uses Pydantic for tool signatures</li>
+<li><strong>Claude Agent SDK adapter</strong> — <code>LoopAdapter</code> implementation intercepting tool calls</li>
+<li><strong>AutoGen adapter</strong> — <code>TurnAdapter</code> implementation intercepting message turns</li>
+<li><strong>Framework-specific examples</strong> — runnable examples for each paradigm (similar to AWS samples)</li>
+</ol>
 
 
 

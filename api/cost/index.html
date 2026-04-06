@@ -287,6 +287,26 @@
   
   
   
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/universal-reliability-layer/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
     <li class="md-tabs__item">
       <a href="../../extending/" class="md-tabs__link">
         
@@ -871,6 +891,95 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/universal-reliability-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Universal Reliability Layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../extending/" class="md-nav__link">
         
@@ -917,10 +1026,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   
@@ -938,8 +1047,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -964,6 +1073,34 @@
     
   
     Runner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../middleware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Middleware
   
 
     
@@ -1287,6 +1424,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#stroma.cost.FallbackPolicy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FallbackPolicy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.cost.resolve_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resolve_model
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1367,6 +1526,34 @@
     
   
     LangGraph Adapter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../crewai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CrewAI Adapter
   
 
     
@@ -1650,6 +1837,28 @@
     <span class="md-ellipsis">
       
         ModelHint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.cost.FallbackPolicy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FallbackPolicy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.cost.resolve_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resolve_model
       
     </span>
   </a>
@@ -2121,6 +2330,80 @@ cap resource usage across all nodes.</p>
 
 
   </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="stroma.cost.FallbackPolicy" class="doc doc-heading">
+            <code>FallbackPolicy</code>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Policy that downgrades a model when cumulative spend crosses a budget threshold.</p>
+<p>When <code>resolve_model</code> sees that <code>tracker.total_cost_usd / budget.max_cost_usd</code>
+has reached <code>at_budget_pct</code>, it swaps <code>preferred_model</code> for <code>fallback_model</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="stroma.cost.resolve_model" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">resolve_model</span><span class="p">(</span><span class="n">declared_model</span><span class="p">,</span> <span class="n">tracker</span><span class="p">,</span> <span class="n">budget</span><span class="p">,</span> <span class="n">fallbacks</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Pick the effective model by checking fallback policies against current spend.</p>
+<p>Iterates <em>fallbacks</em> in order. For each policy whose <code>preferred_model</code>
+matches <em>declared_model</em> and whose spend threshold has been reached,
+returns <code>fallback_model</code>. If nothing triggers, returns <em>declared_model</em>
+unchanged. <code>None</code> always passes through as <code>None</code>.</p>
+
 
     </div>
 

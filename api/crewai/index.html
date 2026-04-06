@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://jengroff.github.io/stroma/api/trace/">
+        <link rel="canonical" href="https://jengroff.github.io/stroma/api/crewai/">
       
       
-        <link rel="prev" href="../failures/">
+        <link rel="prev" href="../langgraph/">
       
       
-        <link rel="next" href="../langgraph/">
+        <link rel="next" href="../deepagents/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Tracing - Stroma</title>
+        <title>CrewAI Adapter - Stroma</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tracing" class="md-skip">
+        <a href="#crewai-adapter" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tracing
+              CrewAI Adapter
             
           </span>
         </div>
@@ -1230,37 +1230,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tracing
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../trace/" class="md-nav__link">
         
   
   
@@ -1276,170 +1249,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.TraceEvent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TraceEvent
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="TraceEvent">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.TraceEvent.step_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        step_id
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ExecutionTrace
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ExecutionTrace">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace--example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.append" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        append
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.events_for" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        events_for
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        failures
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.to_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        to_json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.diff" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        diff
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.replay" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        replay
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.RunStatus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RunStatus
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ExecutionResult
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1477,10 +1286,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../crewai/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CrewAI Adapter
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1496,6 +1332,65 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.adapters.crewai.CrewAIAdapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CrewAIAdapter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CrewAIAdapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stroma.adapters.crewai.CrewAIAdapter.wrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stroma.adapters.crewai.stroma_crewai_step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stroma_crewai_step
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1590,22 +1485,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#stroma.trace.TraceEvent" class="md-nav__link">
+  <a href="#stroma.adapters.crewai.CrewAIAdapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TraceEvent
+        CrewAIAdapter
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="TraceEvent">
+    <nav class="md-nav" aria-label="CrewAIAdapter">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stroma.trace.TraceEvent.step_id" class="md-nav__link">
+  <a href="#stroma.adapters.crewai.CrewAIAdapter.wrap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        step_id
+        wrap
       
     </span>
   </a>
@@ -1618,115 +1513,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace" class="md-nav__link">
+  <a href="#stroma.adapters.crewai.stroma_crewai_step" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ExecutionTrace
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ExecutionTrace">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace--example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.append" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        append
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.events_for" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        events_for
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        failures
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.to_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        to_json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.diff" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        diff
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionTrace.replay" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        replay
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.RunStatus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RunStatus
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stroma.trace.ExecutionResult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ExecutionResult
+        stroma_crewai_step
       
     </span>
   </a>
@@ -1753,91 +1543,15 @@
   
 
 
-<h1 id="tracing">Tracing</h1>
+<h1 id="crewai-adapter">CrewAI Adapter</h1>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="stroma.trace.TraceEvent" class="doc doc-heading">
-            <code>TraceEvent</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>A single recorded execution attempt for a node.</p>
-<p>Captures the <code>node_id</code>, <code>run_id</code>, 1-based <code>attempt</code> number,
-<code>timestamp_utc</code>, <code>input_state</code>, and <code>output_state</code> (or <code>None</code> on
-failure). On failure, <code>failure</code> holds the <code>FailureClass</code> and
-<code>failure_message</code> provides a human-readable description.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="stroma.trace.TraceEvent.step_id" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">step_id</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Alias for <code>node_id</code> — paradigm-neutral name for the execution step.</p>
-
-    </div>
-
-</div>
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="stroma.trace.ExecutionTrace" class="doc doc-heading">
-            <code>ExecutionTrace</code>
+<h2 id="stroma.adapters.crewai.CrewAIAdapter" class="doc doc-heading">
+            <code>CrewAIAdapter</code>
 
 
 </h2>
@@ -1847,21 +1561,10 @@ failure). On failure, <code>failure</code> holds the <code>FailureClass</code> a
 
 
 
-        <p>Ordered collection of <code>TraceEvent</code> instances for a pipeline run.</p>
-<p>Provides filtering, diffing, serialization, and iteration over events.</p>
-<h4 id="stroma.trace.ExecutionTrace--example">Example</h4>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
-
-<span class="c1"># Inspect failures</span>
-<span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">failures</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">node_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">failure_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Compare two traces</span>
-<span class="n">diffs</span> <span class="o">=</span> <span class="n">trace_a</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">trace_b</span><span class="p">)</span>
-
-<span class="c1"># Export to JSON</span>
-<span class="n">json_str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
-</code></pre></div>
+        <p>Wraps a CrewAI Flow instance to apply stroma contract validation on decorated steps.</p>
+<p>Takes a <code>ContractRegistry</code> for validation. Call <code>.wrap(flow_instance)</code> to
+discover decorated methods and replace them with validating wrappers.
+State lives on <code>flow_instance.state</code> and is extracted/merged automatically.</p>
 
 
 
@@ -1887,107 +1590,15 @@ failure). On failure, <code>failure</code> holds the <code>FailureClass</code> a
 <div class="doc doc-object doc-function">
 
 
-<h3 id="stroma.trace.ExecutionTrace.append" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></code>
+<h3 id="stroma.adapters.crewai.CrewAIAdapter.wrap" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wrap</span><span class="p">(</span><span class="n">flow</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Append a trace event.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.events_for" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">events_for</span><span class="p">(</span><span class="n">node_id</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Return all events for the given node.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.failures" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">failures</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Return all events that represent failures.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.to_json" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">to_json</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Serialize all events to a JSON string.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.diff" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">diff</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Compare this trace against <em>other</em>, ignoring timestamps and durations.</p>
-<p>Returns a list of human-readable difference descriptions. An empty
-list means the traces are logically equivalent.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="stroma.trace.ExecutionTrace.replay" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">replay</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Yield events in the order they were recorded.</p>
+        <p>Discover stroma-decorated methods on <em>flow</em> and replace them with validating wrappers.</p>
 
 
     </div>
@@ -2002,109 +1613,21 @@ list means the traces are logically equivalent.</p>
 
 </div>
 
-<div class="doc doc-object doc-class">
+<div class="doc doc-object doc-function">
 
 
-
-<h2 id="stroma.trace.RunStatus" class="doc doc-heading">
-            <code>RunStatus</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
-
-
-
-        <p>Terminal status of a pipeline run.</p>
-<ul>
-<li><code>COMPLETED</code>: All nodes executed successfully.</li>
-<li><code>FAILED</code>: A terminal failure stopped the pipeline.</li>
-<li><code>PARTIAL</code>: Retries were exhausted on a recoverable/ambiguous failure.</li>
-<li><code>RESUMED</code>: The pipeline completed after resuming from a checkpoint.</li>
-</ul>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="stroma.trace.ExecutionResult" class="doc doc-heading">
-            <code>ExecutionResult</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
+<h2 id="stroma.adapters.crewai.stroma_crewai_step" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">stroma_crewai_step</span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span> <span class="n">contract</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents first">
 
+        <p>Decorator that attaches stroma contract metadata to a CrewAI Flow method.</p>
+<p>Binds <em>node_id</em> and <em>contract</em> as attributes on the decorated method so
+<code>CrewAIAdapter</code> can discover and validate it.</p>
 
-
-        <p>Final output of a pipeline run.</p>
-<p>Contains the <code>run_id</code>, terminal <code>status</code>, <code>final_state</code> (the last valid
-state produced, or the initial state on early failure), the complete
-<code>trace</code> with all attempts, and aggregate <code>total_cost_usd</code> /
-<code>total_tokens</code> across all nodes.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
 
     </div>
 
