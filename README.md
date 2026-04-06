@@ -2,7 +2,7 @@
 
 **dbt didn't replace your data warehouse. Stroma doesn't replace your agent framework.**
 
-dbt gave you typed models, tested transformations, and documented lineage — a software engineering layer that worked regardless of which warehouse you were running. Stroma does the same thing for agent execution graphs: typed node contracts, formal failure classification, and cost-aware execution — portable across whatever orchestration framework you're building on.
+dbt gave you typed models, tested transformations, and documented lineage — a software engineering layer that worked regardless of which warehouse you were running. Stroma does the same thing for agent pipelines: typed contracts at every execution boundary, formal failure classification, and cost-aware execution — portable across whatever orchestration pattern you're building on.
 
 The framework handles the graph. Stroma handles the guarantees.
 
@@ -112,7 +112,8 @@ asyncio.run(main())
 - **Shared context** — pass a mutable `context` dict through `RunConfig` to every node
 - **Execution tracing** — full record of every node attempt, with diffing and JSON export
 - **Per-run logging** — structured `LoggerAdapter` with `run_id` in every log line
-- **Fluent builder API** — configure runners with chained `.with_budget()`, `.with_hooks()`, `.with_redis()`, etc.
+- **Model fallback** — automatically downgrade to a cheaper model when spend crosses a budget threshold via `.with_model_fallback()`
+- **Fluent builder API** — configure runners with chained `.with_budget()`, `.with_hooks()`, `.with_model_fallback()`, `.with_redis()`, etc.
 - **LangGraph adapter** — apply contracts to existing LangGraph graphs
 - **CrewAI adapter** — contract validation for CrewAI Flow methods
 - **DeepAgents adapter** — contract validation and cost tracking for deepagents graphs
@@ -227,6 +228,37 @@ manager = CheckpointManager(store)
 ```
 
 The original synchronous Redis store is still available as `SyncRedisStore`.
+
+### Model fallback at budget threshold
+
+Automatically downgrade to a cheaper model when spend crosses a threshold instead of failing:
+
+```python
+runner = (
+    StromaRunner.quick()
+    .with_budget(cost_usd=1.00)
+    .with_model_fallback("gpt-4o", to="gpt-4o-mini", at_budget_pct=0.80)
+)
+```
+
+Nodes read the active model from `ctx["_stroma_model"]` and pass it to their LLM client.
+
+### Framework-free reliability with StromaStep
+
+Apply contracts, retries, cost tracking, and checkpointing to any async callable — no runner or framework adapter required:
+
+```python
+from stroma import ReliabilityContext, RunConfig, StromaStep
+
+ctx = ReliabilityContext.for_run(RunConfig(), registry, checkpoint_manager)
+step = StromaStep(ctx)
+
+@step("summarize", input=DocInput, output=Summary)
+async def summarize(state: DocInput) -> dict:
+    return {"text": state.doc[:100]}
+
+result = await summarize(DocInput(doc="..."))
+```
 
 ## Documentation
 
