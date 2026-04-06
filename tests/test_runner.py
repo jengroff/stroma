@@ -906,3 +906,41 @@ async def test_node_timeout_exhausts_retries():
 def test_with_node_timeouts_builder():
     runner = StromaRunner.quick().with_node_timeouts({"embed": 60_000})
     assert runner.config.node_timeouts == {"embed": 60_000}
+
+
+# --- Model fallback tests ---
+
+
+@pytest.mark.asyncio
+async def test_model_fallback_injects_context_at_threshold():
+    registry = ContractRegistry()
+    registry.register(NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    registry.register(NodeContract(node_id="node2", input_schema=NodeOneOutput, output_schema=NodeTwoOutput))
+    store = InMemoryStore()
+    manager = CheckpointManager(store)
+
+    observed_models = []
+
+    @stroma_node("node1", NodeContract(node_id="node1", input_schema=InputState, output_schema=NodeOneOutput))
+    async def node1(state: InputState, ctx: dict) -> tuple:
+        observed_models.append(ctx.get("_stroma_model"))
+        # 320k input tokens at gpt-4o ($2.50/1M) = $0.80 = exactly 80% of $1.00 budget
+        return ({"result": state.value + 1}, 320_000, 0, "gpt-4o")
+
+    @stroma_node("node2", NodeContract(node_id="node2", input_schema=NodeOneOutput, output_schema=NodeTwoOutput))
+    async def node2(state: NodeOneOutput, ctx: dict) -> tuple:
+        observed_models.append(ctx.get("_stroma_model"))
+        return ({"total": state.result * 2}, 100, 0, "gpt-4o")
+
+    runner = (
+        StromaRunner(registry, manager, RunConfig())
+        .with_budget(cost_usd=1.00)
+        .with_model_fallback("gpt-4o", to="gpt-4o-mini", at_budget_pct=0.80)
+    )
+    result = await runner.run([node1, node2], InputState(value=1))
+
+    assert result.status == RunStatus.COMPLETED
+    # node1 runs before any spend, so no fallback signal
+    assert observed_models[0] is None
+    # node2 runs after node1 spent $0.80, which is 80% of $1.00 — fallback fires
+    assert observed_models[1] == "gpt-4o-mini"

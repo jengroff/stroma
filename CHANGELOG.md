@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-04-05
+
+### Added
+- `ReliabilityContext` dataclass in `stroma.middleware` — per-run bundle of all reliability primitives, decoupled from `StromaRunner`
+- `execute_step()` standalone async function — the full reliability loop (contracts, cost, retries, checkpoints, tracing) as a freestanding primitive usable without `StromaRunner`
+- `StromaStep` class — paradigm-agnostic decorator/wrapper backed by `execute_step()`, equivalent to `StromaRunner.node()` but independent of any execution strategy
+- `StepInterceptor`, `LoopAdapter`, `TurnAdapter` protocols in `stroma.adapters.base` — adapter shapes for agentic-loop, conversation-driven, and step-wrapping paradigms
+- Step aliases for paradigm-neutral naming: `StepContract`, `StepViolation`, `StepUsage`, `StepContext`, `StepHooks`, `stroma_step`, and `TraceEvent.step_id` property
+- `FallbackPolicy` and `resolve_model()` for budget-aware model downgrade during execution
+- `StromaRunner.with_model_fallback()` fluent builder for configuring model fallback rules
+- `RunConfig.model_fallbacks` field for specifying fallback policies
+
+### Changed
+- `StromaRunner` internals refactored to use `ReliabilityContext` — no public API changes, all existing behavior preserved
+
+## [0.3.1] - 2026-04-05
+
+### Added
+- `FrameworkAdapter` Protocol in `stroma.adapters.base` — shared contract that all framework adapters implement
+- `extract_state_dict()` moved to `stroma.adapters.base` as framework-agnostic utility (re-exported from `stroma.adapters.langgraph` for backwards compatibility)
+- `CrewAIAdapter` and `@stroma_crewai_step` decorator for wrapping CrewAI Flow methods with contract validation
+- `stroma[crewai]` optional install extra (`crewai>=0.70`)
+- Conditional adapter export in `stroma.adapters.__init__` for CrewAI
+
 ## [0.3.0] - 2026-04-05
 
 ### Added

@@ -132,6 +132,41 @@ async def main():
     runner = StromaRunner.quick(classifiers=[budget_is_terminal])
     ```
 
+## Model fallback at budget threshold
+
+Instead of failing when costs get high, you can automatically downgrade to a cheaper model. The `with_model_fallback` builder sets a threshold: when cumulative spend reaches a percentage of the budget, subsequent nodes receive a fallback model signal via `ctx["_stroma_model"]`.
+
+```python
+runner = (
+    StromaRunner.quick()
+    .with_budget(cost_usd=1.00)
+    .with_model_fallback("gpt-4o", to="gpt-4o-mini", at_budget_pct=0.80)
+)
+```
+
+When the pipeline has spent 80% of its $1.00 budget, any node that would use `gpt-4o` gets `gpt-4o-mini` instead. Nodes read the signal from the context dict:
+
+```python
+@runner.node("summarize", input=Input, output=Output)
+async def summarize(state: Input, ctx: dict) -> tuple:
+    model = ctx.get("_stroma_model", "gpt-4o")  # (1)!
+    # Pass `model` to your LLM client
+    return ({"summary": "..."}, input_tokens, output_tokens, model)
+```
+
+1. Falls back to `"gpt-4o"` when below threshold (key absent from context).
+
+You can chain multiple fallback rules for different models or thresholds:
+
+```python
+runner = (
+    StromaRunner.quick()
+    .with_budget(cost_usd=5.00)
+    .with_model_fallback("gpt-4-turbo", to="gpt-4o", at_budget_pct=0.60)
+    .with_model_fallback("gpt-4o", to="gpt-4o-mini", at_budget_pct=0.80)
+)
+```
+
 ## Inspecting cost after a run
 
 The `ExecutionResult` includes total token and cost counters:

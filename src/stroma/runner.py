@@ -12,17 +12,17 @@ from pydantic import BaseModel, Field
 
 from stroma.checkpoint import CheckpointManager
 from stroma.contracts import ContractRegistry, NodeContract
-from stroma.cost import CostTracker, ExecutionBudget, NodeUsage, estimate_cost_usd
+from stroma.cost import ExecutionBudget, FallbackPolicy, NodeUsage, estimate_cost_usd, resolve_model
 from stroma.failures import (
     Classifier,
     FailureClass,
     NodeContext,
     PolicyMap,
-    RetryBudget,
     classify,
     default_policy_map,
 )
-from stroma.trace import ExecutionResult, ExecutionTrace, RunStatus, TraceEvent
+from stroma.middleware import ReliabilityContext
+from stroma.trace import ExecutionResult, RunStatus, TraceEvent
 
 logger = logging.getLogger(__name__)
 
@@ -84,9 +84,15 @@ class RunConfig(BaseModel):
         default=None,
         description="Node ID to resume from. Skips earlier nodes and loads checkpoint.",
     )
+    model_fallbacks: list[FallbackPolicy] = Field(
+        default_factory=list,
+        description="Fallback policies that downgrade models when spend crosses a budget threshold.",
+    )
 
     model_config = {"arbitrary_types_allowed": True}
 
+
+StepHooks = NodeHooks
 
 NodeFunc = Callable[[BaseModel], Awaitable[dict[str, Any]]]
 """Type alias for an async node function that takes a Pydantic model and returns a dict."""
@@ -121,6 +127,15 @@ def stroma_node(node_id: str, contract: NodeContract) -> Callable[..., Any]:
         return func
 
     return decorator
+
+
+def stroma_step(step_id: str, contract: NodeContract) -> Callable[..., Any]:
+    """Decorator that attaches contract metadata to an async execution step.
+
+    Paradigm-neutral alias for `stroma_node`. Binds *step_id* and *contract*
+    as attributes on the decorated function.
+    """
+    return stroma_node(step_id, contract)
 
 
 def _unpack_output(output: Any) -> tuple[dict[str, Any], int, int, str | None]:
@@ -293,6 +308,25 @@ class StromaRunner:
         )
         return self
 
+    def with_model_fallback(
+        self,
+        model: str,
+        *,
+        to: str,
+        at_budget_pct: float = 0.80,
+    ) -> "StromaRunner":
+        """Append a model fallback rule that activates when spend crosses *at_budget_pct*.
+
+        When cumulative cost reaches *at_budget_pct* of the budget, nodes
+        that would use *model* receive *to* as the model signal in
+        `ctx["_stroma_model"]` instead, and cost accounting uses *to* for
+        pricing.
+        """
+        existing = list(self.config.model_fallbacks)
+        existing.append(FallbackPolicy(preferred_model=model, fallback_model=to, at_budget_pct=at_budget_pct))
+        self.config = self.config.model_copy(update={"model_fallbacks": existing})
+        return self
+
     def with_classifiers(self, classifiers: list[Classifier]) -> "StromaRunner":
         """Set custom failure classifiers for error handling."""
         self.config = self.config.model_copy(update={"classifiers": classifiers})
@@ -369,38 +403,31 @@ class StromaRunner:
         returning an `ExecutionResult` with the final state, trace, and
         cost info.
         """
-        cost_tracker = CostTracker()
-        retry_budget = RetryBudget()
-        trace = ExecutionTrace()
-        run_logger = logging.LoggerAdapter(logger, {"run_id": self.config.run_id})
+        ctx = ReliabilityContext.for_run(self.config, self.registry, self.checkpoint_manager)
 
         current_state = initial_state
         start_index = self._resolve_resume_index(node_sequence)
         if start_index is None:
-            return self._build_result(RunStatus.PARTIAL, current_state, cost_tracker, trace)
+            return ctx.build_result(RunStatus.PARTIAL, current_state)
 
         current_state = await self._load_resume_state(node_sequence, start_index, current_state)
 
         for node in node_sequence[start_index:]:
             node_id = self._node_id(node)
-            run_logger.debug("Executing node %s", node_id)
+            ctx.run_logger.debug("Executing node %s", node_id)
 
             if getattr(node, "_stroma_is_parallel", False):
-                result = await self._execute_parallel_node(
-                    node, node_id, current_state, cost_tracker, retry_budget, trace, run_logger
-                )
+                result = await self._execute_parallel_node(node, node_id, current_state, ctx)
             else:
                 contract = self._node_contract(node)
-                result = await self._execute_node(
-                    node, node_id, contract, current_state, cost_tracker, retry_budget, trace, run_logger
-                )
+                result = await self._execute_node(node, node_id, contract, current_state, ctx)
             if result.status != RunStatus.COMPLETED:
                 return result
             assert result.final_state is not None
             current_state = result.final_state
 
         status = RunStatus.RESUMED if self.config.resume_from is not None else RunStatus.COMPLETED
-        return self._build_result(status, current_state, cost_tracker, trace)
+        return ctx.build_result(status, current_state)
 
     async def _execute_node(
         self,
@@ -408,28 +435,37 @@ class StromaRunner:
         node_id: str,
         contract: NodeContract,
         current_state: BaseModel,
-        cost_tracker: CostTracker,
-        retry_budget: RetryBudget,
-        trace: ExecutionTrace,
-        run_logger: logging.LoggerAdapter,  # type: ignore[type-arg]
+        ctx: ReliabilityContext,
     ) -> ExecutionResult:
         """Execute a single node with retries, validation, and tracking."""
         attempt = 1
         input_model: BaseModel | None = None
         while True:
-            input_model = self.registry.validate_input(node_id, current_state.model_dump())
+            input_model = ctx.registry.validate_input(node_id, current_state.model_dump())
             start_ts = datetime.now(UTC)
             try:
-                if self.config.hooks.on_node_start is not None:
-                    await self.config.hooks.on_node_start(self.config.run_id, node_id, input_model.model_dump())
-                raw_output = await self._invoke_node(node, node_id, input_model)
-                output_raw, input_tokens, output_tokens, model = _unpack_output(raw_output)
-                output_model = self.registry.validate_output(node_id, output_raw)
+                if ctx.model_fallbacks and ctx.budget.max_cost_usd:
+                    pct_used = ctx.cost_tracker.total_cost_usd / ctx.budget.max_cost_usd
+                    active_fallback = next(
+                        (p for p in ctx.model_fallbacks if pct_used >= p.at_budget_pct),
+                        None,
+                    )
+                    if active_fallback is not None:
+                        ctx.context["_stroma_model"] = active_fallback.fallback_model
+                    else:
+                        ctx.context.pop("_stroma_model", None)
+
+                if ctx.hooks.on_node_start is not None:
+                    await ctx.hooks.on_node_start(ctx.run_id, node_id, input_model.model_dump())
+                raw_output = await self._invoke_node(node, node_id, input_model, ctx)
+                output_raw, input_tokens, output_tokens, declared_model = _unpack_output(raw_output)
+                model = resolve_model(declared_model, ctx.cost_tracker, ctx.budget, ctx.model_fallbacks)
+                output_model = ctx.registry.validate_output(node_id, output_raw)
                 duration_ms = self._elapsed_ms(start_ts)
                 cost_usd = estimate_cost_usd(model, input_tokens, output_tokens) if model else 0.0
                 tokens_used = input_tokens + output_tokens
 
-                cost_tracker.record(
+                ctx.cost_tracker.record(
                     NodeUsage(
                         node_id=node_id,
                         tokens_used=tokens_used,
@@ -439,13 +475,13 @@ class StromaRunner:
                         output_tokens=output_tokens,
                     )
                 )
-                cost_tracker.check_budget(self.config.budget, node_id)
-                await self.checkpoint_manager.checkpoint(self.config.run_id, node_id, output_model)
+                ctx.cost_tracker.check_budget(ctx.budget, node_id)
+                await ctx.checkpoint_manager.checkpoint(ctx.run_id, node_id, output_model)
 
-                trace.append(
+                ctx.trace.append(
                     TraceEvent(
                         node_id=node_id,
-                        run_id=self.config.run_id,
+                        run_id=ctx.run_id,
                         attempt=attempt,
                         timestamp_utc=start_ts,
                         input_state=input_model.model_dump(),
@@ -453,26 +489,13 @@ class StromaRunner:
                         duration_ms=duration_ms,
                     )
                 )
-                run_logger.info("Node %s completed (attempt=%d, tokens=%d)", node_id, attempt, tokens_used)
-                if self.config.hooks.on_node_success is not None:
-                    await self.config.hooks.on_node_success(
-                        self.config.run_id, node_id, output_model.model_dump(), tokens_used
-                    )
-                return self._build_result(RunStatus.COMPLETED, output_model, cost_tracker, trace)
+                ctx.run_logger.info("Node %s completed (attempt=%d, tokens=%d)", node_id, attempt, tokens_used)
+                if ctx.hooks.on_node_success is not None:
+                    await ctx.hooks.on_node_success(ctx.run_id, node_id, output_model.model_dump(), tokens_used)
+                return ctx.build_result(RunStatus.COMPLETED, output_model)
 
             except Exception as exc:
-                result = await self._handle_failure(
-                    exc,
-                    node_id,
-                    attempt,
-                    start_ts,
-                    input_model,
-                    current_state,
-                    cost_tracker,
-                    retry_budget,
-                    trace,
-                    run_logger,
-                )
+                result = await self._handle_failure(exc, node_id, attempt, start_ts, input_model, current_state, ctx)
                 if result is not None:
                     return result
                 attempt += 1
@@ -485,23 +508,20 @@ class StromaRunner:
         start_ts: datetime,
         input_model: BaseModel | None,
         current_state: BaseModel,
-        cost_tracker: CostTracker,
-        retry_budget: RetryBudget,
-        trace: ExecutionTrace,
-        run_logger: logging.LoggerAdapter,  # type: ignore[type-arg]
+        ctx: ReliabilityContext,
     ) -> ExecutionResult | None:
         """Classify a failure and decide whether to retry or stop.
 
         Returns an ExecutionResult if the pipeline should stop, or None to continue retrying.
         """
         duration_ms = self._elapsed_ms(start_ts)
-        context = NodeContext(node_id=node_id, attempt=attempt, run_id=self.config.run_id)
-        failure_class = classify(exc, context, self.config.classifiers)
+        context = NodeContext(node_id=node_id, attempt=attempt, run_id=ctx.run_id)
+        failure_class = classify(exc, context, ctx.classifiers)
 
-        trace.append(
+        ctx.trace.append(
             TraceEvent(
                 node_id=node_id,
-                run_id=self.config.run_id,
+                run_id=ctx.run_id,
                 attempt=attempt,
                 timestamp_utc=start_ts,
                 input_state=input_model.model_dump() if input_model is not None else {},
@@ -511,25 +531,23 @@ class StromaRunner:
                 failure_message=str(exc),
             )
         )
-        run_logger.warning("Node %s failed (attempt=%d, class=%s): %s", node_id, attempt, failure_class, exc)
+        ctx.run_logger.warning("Node %s failed (attempt=%d, class=%s): %s", node_id, attempt, failure_class, exc)
 
-        if self.config.hooks.on_node_failure is not None:
-            await self.config.hooks.on_node_failure(self.config.run_id, node_id, exc, failure_class)
+        if ctx.hooks.on_node_failure is not None:
+            await ctx.hooks.on_node_failure(ctx.run_id, node_id, exc, failure_class)
 
-        node_override = self.config.node_policies.get(node_id, {})
+        node_override = ctx.step_policies.get(node_id, {})
         policy = (
-            node_override.get(failure_class)
-            or self.config.policy_map.get(failure_class)
-            or default_policy_map()[failure_class]
+            node_override.get(failure_class) or ctx.policy_map.get(failure_class) or default_policy_map()[failure_class]
         )
 
         if failure_class is FailureClass.TERMINAL:
-            return self._build_result(RunStatus.FAILED, current_state, cost_tracker, trace)
+            return ctx.build_result(RunStatus.FAILED, current_state)
 
-        retry_budget.increment(self.config.run_id, node_id)
-        if retry_budget.exhausted(self.config.run_id, node_id, policy):
-            run_logger.error("Node %s retries exhausted after %d attempts", node_id, attempt)
-            return self._build_result(RunStatus.PARTIAL, current_state, cost_tracker, trace)
+        ctx.retry_budget.increment(ctx.run_id, node_id)
+        if ctx.retry_budget.exhausted(ctx.run_id, node_id, policy):
+            ctx.run_logger.error("Node %s retries exhausted after %d attempts", node_id, attempt)
+            return ctx.build_result(RunStatus.PARTIAL, current_state)
 
         if policy.backoff_seconds > 0:
             await asyncio.sleep(random.uniform(0, policy.backoff_seconds))
@@ -540,10 +558,7 @@ class StromaRunner:
         node: NodeFunc,
         node_id: str,
         current_state: BaseModel,
-        cost_tracker: CostTracker,
-        retry_budget: RetryBudget,
-        trace: ExecutionTrace,
-        run_logger: logging.LoggerAdapter,  # type: ignore[type-arg]
+        ctx: ReliabilityContext,
     ) -> ExecutionResult:
         """Execute a parallel pseudo-node with full instrumentation.
 
@@ -556,10 +571,10 @@ class StromaRunner:
         while True:
             start_ts = datetime.now(UTC)
             try:
-                if self.config.hooks.on_node_start is not None:
-                    await self.config.hooks.on_node_start(self.config.run_id, node_id, current_state.model_dump())
+                if ctx.hooks.on_node_start is not None:
+                    await ctx.hooks.on_node_start(ctx.run_id, node_id, current_state.model_dump())
 
-                raw_result = await self._invoke_node(node, node_id, current_state)
+                raw_result = await self._invoke_node(node, node_id, current_state, ctx)
                 merged, input_tokens, output_tokens, model = _unpack_output(raw_result)
 
                 dynamic_output = create_model(
@@ -571,7 +586,7 @@ class StromaRunner:
                 tokens_used = input_tokens + output_tokens
                 cost_usd = estimate_cost_usd(model, input_tokens, output_tokens) if model else 0.0
 
-                cost_tracker.record(
+                ctx.cost_tracker.record(
                     NodeUsage(
                         node_id=node_id,
                         tokens_used=tokens_used,
@@ -581,13 +596,13 @@ class StromaRunner:
                         output_tokens=output_tokens,
                     )
                 )
-                cost_tracker.check_budget(self.config.budget, node_id)
-                await self.checkpoint_manager.checkpoint(self.config.run_id, node_id, output_model)
+                ctx.cost_tracker.check_budget(ctx.budget, node_id)
+                await ctx.checkpoint_manager.checkpoint(ctx.run_id, node_id, output_model)
 
-                trace.append(
+                ctx.trace.append(
                     TraceEvent(
                         node_id=node_id,
-                        run_id=self.config.run_id,
+                        run_id=ctx.run_id,
                         attempt=attempt,
                         timestamp_utc=start_ts,
                         input_state=current_state.model_dump(),
@@ -595,26 +610,15 @@ class StromaRunner:
                         duration_ms=duration_ms,
                     )
                 )
-                run_logger.info("Parallel node %s completed (attempt=%d, tokens=%d)", node_id, attempt, tokens_used)
+                ctx.run_logger.info("Parallel node %s completed (attempt=%d, tokens=%d)", node_id, attempt, tokens_used)
 
-                if self.config.hooks.on_node_success is not None:
-                    await self.config.hooks.on_node_success(self.config.run_id, node_id, merged, tokens_used)
+                if ctx.hooks.on_node_success is not None:
+                    await ctx.hooks.on_node_success(ctx.run_id, node_id, merged, tokens_used)
 
-                return self._build_result(RunStatus.COMPLETED, output_model, cost_tracker, trace)
+                return ctx.build_result(RunStatus.COMPLETED, output_model)
 
             except Exception as exc:
-                result = await self._handle_failure(
-                    exc,
-                    node_id,
-                    attempt,
-                    start_ts,
-                    current_state,
-                    current_state,
-                    cost_tracker,
-                    retry_budget,
-                    trace,
-                    run_logger,
-                )
+                result = await self._handle_failure(exc, node_id, attempt, start_ts, current_state, current_state, ctx)
                 if result is not None:
                     return result
                 attempt += 1
@@ -645,27 +649,14 @@ class StromaRunner:
             return loaded
         return current_state
 
-    def _build_result(
-        self, status: RunStatus, final_state: BaseModel | None, cost_tracker: CostTracker, trace: ExecutionTrace
-    ) -> ExecutionResult:
-        """Construct an ExecutionResult from the current tracker/trace state."""
-        return ExecutionResult(
-            run_id=self.config.run_id,
-            status=status,
-            final_state=final_state,
-            trace=trace,
-            total_cost_usd=cost_tracker.total_cost_usd,
-            total_tokens=cost_tracker.total_tokens,
-        )
-
-    async def _invoke_node(self, node: NodeFunc, node_id: str, input_state: BaseModel) -> Any:
+    async def _invoke_node(self, node: NodeFunc, node_id: str, input_state: BaseModel, ctx: ReliabilityContext) -> Any:
         """Call a node function, applying per-node timeout if configured."""
         coro = (
-            node(input_state, self.config.context)  # type: ignore[call-arg]  # ty: ignore[too-many-positional-arguments]
+            node(input_state, ctx.context)  # type: ignore[call-arg]  # ty: ignore[too-many-positional-arguments]
             if _node_accepts_context(node)
             else node(input_state)  # type: ignore[call-arg]
         )
-        timeout_ms = self.config.node_timeouts.get(node_id)
+        timeout_ms = ctx.step_timeouts.get(node_id)
         if timeout_ms is not None:
             return await asyncio.wait_for(coro, timeout=timeout_ms / 1000)
         return await coro

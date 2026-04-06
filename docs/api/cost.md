@@ -13,3 +13,7 @@
 ::: stroma.cost.BudgetExceeded
 
 ::: stroma.cost.ModelHint
+
+::: stroma.cost.FallbackPolicy
+
+::: stroma.cost.resolve_model

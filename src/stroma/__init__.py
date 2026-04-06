@@ -7,15 +7,25 @@ from stroma.checkpoint import (
     RedisStore,
     SyncRedisStore,
 )
-from stroma.contracts import BoundaryValidator, ContractRegistry, ContractViolation, NodeContract
+from stroma.contracts import (
+    BoundaryValidator,
+    ContractRegistry,
+    ContractViolation,
+    NodeContract,
+    StepContract,
+    StepViolation,
+)
 from stroma.cost import (
     KNOWN_MODELS,
     BudgetExceeded,
     CostTracker,
     ExecutionBudget,
+    FallbackPolicy,
     ModelHint,
     NodeUsage,
+    StepUsage,
     estimate_cost_usd,
+    resolve_model,
 )
 from stroma.failures import (
     Classifier,
@@ -23,13 +33,15 @@ from stroma.failures import (
     FailurePolicy,
     NodeContext,
     RetryBudget,
+    StepContext,
     classify,
     default_policy_map,
 )
-from stroma.runner import NodeHooks, RunConfig, StromaRunner, parallel, stroma_node
+from stroma.middleware import ReliabilityContext, StromaStep, execute_step
+from stroma.runner import NodeHooks, RunConfig, StepHooks, StromaRunner, parallel, stroma_node, stroma_step
 from stroma.trace import ExecutionResult, ExecutionTrace, RunStatus, TraceEvent
 
-__version__ = "0.3.0"
+__version__ = "0.3.2"
 
 __all__ = [
     "KNOWN_MODELS",
@@ -48,6 +60,7 @@ __all__ = [
     "ExecutionTrace",
     "FailureClass",
     "FailurePolicy",
+    "FallbackPolicy",
     "InMemoryStore",
     "ModelHint",
     "NodeContext",
@@ -55,15 +68,25 @@ __all__ = [
     "NodeHooks",
     "NodeUsage",
     "RedisStore",
+    "ReliabilityContext",
     "RetryBudget",
     "RunConfig",
     "RunStatus",
+    "StepContext",
+    "StepContract",
+    "StepHooks",
+    "StepUsage",
+    "StepViolation",
     "StromaRunner",
+    "StromaStep",
     "SyncRedisStore",
     "TraceEvent",
     "classify",
     "default_policy_map",
     "estimate_cost_usd",
+    "execute_step",
     "parallel",
+    "resolve_model",
     "stroma_node",
+    "stroma_step",
 ]

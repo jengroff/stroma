@@ -114,7 +114,9 @@ asyncio.run(main())
 - **Per-run logging** — structured `LoggerAdapter` with `run_id` in every log line
 - **Fluent builder API** — configure runners with chained `.with_budget()`, `.with_hooks()`, `.with_redis()`, etc.
 - **LangGraph adapter** — apply contracts to existing LangGraph graphs
+- **CrewAI adapter** — contract validation for CrewAI Flow methods
 - **DeepAgents adapter** — contract validation and cost tracking for deepagents graphs
+- **Universal reliability middleware** — `execute_step()` and `StromaStep` apply contracts, retries, cost tracking, and checkpointing to any async callable, independent of any framework
 - **Framework-agnostic** — works with any async Python code, no framework lock-in
 
 ## Install
@@ -130,6 +132,7 @@ Optional extras:
 ```bash
 uv add stroma[redis]       # Redis-backed checkpointing
 uv add stroma[langgraph]   # LangGraph adapter
+uv add stroma[crewai]      # CrewAI adapter
 uv add stroma[deepagents]  # DeepAgents adapter
 ```
 

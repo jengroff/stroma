@@ -69,6 +69,8 @@ class NodeContext:
     run_id: str
 
 
+StepContext = NodeContext
+
 Classifier = Callable[[Exception, NodeContext], FailureClass | None]
 """A callable that inspects an exception and context, returning a FailureClass or None to defer."""
 

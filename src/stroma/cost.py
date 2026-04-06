@@ -43,6 +43,44 @@ class ModelHint:
     max_tokens: int | None = None
 
 
+@dataclass
+class FallbackPolicy:
+    """Policy that downgrades a model when cumulative spend crosses a budget threshold.
+
+    When `resolve_model` sees that `tracker.total_cost_usd / budget.max_cost_usd`
+    has reached `at_budget_pct`, it swaps `preferred_model` for `fallback_model`.
+    """
+
+    preferred_model: str
+    fallback_model: str
+    at_budget_pct: float = 0.80
+
+
+def resolve_model(
+    declared_model: str | None,
+    tracker: "CostTracker",
+    budget: "ExecutionBudget",
+    fallbacks: list[FallbackPolicy],
+) -> str | None:
+    """Pick the effective model by checking fallback policies against current spend.
+
+    Iterates *fallbacks* in order. For each policy whose `preferred_model`
+    matches *declared_model* and whose spend threshold has been reached,
+    returns `fallback_model`. If nothing triggers, returns *declared_model*
+    unchanged. `None` always passes through as `None`.
+    """
+    if declared_model is None:
+        return None
+    for policy in fallbacks:
+        if budget.max_cost_usd is None:
+            continue
+        if declared_model != policy.preferred_model:
+            continue
+        if tracker.total_cost_usd / budget.max_cost_usd >= policy.at_budget_pct:
+            return policy.fallback_model
+    return declared_model
+
+
 class ExecutionBudget(BaseModel):
     """Optional budget constraints for a pipeline run.
 
@@ -82,6 +120,9 @@ class NodeUsage:
     latency_ms: int
     model: str | None = None
     output_tokens: int = 0
+
+
+StepUsage = NodeUsage
 
 
 class BudgetExceeded(Exception):

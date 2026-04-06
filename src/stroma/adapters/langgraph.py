@@ -3,29 +3,8 @@ import importlib
 from collections.abc import Callable
 from typing import Any
 
-from pydantic import BaseModel
-
+from stroma.adapters.base import extract_state_dict as extract_state_dict
 from stroma.contracts import BoundaryValidator, ContractRegistry, NodeContract
-
-
-def extract_state_dict(state: Any) -> dict[str, Any]:
-    """Convert a LangGraph state object to a plain dict.
-
-    Supports dicts, Pydantic models, objects with a `.dict()` method,
-    and plain objects with `__dict__`. Raises `TypeError` if the state
-    cannot be converted.
-    """
-    if isinstance(state, dict):
-        return dict(state)
-    if isinstance(state, BaseModel):
-        return state.model_dump()
-    if hasattr(state, "dict"):
-        result = state.dict()
-        if isinstance(result, dict):
-            return result
-    if hasattr(state, "__dict__"):
-        return {k: v for k, v in vars(state).items() if not k.startswith("_")}
-    raise TypeError("Unable to extract state dict from LangGraph state")
 
 
 def stroma_langgraph_node(node_id: str, contract: NodeContract) -> Callable[..., Any]:

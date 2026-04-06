@@ -31,6 +31,11 @@ class TraceEvent:
     failure: FailureClass | None = None
     failure_message: str | None = None
 
+    @property
+    def step_id(self) -> str:
+        """Alias for `node_id` — paradigm-neutral name for the execution step."""
+        return self.node_id
+
 
 class ExecutionTrace:
     """Ordered collection of `TraceEvent` instances for a pipeline run.

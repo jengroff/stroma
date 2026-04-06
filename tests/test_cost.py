@@ -5,8 +5,10 @@ from stroma.cost import (
     BudgetExceeded,
     CostTracker,
     ExecutionBudget,
+    FallbackPolicy,
     NodeUsage,
     estimate_cost_usd,
+    resolve_model,
 )
 
 
@@ -126,3 +128,50 @@ def test_record_accumulates_model_fallback_when_none():
 def test_known_models_registry_is_not_empty():
     assert len(KNOWN_MODELS) > 0
     assert all(len(v) == 2 for v in KNOWN_MODELS.values())
+
+
+# --- resolve_model / FallbackPolicy ---
+
+
+def test_resolve_model_below_threshold_no_swap():
+    tracker = CostTracker()
+    tracker.record(NodeUsage(node_id="n1", tokens_used=0, cost_usd=0.50, latency_ms=10))
+    budget = ExecutionBudget(max_cost_usd=1.00)
+    policy = FallbackPolicy(preferred_model="gpt-4o", fallback_model="gpt-4o-mini", at_budget_pct=0.80)
+    result = resolve_model("gpt-4o", tracker, budget, [policy])
+    assert result == "gpt-4o"
+
+
+def test_resolve_model_at_threshold_swaps():
+    tracker = CostTracker()
+    tracker.record(NodeUsage(node_id="n1", tokens_used=0, cost_usd=0.80, latency_ms=10))
+    budget = ExecutionBudget(max_cost_usd=1.00)
+    policy = FallbackPolicy(preferred_model="gpt-4o", fallback_model="gpt-4o-mini", at_budget_pct=0.80)
+    result = resolve_model("gpt-4o", tracker, budget, [policy])
+    assert result == "gpt-4o-mini"
+
+
+def test_resolve_model_no_budget_no_swap():
+    tracker = CostTracker()
+    tracker.record(NodeUsage(node_id="n1", tokens_used=0, cost_usd=999.0, latency_ms=10))
+    budget = ExecutionBudget.unlimited()
+    policy = FallbackPolicy(preferred_model="gpt-4o", fallback_model="gpt-4o-mini")
+    result = resolve_model("gpt-4o", tracker, budget, [policy])
+    assert result == "gpt-4o"
+
+
+def test_resolve_model_mismatch_no_swap():
+    tracker = CostTracker()
+    tracker.record(NodeUsage(node_id="n1", tokens_used=0, cost_usd=0.90, latency_ms=10))
+    budget = ExecutionBudget(max_cost_usd=1.00)
+    policy = FallbackPolicy(preferred_model="gpt-4o", fallback_model="gpt-4o-mini")
+    result = resolve_model("claude-sonnet-4-6", tracker, budget, [policy])
+    assert result == "claude-sonnet-4-6"
+
+
+def test_resolve_model_none_declared_passes_through():
+    tracker = CostTracker()
+    budget = ExecutionBudget(max_cost_usd=1.00)
+    policy = FallbackPolicy(preferred_model="gpt-4o", fallback_model="gpt-4o-mini")
+    result = resolve_model(None, tracker, budget, [policy])
+    assert result is None

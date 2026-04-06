@@ -33,15 +33,19 @@ nav:
       - LangGraph Integration: tutorial/langgraph.md
       - DeepAgents Integration: tutorial/deepagents.md
   - Concepts: concepts.md
+  - Architecture:
+      - Universal Reliability Layer: architecture/universal-reliability-layer.md
   - Extending Stroma: extending.md
   - API Reference:
       - Runner: api/runner.md
+      - Middleware: api/middleware.md
       - Contracts: api/contracts.md
       - Checkpointing: api/checkpoint.md
       - Cost Tracking: api/cost.md
       - Failures: api/failures.md
       - Tracing: api/trace.md
       - LangGraph Adapter: api/langgraph.md
+      - CrewAI Adapter: api/crewai.md
       - DeepAgents Adapter: api/deepagents.md
   - Changelog: changelog.md
 

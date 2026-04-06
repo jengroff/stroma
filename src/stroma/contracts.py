@@ -71,6 +71,10 @@ class BoundaryValidator:
             raise ContractViolation(contract.node_id, direction, raw, exc.errors()) from exc
 
 
+StepContract = NodeContract
+StepViolation = ContractViolation
+
+
 class ContractRegistry:
     """Registry mapping node IDs to their contracts with built-in validation.
 
